@@ -1,9 +1,17 @@
 apply plugin: 'groovy'
 apply plugin: 'maven-publish'
 
+repositories {
+    jcenter()
+    maven {
+        url 'http://repo.jenkins-ci.org/releases/'
+    }
+}
+
 dependencies {
     compile gradleApi()
     compile localGroovy()
+    compile 'org.jenkins-ci.plugins:job-dsl-core:1.42'
 }
 
 publishing {
