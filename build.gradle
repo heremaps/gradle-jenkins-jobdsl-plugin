@@ -1,0 +1,19 @@
+apply plugin: 'groovy'
+apply plugin: 'maven-publish'
+
+dependencies {
+    compile gradleApi()
+    compile localGroovy()
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId 'com.here.gradle.plugins'
+            artifactId 'gradle-jobdsl-plugin'
+            version '1.0'
+
+            from components.java
+        }
+    }
+}
