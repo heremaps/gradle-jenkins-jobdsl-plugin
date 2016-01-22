@@ -8,6 +8,8 @@ class JobDslPlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
+        project.extensions.create('jobdsl', JobDslPluginExtension)
         project.task('dslGenerateXml', type: GenerateXmlTask)
     }
+
 }

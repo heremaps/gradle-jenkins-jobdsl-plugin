@@ -16,7 +16,8 @@ class GenerateXmlTask extends DefaultTask {
     @TaskAction
     void executeTask() {
         def jobManagement = new MemoryJobManagement()
-        project.fileTree(dir: 'jobs', include: '*.groovy').each { File file ->
+
+        project.fileTree(dir: project.jobdsl.source, include: '*.groovy').each { File file ->
             println "Loading ${file.name}"
             DslScriptLoader.runDslEngine(file.text, jobManagement)
         }
