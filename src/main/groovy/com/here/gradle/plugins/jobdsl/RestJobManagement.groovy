@@ -71,7 +71,12 @@ class RestJobManagement extends AbstractJobManagement {
 
     @Override
     void createOrUpdateView(String viewName, String config, boolean ignoreExisting) throws NameNotProvidedException, ConfigurationMissingException {
-        throw new UnsupportedOperationException()
+        String existingXml = requestExistingViewXml(viewName)
+        if (!existingXml) {
+            createView(viewName, config)
+        } else if (!ignoreExisting) {
+            updateView(viewName, config)
+        }
     }
 
     @Override
@@ -217,6 +222,22 @@ class RestJobManagement extends AbstractJobManagement {
         }
     }
 
+    NodeChild requestExistingViewXml(String viewName) {
+        HttpResponseDecorator response = restClient.get(
+                path: "view/${viewName}/config.xml",
+                contentType: ContentType.XML,
+                headers: [Accept: 'application/xml']
+        )
+
+        if (response?.data) {
+            println "View '${viewName}' does already exist"
+            return response?.data
+        } else {
+            println "View '${viewName}' does not yet exist"
+            return null
+        }
+    }
+
     boolean createItem(Item item) {
         HttpResponseDecorator response = restClient.post(
                 path: getItemCreatePath(item),
@@ -237,6 +258,23 @@ class RestJobManagement extends AbstractJobManagement {
         }
     }
 
+    boolean createView(String viewName, String config) {
+        HttpResponseDecorator response = restClient.post(
+                path: "createView",
+                query: [name: viewName],
+                body: config,
+                requestContentType: 'application/xml'
+        )
+
+        if (response.status == 200) {
+            println "Created view '${viewName}'"
+            return true
+        } else {
+            println "Could not create view '${viewName}': ${response.dump()}"
+            return false
+        }
+    }
+
     boolean updateItem(Item item) {
         HttpResponseDecorator response = restClient.post(
                 path: getItemConfigPath(item),
@@ -249,6 +287,22 @@ class RestJobManagement extends AbstractJobManagement {
             return true
         } else {
             println "Could not update ${getItemType(item)} item '${item.name}': ${response.dump()}"
+            return false
+        }
+    }
+
+    boolean updateView(String viewName, String config) {
+        HttpResponseDecorator response = restClient.post(
+                path: "view/${viewName}/config.xml",
+                body: config,
+                requestContentType: 'application/xml'
+        )
+
+        if (response.status == 200) {
+            println "Updated view '${viewName}'"
+            return true
+        } else {
+            println "Could not update view '${viewName}: ${response.dump()}"
             return false
         }
     }

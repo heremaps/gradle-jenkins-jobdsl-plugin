@@ -38,6 +38,11 @@ class GenerateXmlTask extends DefaultTask {
             def xmlFile = project.file("${jobDirectory}/${jobName}.xml")
             xmlFile.write(xml)
         }
+
+        jobManagement.savedViews.each { String name, String xml ->
+            def xmlFile = project.file("${outputDirectory}/${name}.xml")
+            xmlFile.write(xml)
+        }
     }
 
 }
