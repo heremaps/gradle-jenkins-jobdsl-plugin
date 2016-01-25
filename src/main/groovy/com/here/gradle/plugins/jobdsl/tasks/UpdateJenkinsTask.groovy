@@ -20,6 +20,18 @@ class UpdateJenkinsTask extends DefaultTask {
 
     @TaskAction
     void executeTask() {
+        if (jenkinsUrl == null) {
+            jenkinsUrl = project.dsl.jenkinsUrl
+        }
+
+        if (jenkinsUser == null) {
+            jenkinsUser = project.jobdsl.jenkinsUser
+        }
+
+        if (jenkinsPassword == null) {
+            jenkinsPassword = project.jobdsl.jenkinsPassword
+        }
+
         def jobManagement = new RestJobManagement(jenkinsUrl, jenkinsUser, jenkinsPassword)
 
         project.fileTree(dir: project.jobdsl.source, include: '*.groovy').each { File file ->
