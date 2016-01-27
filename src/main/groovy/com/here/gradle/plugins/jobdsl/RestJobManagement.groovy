@@ -203,7 +203,7 @@ class RestJobManagement extends AbstractJobManagement {
 
     @Override
     Node callExtension(String name, Item item, Class<? extends ExtensibleContext> contextType, Object... args) throws Throwable {
-        throw new UnsupportedOperationException()
+        return null
     }
 
     void requestPlugins() {
