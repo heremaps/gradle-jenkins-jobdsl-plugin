@@ -10,8 +10,24 @@ class JobDslPlugin implements Plugin<Project> {
     @Override
     void apply(Project project) {
         project.extensions.create('jobdsl', JobDslPluginExtension)
-        project.task('dslGenerateXml', type: GenerateXmlTask)
-        project.task('dslUpdateJenkins', type: UpdateJenkinsTask)
+
+        def execTasks = []
+        execTasks += project.task('dslGenerateXml', type: GenerateXmlTask)
+        execTasks += project.task('dslUpdateJenkins', type: UpdateJenkinsTask)
+
+        project.plugins.apply('groovy')
+
+        execTasks.each { task ->
+            task.dependsOn 'classes'
+        }
+
+        project.sourceSets {
+            jobdsl {
+                groovy {
+                    srcDirs 'jobdsl'
+                }
+            }
+        }
     }
 
 }

@@ -1,12 +1,9 @@
 package com.here.gradle.plugins.jobdsl.tasks
 
-import com.here.gradle.plugins.jobdsl.RestJobManagement
-import javaposse.jobdsl.dsl.DslScriptLoader
-import org.gradle.api.DefaultTask
 import org.gradle.api.internal.tasks.options.Option
-import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.JavaExec
 
-class UpdateJenkinsTask extends DefaultTask {
+class UpdateJenkinsTask extends JavaExec {
 
     private String jenkinsUrl
     private String jenkinsUser
@@ -18,8 +15,8 @@ class UpdateJenkinsTask extends DefaultTask {
         description = 'Update jobs on Jenkins.'
     }
 
-    @TaskAction
-    void executeTask() {
+    @Override
+    void exec() {
         if (jenkinsUrl == null) {
             jenkinsUrl = project.dsl.jenkinsUrl
         }
@@ -32,13 +29,18 @@ class UpdateJenkinsTask extends DefaultTask {
             jenkinsPassword = project.jobdsl.jenkinsPassword
         }
 
-        def jobManagement = new RestJobManagement(jenkinsUrl, jenkinsUser, jenkinsPassword)
+        Map properties = [
+                jenkinsUrl     : jenkinsUrl,
+                jenkinsUser    : jenkinsUser,
+                jenkinsPassword: jenkinsPassword,
+                inputFiles     : project.sourceSets.jobdsl.allGroovy.asPath,
+        ]
+        setSystemProperties(properties)
 
-        project.fileTree(dir: project.jobdsl.source, include: '*.groovy').each { File file ->
-            println "Loading ${file.name}"
-            DslScriptLoader.runDslEngine(file.text, jobManagement)
-        }
+        setMain('com.here.gradle.plugins.jobdsl.tasks.runners.UpdateJenkinsRunner')
+        setClasspath(project.sourceSets.main.runtimeClasspath)
 
+        super.exec()
     }
 
     @Option(option = 'jenkinsUrl', description = 'URL of the Jenkins server to update.')
