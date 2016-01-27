@@ -10,6 +10,7 @@ import javaposse.jobdsl.dsl.ConfigFile
 import javaposse.jobdsl.dsl.ConfigFileType
 import javaposse.jobdsl.dsl.ConfigurationMissingException
 import javaposse.jobdsl.dsl.DslException
+import javaposse.jobdsl.dsl.DslScriptException
 import javaposse.jobdsl.dsl.Item
 import javaposse.jobdsl.dsl.JobConfigurationNotFoundException
 import javaposse.jobdsl.dsl.NameNotProvidedException
@@ -143,14 +144,31 @@ class RestJobManagement extends AbstractJobManagement {
             def message = "Required plugin ${pluginShortName} not installed."
             println message
             if (failIfMissing) {
-                throw new DslException(message)
+                throw new DslScriptException(message)
             }
         }
     }
 
     @Override
     void requireMinimumPluginVersion(String pluginShortName, String version, boolean failIfMissing) {
-        throw new UnsupportedOperationException()
+        def plugin = findPlugin(pluginShortName)
+        if (plugin == null) {
+            def message = "Version ${version} or later of plugin ${pluginShortName} needs to be installed."
+            println message
+            if (failIfMissing) {
+                throw new DslScriptException(message)
+            }
+        } else {
+            def minimumVersionNumber = new VersionNumber(version)
+            def actualVersionNumber = new VersionNumber(plugin.version)
+            if (actualVersionNumber.isOlderThan(minimumVersionNumber)) {
+                def message = "Plugin ${pluginShortName} needs to be updated to version ${version} or later."
+                println message
+                if (failIfMissing) {
+                    throw new DslScriptException(message)
+                }
+            }
+        }
     }
 
     @Override
@@ -196,7 +214,7 @@ class RestJobManagement extends AbstractJobManagement {
         )
 
         if (response.status != 200) {
-            throw new DslException("Could not load list of plugins from Jenkins server '${jenkinsUrl}'")
+            throw new DslScriptException("Could not load list of plugins from Jenkins server '${jenkinsUrl}'")
         }
 
         plugins = response.data.plugins
