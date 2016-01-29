@@ -28,4 +28,9 @@ publishing {
             from components.java
         }
     }
+    repositories {
+        maven {
+            url "${buildDir}/repo"
+        }
+    }
 }
