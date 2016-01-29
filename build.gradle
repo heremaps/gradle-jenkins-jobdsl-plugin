@@ -21,9 +21,9 @@ dependencies {
 publishing {
     publications {
         maven(MavenPublication) {
-            groupId 'com.here.gradle.plugins'
-            artifactId 'gradle-jobdsl-plugin'
-            version '1.0'
+            groupId project.properties['maven.groupId']
+            artifactId project.properties['maven.artifactId']
+            version project.properties['maven.version']
 
             from components.java
         }
