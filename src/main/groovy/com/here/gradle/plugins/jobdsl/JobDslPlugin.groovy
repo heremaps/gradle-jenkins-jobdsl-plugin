@@ -24,7 +24,7 @@ class JobDslPlugin implements Plugin<Project> {
         project.sourceSets {
             jobdsl {
                 groovy {
-                    srcDirs 'jobdsl'
+                    srcDirs 'src/jobdsl'
                 }
             }
         }
