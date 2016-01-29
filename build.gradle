@@ -23,7 +23,12 @@ publishing {
         maven(MavenPublication) {
             groupId project.properties['maven.groupId']
             artifactId project.properties['maven.artifactId']
-            version project.properties['maven.version']
+
+            if (System.env['BUILD_NUMBER']) {
+                version "${project.properties['maven.version']}.${System.env['BUILD_NUMBER']}"
+            } else {
+                version project.properties['maven.version']
+            }
 
             from components.java
         }
