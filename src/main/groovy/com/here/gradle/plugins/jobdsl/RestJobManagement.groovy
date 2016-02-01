@@ -215,7 +215,7 @@ class RestJobManagement extends AbstractJobManagement {
         )
 
         if (response.status != 200) {
-            throw new DslScriptException("Could not load list of plugins from Jenkins server '${jenkinsUrl}'")
+            throw new DslScriptException("Could not load list of plugins from Jenkins server '${jenkinsUrl}': ${response.statusLine}")
         }
 
         plugins = response.data.plugins
