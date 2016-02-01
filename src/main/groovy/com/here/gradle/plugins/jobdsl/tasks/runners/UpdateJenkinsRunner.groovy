@@ -7,9 +7,9 @@ def properties = System.getProperties()
 
 def jenkinsUrl = properties['jenkinsUrl']
 def jenkinsUser = properties['jenkinsUser']
-def jenkinsPassword = properties['jenkinsPassword']
+def jenkinsApiToken = properties['jenkinsApiToken']
 
-def jobManagement = new RestJobManagement(jenkinsUrl, jenkinsUser, jenkinsPassword)
+def jobManagement = new RestJobManagement(jenkinsUrl, jenkinsUser, jenkinsApiToken)
 
 properties['inputFiles'].split(':').each { String filename ->
     println "Loading ${filename}"

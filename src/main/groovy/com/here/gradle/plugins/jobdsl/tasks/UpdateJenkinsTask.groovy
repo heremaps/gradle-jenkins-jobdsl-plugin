@@ -7,7 +7,7 @@ class UpdateJenkinsTask extends JavaExec {
 
     private String jenkinsUrl
     private String jenkinsUser
-    private String jenkinsPassword
+    private String jenkinsApiToken
 
     UpdateJenkinsTask() {
         super()
@@ -25,14 +25,14 @@ class UpdateJenkinsTask extends JavaExec {
             jenkinsUser = project.jobdsl.jenkinsUser
         }
 
-        if (jenkinsPassword == null) {
-            jenkinsPassword = project.jobdsl.jenkinsPassword
+        if (jenkinsApiToken == null) {
+            jenkinsApiToken = project.jobdsl.jenkinsApiToken
         }
 
         Map properties = [
                 jenkinsUrl     : jenkinsUrl,
                 jenkinsUser    : jenkinsUser,
-                jenkinsPassword: jenkinsPassword,
+                jenkinsApiToken: jenkinsApiToken,
                 inputFiles     : project.sourceSets.jobdsl.allGroovy.asPath,
         ]
         setSystemProperties(properties)
@@ -53,9 +53,9 @@ class UpdateJenkinsTask extends JavaExec {
         this.jenkinsUser = jenkinsUser
     }
 
-    @Option(option = 'jenkinsPassword', description = 'Jenkins password.')
-    void setJenkinsPassword(String jenkinsPassword) {
-        this.jenkinsPassword = jenkinsPassword
+    @Option(option = 'jenkinsApiToken', description = 'Jenkins API token.')
+    void setJenkinsApiToken(String jenkinsApiToken) {
+        this.jenkinsApiToken = jenkinsApiToken
     }
 
 }
