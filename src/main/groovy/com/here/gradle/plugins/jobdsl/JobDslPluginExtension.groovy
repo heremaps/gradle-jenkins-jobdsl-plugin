@@ -1,10 +1,18 @@
 package com.here.gradle.plugins.jobdsl
 
+import org.gradle.api.NamedDomainObjectContainer
+import org.gradle.api.Project
+
 class JobDslPluginExtension {
 
-    def String jenkinsUrl = null
-    def String jenkinsUser = null
-    def String jenkinsPassword = null
-    def String source = 'jobdsl'
+    NamedDomainObjectContainer<ServerDefinition> servers
+
+    JobDslPluginExtension(Project project) {
+        servers = project.container(ServerDefinition)
+    }
+
+    def servers(Closure closure) {
+        servers.configure(closure)
+    }
 
 }

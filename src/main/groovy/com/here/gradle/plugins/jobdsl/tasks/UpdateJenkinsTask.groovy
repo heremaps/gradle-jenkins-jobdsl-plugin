@@ -1,13 +1,17 @@
 package com.here.gradle.plugins.jobdsl.tasks
 
+import com.here.gradle.plugins.jobdsl.ServerDefinition
+import org.gradle.api.GradleException
 import org.gradle.api.internal.tasks.options.Option
 import org.gradle.api.tasks.JavaExec
 
 class UpdateJenkinsTask extends JavaExec {
 
-    private String jenkinsUrl
-    private String jenkinsUser
-    private String jenkinsApiToken
+    String jenkinsUrl
+    String jenkinsUser
+    String jenkinsApiToken
+    String serverName
+    ServerDefinition server
 
     UpdateJenkinsTask() {
         super()
@@ -17,16 +21,24 @@ class UpdateJenkinsTask extends JavaExec {
 
     @Override
     void exec() {
-        if (jenkinsUrl == null) {
-            jenkinsUrl = project.dsl.jenkinsUrl
-        }
+        if (serverName != null) {
+            server = project.jobdsl.servers.find { it.name == serverName }
 
-        if (jenkinsUser == null) {
-            jenkinsUser = project.jobdsl.jenkinsUser
-        }
+            if (server == null) {
+                throw new GradleException("Server '${serverName}' is not configured in the build script.")
+            }
 
-        if (jenkinsApiToken == null) {
-            jenkinsApiToken = project.jobdsl.jenkinsApiToken
+            if (jenkinsUrl == null) {
+                jenkinsUrl = server.jenkinsUrl
+            }
+
+            if (jenkinsUser == null) {
+                jenkinsUser = server.jenkinsUser
+            }
+
+            if (jenkinsApiToken == null) {
+                jenkinsApiToken = server.jenkinsApiToken
+            }
         }
 
         Map properties = [
@@ -56,6 +68,11 @@ class UpdateJenkinsTask extends JavaExec {
     @Option(option = 'jenkinsApiToken', description = 'Jenkins API token.')
     void setJenkinsApiToken(String jenkinsApiToken) {
         this.jenkinsApiToken = jenkinsApiToken
+    }
+
+    @Option(option = 'server', description = 'Name of the Jenkins server configuration.')
+    void setServerName(String serverName) {
+        this.serverName = serverName
     }
 
 }

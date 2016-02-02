@@ -9,7 +9,7 @@ class JobDslPlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
-        project.extensions.create('jobdsl', JobDslPluginExtension)
+        project.extensions.create('jobdsl', JobDslPluginExtension, project)
 
         def execTasks = []
         execTasks += project.task('dslGenerateXml', type: GenerateXmlTask)
