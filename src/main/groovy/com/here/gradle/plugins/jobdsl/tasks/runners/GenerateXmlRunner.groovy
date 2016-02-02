@@ -1,9 +1,14 @@
 package com.here.gradle.plugins.jobdsl.tasks.runners
 
+import com.here.gradle.plugins.jobdsl.util.DslConfig
+import groovy.json.JsonSlurper
 import javaposse.jobdsl.dsl.DslScriptLoader
 import javaposse.jobdsl.dsl.MemoryJobManagement
 
 def properties = System.getProperties()
+
+def configuration = new JsonSlurper().parseText(properties['configuration'])
+DslConfig.setConfiguration(configuration)
 
 def jobManagement = new MemoryJobManagement()
 

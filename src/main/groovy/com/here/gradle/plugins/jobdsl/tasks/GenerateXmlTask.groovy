@@ -1,5 +1,6 @@
 package com.here.gradle.plugins.jobdsl.tasks
 
+import groovy.json.JsonBuilder
 import org.gradle.api.tasks.JavaExec
 
 class GenerateXmlTask extends JavaExec {
@@ -14,7 +15,8 @@ class GenerateXmlTask extends JavaExec {
     void exec() {
         Map properties = [
                 inputFiles     : project.sourceSets.jobdsl.allGroovy.asPath,
-                outputDirectory: "${project.buildDir}/jobdsl/xml"
+                outputDirectory: "${project.buildDir}/jobdsl/xml",
+                configuration  : new JsonBuilder(project.jobdsl.configuration).toString()
         ]
         setSystemProperties(properties)
 

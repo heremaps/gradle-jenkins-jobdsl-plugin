@@ -5,6 +5,7 @@ import org.gradle.api.Project
 
 class JobDslPluginExtension {
 
+    Map<String, ?> configuration = [:]
     NamedDomainObjectContainer<ServerDefinition> servers
 
     JobDslPluginExtension(Project project) {

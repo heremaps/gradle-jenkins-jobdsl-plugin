@@ -1,6 +1,7 @@
 package com.here.gradle.plugins.jobdsl.tasks
 
 import com.here.gradle.plugins.jobdsl.ServerDefinition
+import groovy.json.JsonBuilder
 import org.gradle.api.GradleException
 import org.gradle.api.internal.tasks.options.Option
 import org.gradle.api.tasks.JavaExec
@@ -46,6 +47,7 @@ class UpdateJenkinsTask extends JavaExec {
                 jenkinsUser    : jenkinsUser,
                 jenkinsApiToken: jenkinsApiToken,
                 inputFiles     : project.sourceSets.jobdsl.allGroovy.asPath,
+                configuration  : new JsonBuilder(project.jobdsl.configuration).toString()
         ]
         setSystemProperties(properties)
 
