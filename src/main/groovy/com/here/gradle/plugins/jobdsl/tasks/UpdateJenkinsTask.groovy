@@ -1,34 +1,26 @@
 package com.here.gradle.plugins.jobdsl.tasks
 
-import com.here.gradle.plugins.jobdsl.ServerDefinition
-import groovy.json.JsonBuilder
-import org.gradle.api.GradleException
 import org.gradle.api.internal.tasks.options.Option
-import org.gradle.api.tasks.JavaExec
 
-class UpdateJenkinsTask extends JavaExec {
+class UpdateJenkinsTask extends AbstractDslTask {
 
     String jenkinsUrl
     String jenkinsUser
     String jenkinsApiToken
-    String serverName
-    ServerDefinition server
 
     UpdateJenkinsTask() {
         super()
-        group = 'Job DSL'
         description = 'Update jobs on Jenkins.'
     }
 
     @Override
-    void exec() {
-        if (serverName != null) {
-            server = project.jobdsl.servers.find { it.name == serverName }
+    String getMainClass() {
+        'com.here.gradle.plugins.jobdsl.tasks.runners.UpdateJenkinsRunner'
+    }
 
-            if (server == null) {
-                throw new GradleException("Server '${serverName}' is not configured in the build script.")
-            }
-
+    @Override
+    Map<String, ?> getProperties() {
+        if (server != null) {
             if (jenkinsUrl == null) {
                 jenkinsUrl = server.jenkinsUrl
             }
@@ -42,19 +34,11 @@ class UpdateJenkinsTask extends JavaExec {
             }
         }
 
-        Map properties = [
+        return [
                 jenkinsUrl     : jenkinsUrl,
                 jenkinsUser    : jenkinsUser,
-                jenkinsApiToken: jenkinsApiToken,
-                inputFiles     : project.sourceSets.jobdsl.allGroovy.asPath,
-                configuration  : new JsonBuilder(project.jobdsl.configuration).toString()
+                jenkinsApiToken: jenkinsApiToken
         ]
-        setSystemProperties(properties)
-
-        setMain('com.here.gradle.plugins.jobdsl.tasks.runners.UpdateJenkinsRunner')
-        setClasspath(project.sourceSets.main.runtimeClasspath)
-
-        super.exec()
     }
 
     @Option(option = 'jenkinsUrl', description = 'URL of the Jenkins server to update.')
@@ -70,11 +54,6 @@ class UpdateJenkinsTask extends JavaExec {
     @Option(option = 'jenkinsApiToken', description = 'Jenkins API token.')
     void setJenkinsApiToken(String jenkinsApiToken) {
         this.jenkinsApiToken = jenkinsApiToken
-    }
-
-    @Option(option = 'server', description = 'Name of the Jenkins server configuration.')
-    void setServerName(String serverName) {
-        this.serverName = serverName
     }
 
 }
