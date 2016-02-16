@@ -233,10 +233,10 @@ class RestJobManagement extends AbstractJobManagement {
         )
 
         if (response?.data) {
-            println "${getItemType(item)} item '${item.name}' does already exist"
+            println "${item.name} (${getItemType(item)}): EXISTS"
             return response?.data
         } else {
-            println "${getItemType(item)} item '${item.name}' does not yet exist"
+            println "${item.name} (${getItemType(item)}): NEW"
             return null
         }
     }
@@ -249,10 +249,10 @@ class RestJobManagement extends AbstractJobManagement {
         )
 
         if (response?.data) {
-            println "View '${viewName}' does already exist"
+            println "${viewName} (View): EXISTS"
             return response?.data
         } else {
-            println "View '${viewName}' does not yet exist"
+            println "${viewName} (View): NEW"
             return null
         }
     }
@@ -266,10 +266,10 @@ class RestJobManagement extends AbstractJobManagement {
         )
 
         if (response.status == 200) {
-            println "Created ${getItemType(item)} item '${item.name}'"
+            println "${item.name} (${getItemType(item)}): CREATED"
             return true
         } else {
-            println "Could not create ${getItemType(item)} item '${item.name}': ${response.dump()}"
+            println "${item.name} (${getItemType(item)}): COULD NOT CREATE - ${response.dump()}"
             if (response.status == 404) {
                 println "If the item is contained in a folder probably the folder does not exist"
             }
@@ -286,10 +286,10 @@ class RestJobManagement extends AbstractJobManagement {
         )
 
         if (response.status == 200) {
-            println "Created view '${viewName}'"
+            println "${viewName} (View): CREATED"
             return true
         } else {
-            println "Could not create view '${viewName}': ${response.dump()}"
+            println "${viewName} (View): COULD NOT CREATE - ${response.dump()}"
             return false
         }
     }
@@ -302,10 +302,10 @@ class RestJobManagement extends AbstractJobManagement {
         )
 
         if (response.status == 200) {
-            println "Updated ${getItemType(item)} item '${item.name}'"
+            println "${item.name} (${getItemType(item)}): UPDATED"
             return true
         } else {
-            println "Could not update ${getItemType(item)} item '${item.name}': ${response.dump()}"
+            println "${item.name} (${getItemType(item)}): COULD NOT UPDATE - ${response.dump()}"
             return false
         }
     }
@@ -318,10 +318,10 @@ class RestJobManagement extends AbstractJobManagement {
         )
 
         if (response.status == 200) {
-            println "Updated view '${viewName}'"
+            println "${viewName} (View): UPDATED"
             return true
         } else {
-            println "Could not update view '${viewName}: ${response.dump()}"
+            println "${viewName} (View): COULD NOT UPDATE - ${response.dump()}"
             return false
         }
     }
