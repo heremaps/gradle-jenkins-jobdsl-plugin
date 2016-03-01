@@ -120,19 +120,9 @@ class RestJobManagement extends AbstractJobManagement {
     }
 
     @Override
-    String getCredentialsId(String credentialsDescription) {
-        throw new UnsupportedOperationException()
-    }
-
-    @Override
     void logPluginDeprecationWarning(String pluginShortName, String minimumVersion) {
-        def plugin = findPlugin(pluginShortName)
-        if (plugin != null) {
-            def minimumVersionNumber = new VersionNumber(minimumVersion)
-            def actualVersionNumber = new VersionNumber(plugin.version)
-            if (actualVersionNumber.isOlderThan(minimumVersionNumber)) {
-                logDeprecationWarning("Support for ${pluginShortName} versions older than ${minimumVersion}");
-            }
+        if (!isMinimumPluginVersionInstalled(pluginShortName, minimumVersion)) {
+            logDeprecationWarning("Support for ${pluginShortName} versions older than ${minimumVersion}");
         }
     }
 
@@ -150,22 +140,19 @@ class RestJobManagement extends AbstractJobManagement {
 
     @Override
     void requireMinimumPluginVersion(String pluginShortName, String version, boolean failIfMissing) {
-        def plugin = findPlugin(pluginShortName)
-        if (plugin == null) {
-            def message = "Version ${version} or later of plugin ${pluginShortName} needs to be installed."
+        if (!isMinimumPluginVersionInstalled(pluginShortName, version)) {
+            def plugin = findPlugin(pluginShortName)
+            def message
+
+            if (plugin == null) {
+                message = "Version ${version} or later of plugin ${pluginShortName} needs to be installed."
+            } else {
+                message = "Plugin ${pluginShortName} needs to be updated to version ${version} or later."
+            }
             println message
+
             if (failIfMissing) {
                 throw new DslScriptException(message)
-            }
-        } else {
-            def minimumVersionNumber = new VersionNumber(version)
-            def actualVersionNumber = new VersionNumber(plugin.version)
-            if (actualVersionNumber.isOlderThan(minimumVersionNumber)) {
-                def message = "Plugin ${pluginShortName} needs to be updated to version ${version} or later."
-                println message
-                if (failIfMissing) {
-                    throw new DslScriptException(message)
-                }
             }
         }
     }
@@ -179,6 +166,16 @@ class RestJobManagement extends AbstractJobManagement {
     VersionNumber getPluginVersion(String pluginShortName) {
         def plugin = findPlugin(pluginShortName)
         return plugin == null ?: new VersionNumber(plugin.version)
+    }
+
+    @Override
+    boolean isMinimumPluginVersionInstalled(String pluginShortName, String version) {
+        def actualVersionNumber = getPluginVersion(pluginShortName)
+        if (actualVersionNumber == null) {
+            return false
+        }
+        def minimumVersionNumber = new VersionNumber(version)
+        return !actualVersionNumber.isOlderThan(minimumVersionNumber)
     }
 
     @Override
