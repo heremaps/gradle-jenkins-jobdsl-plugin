@@ -1,5 +1,4 @@
-gradle-jobdsl-plugin.iml
-local.properties
-/.gradle
-/.idea
-/build
+/.gradle/
+/.idea/
+build/
+*.iml
