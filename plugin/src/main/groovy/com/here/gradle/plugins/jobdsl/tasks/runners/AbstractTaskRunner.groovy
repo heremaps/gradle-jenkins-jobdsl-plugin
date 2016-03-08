@@ -24,7 +24,7 @@ abstract class AbstractTaskRunner {
 
         jobManagement = createJobManagement()
 
-        runProperties['inputFiles'].split(':').each { String filename ->
+        runProperties['inputFiles'].split(File.pathSeparator).each { String filename ->
             println "Loading ${filename}"
             DslScriptLoader.runDslEngine(new File(filename).text, jobManagement)
         }
