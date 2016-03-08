@@ -33,9 +33,10 @@ abstract class AbstractDslTask extends JavaExec {
         }
 
         def properties = getProperties()
-        properties['configuration'] = new JsonBuilder(project.jobdsl.configuration).toString()
+        properties['configuration'] = encodeBase64(new JsonBuilder(project.jobdsl.configuration).toString())
         properties['inputFiles'] = project.sourceSets.jobdsl.allGroovy.asPath
-        properties['serverConfiguration'] = server != null ? new JsonBuilder(server.configuration).toString() : '{}'
+        properties['serverConfiguration'] = server != null ?
+                encodeBase64(new JsonBuilder(server.configuration).toString()) : ''
         setSystemProperties(properties)
 
         setMain(getMainClass())
@@ -51,6 +52,10 @@ abstract class AbstractDslTask extends JavaExec {
     @Option(option = 'server', description = 'Name of the Jenkins server configuration.')
     void setServerName(String serverName) {
         this.serverName = serverName
+    }
+
+    private String encodeBase64(String string) {
+        string.bytes.encodeBase64().toString()
     }
 
 }

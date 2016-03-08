@@ -15,10 +15,11 @@ abstract class AbstractTaskRunner {
 
         def slurper = new JsonSlurper()
 
-        def configuration = slurper.parseText(runProperties['configuration'])
+        def configuration = slurper.parseText(decodeBase64(runProperties['configuration'].toString()))
         DslConfig.setConfiguration(configuration)
 
-        def serverConfiguration = slurper.parseText(runProperties['serverConfiguration'])
+        def serverConfiguration = runProperties['serverConfiguration'].toString().length() == 0 ?
+                [:] : slurper.parseText(decodeBase64(runProperties['serverConfiguration'].toString()))
         DslConfig.setServerConfiguration(serverConfiguration)
 
         jobManagement = createJobManagement()
@@ -35,6 +36,10 @@ abstract class AbstractTaskRunner {
 
     void postProcess() {
         // do nothing by default
+    }
+
+    private String decodeBase64(String encoded) {
+        new String(encoded.decodeBase64())
     }
 
 }
