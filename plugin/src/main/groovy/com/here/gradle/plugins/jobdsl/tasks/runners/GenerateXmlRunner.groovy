@@ -1,7 +1,8 @@
 package com.here.gradle.plugins.jobdsl.tasks.runners
 
+import com.here.gradle.plugins.jobdsl.FilteringMemoryJobManagement
+import com.here.gradle.plugins.jobdsl.ItemFilter
 import javaposse.jobdsl.dsl.JobManagement
-import javaposse.jobdsl.dsl.MemoryJobManagement
 
 class GenerateXmlRunner extends AbstractTaskRunner {
 
@@ -10,8 +11,8 @@ class GenerateXmlRunner extends AbstractTaskRunner {
     }
 
     @Override
-    JobManagement createJobManagement() {
-        new MemoryJobManagement()
+    JobManagement createJobManagement(ItemFilter filter) {
+        new FilteringMemoryJobManagement(filter)
     }
 
     @Override

@@ -8,6 +8,7 @@ import org.gradle.api.tasks.JavaExec
 
 abstract class AbstractDslTask extends JavaExec {
 
+    protected String filter = ''
     protected ServerDefinition server
     protected String serverName
 
@@ -34,6 +35,7 @@ abstract class AbstractDslTask extends JavaExec {
 
         def properties = getProperties()
         properties['configuration'] = encodeBase64(new JsonBuilder(project.jobdsl.configuration).toString())
+        properties['filter'] = encodeBase64(filter)
         properties['inputFiles'] = project.sourceSets.jobdsl.allGroovy.asPath
         properties['serverConfiguration'] = server != null ?
                 encodeBase64(new JsonBuilder(server.configuration).toString()) : ''
@@ -48,6 +50,11 @@ abstract class AbstractDslTask extends JavaExec {
     abstract String getMainClass()
 
     abstract Map<String, ?> getProperties()
+
+    @Option(option = 'filter', description = 'Only evaluate item names that match this regular expression.')
+    void setFilter(String filter) {
+        this.filter = filter
+    }
 
     @Option(option = 'server', description = 'Name of the Jenkins server configuration.')
     void setServerName(String serverName) {

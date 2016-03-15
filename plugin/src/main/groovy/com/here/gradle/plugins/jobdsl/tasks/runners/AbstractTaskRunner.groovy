@@ -1,5 +1,6 @@
 package com.here.gradle.plugins.jobdsl.tasks.runners
 
+import com.here.gradle.plugins.jobdsl.ItemFilter
 import com.here.gradle.plugins.jobdsl.util.DslConfig
 import groovy.json.JsonSlurper
 import javaposse.jobdsl.dsl.DslScriptLoader
@@ -22,7 +23,8 @@ abstract class AbstractTaskRunner {
                 [:] : slurper.parseText(decodeBase64(runProperties['serverConfiguration'].toString()))
         DslConfig.setServerConfiguration(serverConfiguration)
 
-        jobManagement = createJobManagement()
+        def filter = new ItemFilter(decodeBase64(runProperties['filter']))
+        jobManagement = createJobManagement(filter)
 
         runProperties['inputFiles'].split(File.pathSeparator).each { String filename ->
             println "Loading ${filename}"
@@ -32,7 +34,7 @@ abstract class AbstractTaskRunner {
         postProcess()
     }
 
-    abstract JobManagement createJobManagement()
+    abstract JobManagement createJobManagement(ItemFilter filter)
 
     void postProcess() {
         // do nothing by default

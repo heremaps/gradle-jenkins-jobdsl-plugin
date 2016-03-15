@@ -22,12 +22,15 @@ import org.apache.http.protocol.HttpContext
 
 class RestJobManagement extends AbstractJobManagement {
 
+    ItemFilter filter
     String jenkinsUrl
     RESTClient restClient
     List<Map> plugins
 
-    RestJobManagement(String jenkinsUrl, String jenkinsUser, String jenkinsPassword) {
+    RestJobManagement(ItemFilter filter, String jenkinsUrl, String jenkinsUser, String jenkinsPassword) {
         super(System.out)
+
+        this.filter = filter
         this.jenkinsUrl = jenkinsUrl
 
         restClient = new RESTClient(jenkinsUrl)
@@ -61,21 +64,30 @@ class RestJobManagement extends AbstractJobManagement {
 
     @Override
     boolean createOrUpdateConfig(Item item, boolean ignoreExisting) throws NameNotProvidedException {
-        String existingXml = requestExistingItemXml(item)
-        if (!existingXml) {
-            return createItem(item)
-        } else if (!ignoreExisting) {
-            return updateItem(item)
+        if (filter.matches(item.name)) {
+            String existingXml = requestExistingItemXml(item)
+            if (!existingXml) {
+                return createItem(item)
+            } else if (!ignoreExisting) {
+                return updateItem(item)
+            }
+        } else {
+            println "${item.name} (${getItemType(item)}): IGNORE (name does not match filter expression)"
+            return true
         }
     }
 
     @Override
     void createOrUpdateView(String viewName, String config, boolean ignoreExisting) throws NameNotProvidedException, ConfigurationMissingException {
-        String existingXml = requestExistingViewXml(viewName)
-        if (!existingXml) {
-            createView(viewName, config)
-        } else if (!ignoreExisting) {
-            updateView(viewName, config)
+        if (filter.matches(viewName)) {
+            String existingXml = requestExistingViewXml(viewName)
+            if (!existingXml) {
+                createView(viewName, config)
+            } else if (!ignoreExisting) {
+                updateView(viewName, config)
+            }
+        } else {
+            println "${viewName} (View): IGNORE (name does not match filter expression)"
         }
     }
 
