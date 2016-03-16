@@ -72,11 +72,11 @@ class RestJobManagement extends AbstractJobManagement {
                 if (isXmlDifferent(existingXml, item.xml)) {
                     return updateItem(item)
                 } else {
-                    println "${item.name} (${getItemType(item)}): UP-TO-DATE"
+                    logItemStatus(item, 'UP-TO-DATE')
                 }
             }
         } else {
-            println "${item.name} (${getItemType(item)}): IGNORE (name does not match filter expression)"
+            logItemStatus(item, 'IGNORE (name does not match filter expression)')
             return true
         }
     }
@@ -91,11 +91,11 @@ class RestJobManagement extends AbstractJobManagement {
                 if (isXmlDifferent(existingXml, config)) {
                     updateView(viewName, config)
                 } else {
-                    println "${viewName} (View): UP-TO-DATE"
+                    logViewStatus(viewName, 'UP-TO-DATE')
                 }
             }
         } else {
-            println "${viewName} (View): IGNORE (name does not match filter expression)"
+            logViewStatus(viewName, 'IGNORE (name does not match filter expression)')
         }
     }
 
@@ -249,10 +249,10 @@ class RestJobManagement extends AbstractJobManagement {
         )
 
         if (response?.data) {
-            println "${item.name} (${getItemType(item)}): EXISTS"
+            logItemStatus(item, 'EXISTS')
             return "${response.data}".toString()
         } else {
-            println "${item.name} (${getItemType(item)}): NEW"
+            logItemStatus(item, 'NEW')
             return null
         }
     }
@@ -265,10 +265,10 @@ class RestJobManagement extends AbstractJobManagement {
         )
 
         if (response?.data) {
-            println "${viewName} (View): EXISTS"
+            logViewStatus(viewName, 'EXISTS')
             return "${response.data}".toString()
         } else {
-            println "${viewName} (View): NEW"
+            logViewStatus(viewName, 'NEW')
             return null
         }
     }
@@ -282,10 +282,10 @@ class RestJobManagement extends AbstractJobManagement {
         )
 
         if (response.status == 200) {
-            println "${item.name} (${getItemType(item)}): CREATED"
+            logItemStatus(item, 'CREATED')
             return true
         } else {
-            println "${item.name} (${getItemType(item)}): COULD NOT CREATE - ${response.dump()}"
+            logItemStatus(item, "COULD NOT CREATE - ${response.dump()}")
             if (response.status == 404) {
                 println "If the item is contained in a folder probably the folder does not exist"
             }
@@ -302,10 +302,10 @@ class RestJobManagement extends AbstractJobManagement {
         )
 
         if (response.status == 200) {
-            println "${viewName} (View): CREATED"
+            logViewStatus(viewName, 'CREATED')
             return true
         } else {
-            println "${viewName} (View): COULD NOT CREATE - ${response.dump()}"
+            logViewStatus(viewName, "COULD NOT CREATE - ${response.dump()}")
             return false
         }
     }
@@ -318,10 +318,10 @@ class RestJobManagement extends AbstractJobManagement {
         )
 
         if (response.status == 200) {
-            println "${item.name} (${getItemType(item)}): UPDATED"
+            logItemStatus(item, 'UPDATED')
             return true
         } else {
-            println "${item.name} (${getItemType(item)}): COULD NOT UPDATE - ${response.dump()}"
+            logItemStatus(item, "COULD NOT UPDATE - ${response.dump()}")
             return false
         }
     }
@@ -334,10 +334,10 @@ class RestJobManagement extends AbstractJobManagement {
         )
 
         if (response.status == 200) {
-            println "${viewName} (View): UPDATED"
+            logViewStatus(viewName, 'UPDATED')
             return true
         } else {
-            println "${viewName} (View): COULD NOT UPDATE - ${response.dump()}"
+            logViewStatus(viewName, "COULD NOT UPDATE - ${response.dump()}")
             return false
         }
     }
@@ -364,6 +364,14 @@ class RestJobManagement extends AbstractJobManagement {
         XMLUnit.setIgnoreComments(true)
         XMLUnit.setIgnoreWhitespace(true)
         return !XMLUnit.compareXML(control, test).similar()
+    }
+
+    private void logItemStatus(Item item, String status) {
+        println "${item.name} (${getItemType(item)}): ${status}"
+    }
+
+    private void logViewStatus(String viewName, String status) {
+        println "${viewName} (View): ${status}"
     }
 
 }
