@@ -1,6 +1,5 @@
 package com.here.gradle.plugins.jobdsl
 
-import groovy.util.slurpersupport.NodeChild
 import groovyx.net.http.ContentType
 import groovyx.net.http.HttpResponseDecorator
 import groovyx.net.http.RESTClient
@@ -19,6 +18,7 @@ import org.apache.http.HttpException
 import org.apache.http.HttpRequest
 import org.apache.http.HttpRequestInterceptor
 import org.apache.http.protocol.HttpContext
+import org.custommonkey.xmlunit.XMLUnit
 
 class RestJobManagement extends AbstractJobManagement {
 
@@ -69,7 +69,11 @@ class RestJobManagement extends AbstractJobManagement {
             if (!existingXml) {
                 return createItem(item)
             } else if (!ignoreExisting) {
-                return updateItem(item)
+                if (isXmlDifferent(existingXml, item.xml)) {
+                    return updateItem(item)
+                } else {
+                    println "${item.name} (${getItemType(item)}): UP-TO-DATE"
+                }
             }
         } else {
             println "${item.name} (${getItemType(item)}): IGNORE (name does not match filter expression)"
@@ -84,7 +88,11 @@ class RestJobManagement extends AbstractJobManagement {
             if (!existingXml) {
                 createView(viewName, config)
             } else if (!ignoreExisting) {
-                updateView(viewName, config)
+                if (isXmlDifferent(existingXml, config)) {
+                    updateView(viewName, config)
+                } else {
+                    println "${viewName} (View): UP-TO-DATE"
+                }
             }
         } else {
             println "${viewName} (View): IGNORE (name does not match filter expression)"
@@ -233,32 +241,32 @@ class RestJobManagement extends AbstractJobManagement {
         return plugins.find { it.shortName == pluginShortName }
     }
 
-    NodeChild requestExistingItemXml(Item item) {
+    String requestExistingItemXml(Item item) {
         HttpResponseDecorator response = restClient.get(
                 path: getItemConfigPath(item),
-                contentType: ContentType.XML,
+                contentType: ContentType.TEXT,
                 headers: [Accept: 'application/xml']
         )
 
         if (response?.data) {
             println "${item.name} (${getItemType(item)}): EXISTS"
-            return response?.data
+            return "${response.data}".toString()
         } else {
             println "${item.name} (${getItemType(item)}): NEW"
             return null
         }
     }
 
-    NodeChild requestExistingViewXml(String viewName) {
+    String requestExistingViewXml(String viewName) {
         HttpResponseDecorator response = restClient.get(
                 path: "view/${viewName}/config.xml",
-                contentType: ContentType.XML,
+                contentType: ContentType.TEXT,
                 headers: [Accept: 'application/xml']
         )
 
         if (response?.data) {
             println "${viewName} (View): EXISTS"
-            return response?.data
+            return "${response.data}".toString()
         } else {
             println "${viewName} (View): NEW"
             return null
@@ -350,6 +358,12 @@ class RestJobManagement extends AbstractJobManagement {
 
     String getItemType(Item item) {
         return item.getClass().simpleName
+    }
+
+    private boolean isXmlDifferent(String control, String test) {
+        XMLUnit.setIgnoreComments(true)
+        XMLUnit.setIgnoreWhitespace(true)
+        return !XMLUnit.compareXML(control, test).similar()
     }
 
 }
