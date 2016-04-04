@@ -12,10 +12,11 @@ class UpdateJenkinsRunner extends AbstractTaskRunner {
 
     @Override
     JobManagement createJobManagement(ItemFilter filter) {
+        boolean dryRun = runProperties['dryRun'].toBoolean()
         String jenkinsUrl = runProperties['jenkinsUrl']
         String jenkinsUser = runProperties['jenkinsUser']
         String jenkinsApiToken = runProperties['jenkinsApiToken']
 
-        new RestJobManagement(filter, jenkinsUrl, jenkinsUser, jenkinsApiToken)
+        new RestJobManagement(filter, dryRun, jenkinsUrl, jenkinsUser, jenkinsApiToken)
     }
 }

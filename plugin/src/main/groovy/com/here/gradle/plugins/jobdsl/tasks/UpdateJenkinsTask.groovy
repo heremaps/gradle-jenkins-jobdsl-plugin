@@ -4,6 +4,7 @@ import org.gradle.api.internal.tasks.options.Option
 
 class UpdateJenkinsTask extends AbstractDslTask {
 
+    boolean dryRun
     String jenkinsUrl
     String jenkinsUser
     String jenkinsApiToken
@@ -11,6 +12,7 @@ class UpdateJenkinsTask extends AbstractDslTask {
     UpdateJenkinsTask() {
         super()
         description = 'Update jobs on Jenkins.'
+        dryRun = false
     }
 
     @Override
@@ -35,10 +37,16 @@ class UpdateJenkinsTask extends AbstractDslTask {
         }
 
         return [
+                dryRun         : dryRun,
                 jenkinsUrl     : jenkinsUrl,
                 jenkinsUser    : jenkinsUser,
                 jenkinsApiToken: jenkinsApiToken
         ]
+    }
+
+    @Option(option = 'dryRun', description = 'Do not upload jobs to Jenkins.')
+    void setDryRun(boolean dryRun) {
+        this.dryRun = dryRun
     }
 
     @Option(option = 'jenkinsUrl', description = 'URL of the Jenkins server to update.')

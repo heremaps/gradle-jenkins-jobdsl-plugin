@@ -22,14 +22,16 @@ import org.custommonkey.xmlunit.XMLUnit
 
 class RestJobManagement extends AbstractJobManagement {
 
+    boolean dryRun
     ItemFilter filter
     String jenkinsUrl
     RESTClient restClient
     List<Map> plugins
 
-    RestJobManagement(ItemFilter filter, String jenkinsUrl, String jenkinsUser, String jenkinsPassword) {
+    RestJobManagement(ItemFilter filter, boolean dryRun, String jenkinsUrl, String jenkinsUser, String jenkinsPassword) {
         super(System.out)
 
+        this.dryRun = dryRun
         this.filter = filter
         this.jenkinsUrl = jenkinsUrl
 
@@ -274,6 +276,11 @@ class RestJobManagement extends AbstractJobManagement {
     }
 
     boolean createItem(Item item) {
+        if (dryRun) {
+            logItemStatus(item, 'WOULD BE CREATED')
+            return true
+        }
+
         HttpResponseDecorator response = restClient.post(
                 path: getItemCreatePath(item),
                 query: [name: getItemNameWithoutFolders(item)],
@@ -294,6 +301,11 @@ class RestJobManagement extends AbstractJobManagement {
     }
 
     boolean createView(String viewName, String config) {
+        if (dryRun) {
+            logViewStatus(viewName, 'WOULD BE CREATED')
+            return true
+        }
+
         HttpResponseDecorator response = restClient.post(
                 path: "createView",
                 query: [name: viewName],
@@ -311,6 +323,11 @@ class RestJobManagement extends AbstractJobManagement {
     }
 
     boolean updateItem(Item item) {
+        if (dryRun) {
+            logItemStatus(item, 'WOULD BE UPDATED')
+            return true
+        }
+
         HttpResponseDecorator response = restClient.post(
                 path: getItemConfigPath(item),
                 body: item.xml,
@@ -327,6 +344,11 @@ class RestJobManagement extends AbstractJobManagement {
     }
 
     boolean updateView(String viewName, String config) {
+        if (dryRun) {
+            logViewStatus(viewName, 'WOULD BE UPDATED')
+            return true
+        }
+
         HttpResponseDecorator response = restClient.post(
                 path: "view/${viewName}/config.xml",
                 body: config,
