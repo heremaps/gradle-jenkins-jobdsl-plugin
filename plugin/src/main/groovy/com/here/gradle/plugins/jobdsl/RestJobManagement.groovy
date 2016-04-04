@@ -251,10 +251,8 @@ class RestJobManagement extends AbstractJobManagement {
         )
 
         if (response?.data) {
-            logItemStatus(item, 'EXISTS')
             return "${response.data}".toString()
         } else {
-            logItemStatus(item, 'NEW')
             return null
         }
     }
@@ -267,10 +265,8 @@ class RestJobManagement extends AbstractJobManagement {
         )
 
         if (response?.data) {
-            logViewStatus(viewName, 'EXISTS')
             return "${response.data}".toString()
         } else {
-            logViewStatus(viewName, 'NEW')
             return null
         }
     }
