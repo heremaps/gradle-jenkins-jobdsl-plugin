@@ -187,7 +187,7 @@ class RestJobManagement extends AbstractJobManagement {
     @Override
     VersionNumber getPluginVersion(String pluginShortName) {
         def plugin = findPlugin(pluginShortName)
-        return plugin == null ?: new VersionNumber(plugin.version)
+        return plugin == null ? null : new VersionNumber(plugin.version)
     }
 
     @Override
