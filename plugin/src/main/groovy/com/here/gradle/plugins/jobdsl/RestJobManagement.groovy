@@ -22,11 +22,24 @@ import org.custommonkey.xmlunit.XMLUnit
 
 class RestJobManagement extends AbstractJobManagement {
 
+    public static final String STATUS_COULD_NOT_CREATE = 'COULD NOT CREATE'
+    public static final String STATUS_COULD_NOT_UPDATE = 'COULD NOT UPDATE'
+    public static final String STATUS_CREATED = 'CREATED'
+    public static final String STATUS_IGNORE = 'IGNORE'
+    public static final String STATUS_UP_TO_DATE = 'UP-TO-DATE'
+    public static final String STATUS_UPDATED = 'UPDATED'
+    public static final String STATUS_WOULD_BE_CREATED = 'WOULD BE CREATED'
+    public static final String STATUS_WOULD_BE_UPDATED = 'WOULD BE UPDATED'
+
     boolean dryRun
     ItemFilter filter
     String jenkinsUrl
     RESTClient restClient
     List<Map> plugins
+    Set<String> deprecatedPlugins
+    Set<String> missingPlugins
+    Set<String> outdatedPlugins
+    Map<String, Integer> statusCounter
 
     RestJobManagement(ItemFilter filter, boolean dryRun, String jenkinsUrl, String jenkinsUser, String jenkinsPassword) {
         super(System.out)
@@ -34,6 +47,11 @@ class RestJobManagement extends AbstractJobManagement {
         this.dryRun = dryRun
         this.filter = filter
         this.jenkinsUrl = jenkinsUrl
+
+        deprecatedPlugins = new TreeSet<>()
+        missingPlugins = new TreeSet<>()
+        outdatedPlugins = new TreeSet<>()
+        statusCounter = [:]
 
         restClient = new RESTClient(jenkinsUrl)
         restClient.handler.failure = { it }
@@ -74,11 +92,11 @@ class RestJobManagement extends AbstractJobManagement {
                 if (isXmlDifferent(existingXml, item.xml)) {
                     return updateItem(item)
                 } else {
-                    logItemStatus(item, 'UP-TO-DATE')
+                    logItemStatus(item, STATUS_UP_TO_DATE)
                 }
             }
         } else {
-            logItemStatus(item, 'IGNORE (name does not match filter expression)')
+            logItemStatus(item, STATUS_IGNORE)
             return true
         }
     }
@@ -93,11 +111,11 @@ class RestJobManagement extends AbstractJobManagement {
                 if (isXmlDifferent(existingXml, config)) {
                     updateView(viewName, config)
                 } else {
-                    logViewStatus(viewName, 'UP-TO-DATE')
+                    logViewStatus(viewName, STATUS_UP_TO_DATE)
                 }
             }
         } else {
-            logViewStatus(viewName, 'IGNORE (name does not match filter expression)')
+            logViewStatus(viewName, STATUS_IGNORE)
         }
     }
 
@@ -145,6 +163,7 @@ class RestJobManagement extends AbstractJobManagement {
     void logPluginDeprecationWarning(String pluginShortName, String minimumVersion) {
         if (!isMinimumPluginVersionInstalled(pluginShortName, minimumVersion)) {
             logDeprecationWarning("Support for ${pluginShortName} versions older than ${minimumVersion}");
+            deprecatedPlugins.add(pluginShortName)
         }
     }
 
@@ -154,6 +173,7 @@ class RestJobManagement extends AbstractJobManagement {
         if (plugin == null) {
             def message = "Required plugin ${pluginShortName} not installed."
             println message
+            missingPlugins.add(pluginShortName)
             if (failIfMissing) {
                 throw new DslScriptException(message)
             }
@@ -168,8 +188,10 @@ class RestJobManagement extends AbstractJobManagement {
 
             if (plugin == null) {
                 message = "Version ${version} or later of plugin ${pluginShortName} needs to be installed."
+                missingPlugins.add(pluginShortName)
             } else {
                 message = "Plugin ${pluginShortName} needs to be updated to version ${version} or later."
+                outdatedPlugins.add(pluginShortName)
             }
             println message
 
@@ -273,7 +295,7 @@ class RestJobManagement extends AbstractJobManagement {
 
     boolean createItem(Item item) {
         if (dryRun) {
-            logItemStatus(item, 'WOULD BE CREATED')
+            logItemStatus(item, STATUS_WOULD_BE_CREATED)
             return true
         }
 
@@ -285,10 +307,10 @@ class RestJobManagement extends AbstractJobManagement {
         )
 
         if (response.status == 200) {
-            logItemStatus(item, 'CREATED')
+            logItemStatus(item, STATUS_CREATED)
             return true
         } else {
-            logItemStatus(item, "COULD NOT CREATE - ${response.dump()}")
+            logItemStatus(item, STATUS_COULD_NOT_CREATE, response.dump())
             if (response.status == 404) {
                 println "If the item is contained in a folder probably the folder does not exist"
             }
@@ -298,7 +320,7 @@ class RestJobManagement extends AbstractJobManagement {
 
     boolean createView(String viewName, String config) {
         if (dryRun) {
-            logViewStatus(viewName, 'WOULD BE CREATED')
+            logViewStatus(viewName, STATUS_WOULD_BE_CREATED)
             return true
         }
 
@@ -310,17 +332,17 @@ class RestJobManagement extends AbstractJobManagement {
         )
 
         if (response.status == 200) {
-            logViewStatus(viewName, 'CREATED')
+            logViewStatus(viewName, STATUS_CREATED)
             return true
         } else {
-            logViewStatus(viewName, "COULD NOT CREATE - ${response.dump()}")
+            logViewStatus(viewName, STATUS_COULD_NOT_CREATE, response.dump())
             return false
         }
     }
 
     boolean updateItem(Item item) {
         if (dryRun) {
-            logItemStatus(item, 'WOULD BE UPDATED')
+            logItemStatus(item, STATUS_WOULD_BE_UPDATED)
             return true
         }
 
@@ -331,17 +353,17 @@ class RestJobManagement extends AbstractJobManagement {
         )
 
         if (response.status == 200) {
-            logItemStatus(item, 'UPDATED')
+            logItemStatus(item, STATUS_UPDATED)
             return true
         } else {
-            logItemStatus(item, "COULD NOT UPDATE - ${response.dump()}")
+            logItemStatus(item, STATUS_COULD_NOT_UPDATE, response.dump())
             return false
         }
     }
 
     boolean updateView(String viewName, String config) {
         if (dryRun) {
-            logViewStatus(viewName, 'WOULD BE UPDATED')
+            logViewStatus(viewName, STATUS_WOULD_BE_UPDATED)
             return true
         }
 
@@ -352,10 +374,10 @@ class RestJobManagement extends AbstractJobManagement {
         )
 
         if (response.status == 200) {
-            logViewStatus(viewName, 'UPDATED')
+            logViewStatus(viewName, STATUS_UPDATED)
             return true
         } else {
-            logViewStatus(viewName, "COULD NOT UPDATE - ${response.dump()}")
+            logViewStatus(viewName, STATUS_COULD_NOT_UPDATE, response.dump())
             return false
         }
     }
@@ -384,12 +406,21 @@ class RestJobManagement extends AbstractJobManagement {
         return !XMLUnit.compareXML(control, test).similar()
     }
 
-    private void logItemStatus(Item item, String status) {
-        println "${item.name} (${getItemType(item)}): ${status}"
+    private void logItemStatus(Item item, String status, String message = null) {
+        countStatus(status)
+        println "${item.name} (${getItemType(item)}): ${status}${message != null ? " - ${message}" : ''}"
     }
 
-    private void logViewStatus(String viewName, String status) {
-        println "${viewName} (View): ${status}"
+    private void logViewStatus(String viewName, String status, String message = null) {
+        countStatus(status)
+        println "${viewName} (View): ${status}${message != null ? " - ${message}" : ''}"
+    }
+
+    private void countStatus(String status) {
+        if (!statusCounter[status]) {
+            statusCounter[status] = 0
+        }
+        statusCounter[status] = statusCounter[status] + 1
     }
 
 }
