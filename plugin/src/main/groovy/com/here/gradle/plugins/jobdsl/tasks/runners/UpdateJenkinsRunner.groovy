@@ -1,5 +1,6 @@
 package com.here.gradle.plugins.jobdsl.tasks.runners
 
+import com.here.gradle.plugins.jobdsl.GradleJobDslPluginException
 import com.here.gradle.plugins.jobdsl.ItemFilter
 import com.here.gradle.plugins.jobdsl.RestJobManagement
 import javaposse.jobdsl.dsl.JobManagement
@@ -36,6 +37,11 @@ class UpdateJenkinsRunner extends AbstractTaskRunner {
         printPluginList(restJobManagement.deprecatedPlugins, 'Deprecated')
         printPluginList(restJobManagement.missingPlugins, 'Missing')
         printPluginList(restJobManagement.outdatedPlugins, 'Outdated')
+
+        if (restJobManagement.statusCounter[RestJobManagement.STATUS_COULD_NOT_CREATE] > 0
+                || restJobManagement.statusCounter[RestJobManagement.STATUS_COULD_NOT_UPDATE] > 0) {
+            throw new GradleJobDslPluginException('Some items or view could not be updated. Check the log for details.')
+        }
     }
 
     private void printPluginList(Set<String> plugins, String name) {
