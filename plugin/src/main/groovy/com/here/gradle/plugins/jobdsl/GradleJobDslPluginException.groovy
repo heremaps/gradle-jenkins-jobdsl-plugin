@@ -1,8 +1,6 @@
 package com.here.gradle.plugins.jobdsl
 
-import org.gradle.api.GradleException
-
-class GradleJobDslPluginException extends GradleException {
+class GradleJobDslPluginException extends RuntimeException {
     public GradleJobDslPluginException() {
         super();
     }
