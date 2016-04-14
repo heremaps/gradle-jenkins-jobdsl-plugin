@@ -5,6 +5,7 @@ import com.here.gradle.plugins.jobdsl.util.DslConfig
 import groovy.json.JsonSlurper
 import javaposse.jobdsl.dsl.DslScriptLoader
 import javaposse.jobdsl.dsl.JobManagement
+import javaposse.jobdsl.dsl.ScriptRequest
 
 abstract class AbstractTaskRunner {
 
@@ -25,10 +26,12 @@ abstract class AbstractTaskRunner {
 
         def filter = new ItemFilter(decodeBase64(runProperties['filter']))
         jobManagement = createJobManagement(filter)
+        DslScriptLoader loader = new DslScriptLoader(jobManagement)
 
         runProperties['inputFiles'].split(File.pathSeparator).each { String filename ->
             println "Loading ${filename}"
-            DslScriptLoader.runDslEngine(new File(filename).text, jobManagement)
+            ScriptRequest sriptRequest = new ScriptRequest(new File(filename).text)
+            loader.runScripts([scriptRequest])
         }
 
         postProcess()

@@ -9,11 +9,11 @@ import javaposse.jobdsl.dsl.ConfigFile
 import javaposse.jobdsl.dsl.ConfigFileType
 import javaposse.jobdsl.dsl.ConfigurationMissingException
 import javaposse.jobdsl.dsl.DslScriptException
+import javaposse.jobdsl.dsl.ExtensibleContext
 import javaposse.jobdsl.dsl.Item
 import javaposse.jobdsl.dsl.JobConfigurationNotFoundException
 import javaposse.jobdsl.dsl.NameNotProvidedException
 import javaposse.jobdsl.dsl.UserContent
-import javaposse.jobdsl.dsl.helpers.ExtensibleContext
 import org.apache.http.HttpException
 import org.apache.http.HttpRequest
 import org.apache.http.HttpRequestInterceptor
