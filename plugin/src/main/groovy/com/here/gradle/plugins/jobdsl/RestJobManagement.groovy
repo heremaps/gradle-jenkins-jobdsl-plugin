@@ -48,6 +48,10 @@ class RestJobManagement extends AbstractJobManagement {
         this.filter = filter
         this.jenkinsUrl = jenkinsUrl
 
+        if (!this.jenkinsUrl.endsWith('/')) {
+            this.jenkinsUrl += '/'
+        }
+
         deprecatedPlugins = new TreeSet<>()
         missingPlugins = new TreeSet<>()
         outdatedPlugins = new TreeSet<>()
