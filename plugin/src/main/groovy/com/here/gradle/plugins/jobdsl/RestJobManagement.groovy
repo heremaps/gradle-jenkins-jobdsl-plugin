@@ -301,7 +301,7 @@ class RestJobManagement extends AbstractJobManagement {
 
         HttpResponseDecorator response = restClient.post(
                 path: getItemCreatePath(item),
-                query: [name: getItemNameWithoutFolders(item)],
+                query: [name: getNameWithoutFolders(item.name)],
                 body: item.xml,
                 requestContentType: 'application/xml'
         )
@@ -325,8 +325,8 @@ class RestJobManagement extends AbstractJobManagement {
         }
 
         HttpResponseDecorator response = restClient.post(
-                path: "createView",
-                query: [name: viewName],
+                path: getViewCreatePath(viewName),
+                query: [name: getNameWithoutFolders(viewName)],
                 body: config,
                 requestContentType: 'application/xml'
         )
@@ -368,7 +368,7 @@ class RestJobManagement extends AbstractJobManagement {
         }
 
         HttpResponseDecorator response = restClient.post(
-                path: "view/${viewName}/config.xml",
+                path: getViewConfigPath(viewName),
                 body: config,
                 requestContentType: 'application/xml'
         )
@@ -382,22 +382,36 @@ class RestJobManagement extends AbstractJobManagement {
         }
     }
 
+    String getItemType(Item item) {
+        return item.getClass().simpleName
+    }
+
     String getItemConfigPath(Item item) {
         return "job/${item.name.replaceAll('/', '/job/')}/config.xml"
     }
 
+    String getViewConfigPath(String viewName) {
+        return viewName.split('/').reverse().inject('view') { acc, value ->
+            return acc.contains('/') ? "job/${value}/${acc}" : "${acc}/${value}"
+        } + '/config.xml'
+    }
+
     String getItemCreatePath(Item item) {
-        def names = item.name.split('/')
-        return (names.length > 1 ? "job/${names[0..-2].join('/job/')}/" : '') + 'createItem'
+        return getCreatePath(item.name, 'createItem')
     }
 
-    String getItemNameWithoutFolders(Item item) {
-        int lastIndex = item.name.lastIndexOf('/')
-        return item.name.substring(lastIndex + 1)
+    String getViewCreatePath(String viewName) {
+        return  getCreatePath(viewName, 'createView')
     }
 
-    String getItemType(Item item) {
-        return item.getClass().simpleName
+    String getCreatePath(String name, String createMethod) {
+        def names = name.split('/')
+        return (names.length > 1 ? "job/${names[0..-2].join('/job/')}/" : '') + createMethod
+    }
+
+    String getNameWithoutFolders(String name) {
+        int lastIndex = name.lastIndexOf('/')
+        return name.substring(lastIndex + 1)
     }
 
     private boolean isXmlDifferent(String control, String test) {
