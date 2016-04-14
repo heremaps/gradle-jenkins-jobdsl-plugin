@@ -24,12 +24,16 @@ repositories {
 
 dependencies {
     compile gradleApi()
-    compile localGroovy()
+    compile 'org.codehaus.groovy:groovy-all:2.4.4'
     compile 'org.jenkins-ci.plugins:job-dsl-core:1.45'
     compile 'org.jenkins-ci:version-number:1.1'
     compile('org.codehaus.groovy.modules.http-builder:http-builder:0.7.2') {
         exclude(module: 'groovy')
         exclude(module: 'xercesImpl')
+    }
+
+    testCompile('org.spockframework:spock-core:1.0-groovy-2.4') {
+        exclude(module: 'groovy-all')
     }
 }
 
