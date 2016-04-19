@@ -14,7 +14,6 @@ import javaposse.jobdsl.dsl.Item
 import javaposse.jobdsl.dsl.JobConfigurationNotFoundException
 import javaposse.jobdsl.dsl.NameNotProvidedException
 import javaposse.jobdsl.dsl.UserContent
-import org.apache.http.HttpException
 import org.apache.http.HttpRequest
 import org.apache.http.HttpRequestInterceptor
 import org.apache.http.protocol.HttpContext
@@ -72,14 +71,6 @@ class RestJobManagement extends AbstractJobManagement {
 
         requestPlugins()
     }
-
-    void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
-        request.addHeader(
-                'Authorization',
-                'Basic ' + "${jenkinsUser}:${jenkinsPassword}".toString().bytes.encodeBase64().toString()
-        )
-    }
-
 
     @Override
     String getConfig(String jobName) throws JobConfigurationNotFoundException {
