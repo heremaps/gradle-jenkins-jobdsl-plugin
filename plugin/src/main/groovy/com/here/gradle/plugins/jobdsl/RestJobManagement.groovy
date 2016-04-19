@@ -257,7 +257,7 @@ class RestJobManagement extends AbstractJobManagement {
                 path: '/pluginManager/api/json',
                 query: [depth: 2],
                 contentType: ContentType.JSON
-        )
+        ) as HttpResponseDecorator
 
         if (response.status != 200) {
             throw new DslScriptException("Could not load list of plugins from Jenkins server '${jenkinsUrl}': ${response.statusLine}")
@@ -275,7 +275,7 @@ class RestJobManagement extends AbstractJobManagement {
                 path: FolderPathHelper.itemConfigPath(item.name),
                 contentType: ContentType.TEXT,
                 headers: [Accept: 'application/xml']
-        )
+        ) as HttpResponseDecorator
 
         if (response?.data) {
             return "${response.data}".toString()
@@ -289,7 +289,7 @@ class RestJobManagement extends AbstractJobManagement {
                 path: FolderPathHelper.viewConfigPath(viewName),
                 contentType: ContentType.TEXT,
                 headers: [Accept: 'application/xml']
-        )
+        ) as HttpResponseDecorator
 
         if (response?.data) {
             return "${response.data}".toString()
@@ -309,7 +309,7 @@ class RestJobManagement extends AbstractJobManagement {
                 query: [name: FolderPathHelper.removeFoldersFromName(item.name)],
                 body: item.xml,
                 requestContentType: 'application/xml'
-        )
+        ) as HttpResponseDecorator
 
         if (response.status == 200) {
             logItemStatus(item, STATUS_CREATED)
@@ -334,7 +334,7 @@ class RestJobManagement extends AbstractJobManagement {
                 query: [name: FolderPathHelper.removeFoldersFromName(viewName)],
                 body: config,
                 requestContentType: 'application/xml'
-        )
+        ) as HttpResponseDecorator
 
         if (response.status == 200) {
             logViewStatus(viewName, STATUS_CREATED)
@@ -355,7 +355,7 @@ class RestJobManagement extends AbstractJobManagement {
                 path: FolderPathHelper.itemConfigPath(item.name),
                 body: item.xml,
                 requestContentType: 'application/xml'
-        )
+        ) as HttpResponseDecorator
 
         if (response.status == 200) {
             logItemStatus(item, STATUS_UPDATED)
@@ -376,7 +376,7 @@ class RestJobManagement extends AbstractJobManagement {
                 path: FolderPathHelper.viewConfigPath(viewName),
                 body: config,
                 requestContentType: 'application/xml'
-        )
+        ) as HttpResponseDecorator
 
         if (response.status == 200) {
             logViewStatus(viewName, STATUS_UPDATED)
