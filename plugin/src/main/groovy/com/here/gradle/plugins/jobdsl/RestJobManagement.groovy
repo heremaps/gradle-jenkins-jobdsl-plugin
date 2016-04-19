@@ -92,8 +92,8 @@ class RestJobManagement extends AbstractJobManagement {
             }
         } else {
             logItemStatus(item, STATUS_IGNORE)
-            return true
         }
+        return true
     }
 
     @Override
