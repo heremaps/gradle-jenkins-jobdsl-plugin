@@ -271,7 +271,7 @@ class RestJobManagement extends AbstractJobManagement {
 
     String requestExistingItemXml(Item item) {
         HttpResponseDecorator response = restClient.get(
-                path: getItemConfigPath(item),
+                path: FolderPathHelper.itemConfigPath(item.name),
                 contentType: ContentType.TEXT,
                 headers: [Accept: 'application/xml']
         )
@@ -285,7 +285,7 @@ class RestJobManagement extends AbstractJobManagement {
 
     String requestExistingViewXml(String viewName) {
         HttpResponseDecorator response = restClient.get(
-                path: "view/${viewName}/config.xml",
+                path: FolderPathHelper.viewConfigPath(viewName),
                 contentType: ContentType.TEXT,
                 headers: [Accept: 'application/xml']
         )
@@ -304,8 +304,8 @@ class RestJobManagement extends AbstractJobManagement {
         }
 
         HttpResponseDecorator response = restClient.post(
-                path: getItemCreatePath(item),
-                query: [name: getNameWithoutFolders(item.name)],
+                path: FolderPathHelper.createItemPath(item.name),
+                query: [name: FolderPathHelper.removeFoldersFromName(item.name)],
                 body: item.xml,
                 requestContentType: 'application/xml'
         )
@@ -329,8 +329,8 @@ class RestJobManagement extends AbstractJobManagement {
         }
 
         HttpResponseDecorator response = restClient.post(
-                path: getViewCreatePath(viewName),
-                query: [name: getNameWithoutFolders(viewName)],
+                path: FolderPathHelper.createViewPath(viewName),
+                query: [name: FolderPathHelper.removeFoldersFromName(viewName)],
                 body: config,
                 requestContentType: 'application/xml'
         )
@@ -351,7 +351,7 @@ class RestJobManagement extends AbstractJobManagement {
         }
 
         HttpResponseDecorator response = restClient.post(
-                path: getItemConfigPath(item),
+                path: FolderPathHelper.itemConfigPath(item.name),
                 body: item.xml,
                 requestContentType: 'application/xml'
         )
@@ -372,7 +372,7 @@ class RestJobManagement extends AbstractJobManagement {
         }
 
         HttpResponseDecorator response = restClient.post(
-                path: getViewConfigPath(viewName),
+                path: FolderPathHelper.viewConfigPath(viewName),
                 body: config,
                 requestContentType: 'application/xml'
         )
@@ -388,34 +388,6 @@ class RestJobManagement extends AbstractJobManagement {
 
     String getItemType(Item item) {
         return item.getClass().simpleName
-    }
-
-    String getItemConfigPath(Item item) {
-        return "job/${item.name.replaceAll('/', '/job/')}/config.xml"
-    }
-
-    String getViewConfigPath(String viewName) {
-        return viewName.split('/').reverse().inject('view') { acc, value ->
-            return acc.contains('/') ? "job/${value}/${acc}" : "${acc}/${value}"
-        } + '/config.xml'
-    }
-
-    String getItemCreatePath(Item item) {
-        return getCreatePath(item.name, 'createItem')
-    }
-
-    String getViewCreatePath(String viewName) {
-        return  getCreatePath(viewName, 'createView')
-    }
-
-    String getCreatePath(String name, String createMethod) {
-        def names = name.split('/')
-        return (names.length > 1 ? "job/${names[0..-2].join('/job/')}/" : '') + createMethod
-    }
-
-    String getNameWithoutFolders(String name) {
-        int lastIndex = name.lastIndexOf('/')
-        return name.substring(lastIndex + 1)
     }
 
     private boolean isXmlDifferent(String control, String test) {
