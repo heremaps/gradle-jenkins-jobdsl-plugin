@@ -30,6 +30,16 @@ class RestJobManagement extends AbstractJobManagement {
     public static final String STATUS_WOULD_BE_CREATED = 'WOULD BE CREATED'
     public static final String STATUS_WOULD_BE_UPDATED = 'WOULD BE UPDATED'
 
+    static String getItemType(Item item) {
+        return item.getClass().simpleName
+    }
+
+    private static boolean isXmlDifferent(String control, String test) {
+        XMLUnit.setIgnoreComments(true)
+        XMLUnit.setIgnoreWhitespace(true)
+        return !XMLUnit.compareXML(control, test).similar()
+    }
+
     boolean dryRun
     ItemFilter filter
     String jenkinsUrl
@@ -375,16 +385,6 @@ class RestJobManagement extends AbstractJobManagement {
             logViewStatus(viewName, STATUS_COULD_NOT_UPDATE, response.dump())
             return false
         }
-    }
-
-    String getItemType(Item item) {
-        return item.getClass().simpleName
-    }
-
-    private boolean isXmlDifferent(String control, String test) {
-        XMLUnit.setIgnoreComments(true)
-        XMLUnit.setIgnoreWhitespace(true)
-        return !XMLUnit.compareXML(control, test).similar()
     }
 
     private void logItemStatus(Item item, String status, String message = null) {
