@@ -10,6 +10,7 @@ import javaposse.jobdsl.dsl.ConfigFileType
 import javaposse.jobdsl.dsl.ConfigurationMissingException
 import javaposse.jobdsl.dsl.DslScriptException
 import javaposse.jobdsl.dsl.ExtensibleContext
+import javaposse.jobdsl.dsl.Folder
 import javaposse.jobdsl.dsl.Item
 import javaposse.jobdsl.dsl.JobConfigurationNotFoundException
 import javaposse.jobdsl.dsl.NameNotProvidedException
@@ -19,7 +20,7 @@ import org.apache.http.HttpRequestInterceptor
 import org.apache.http.protocol.HttpContext
 import org.custommonkey.xmlunit.XMLUnit
 
-class RestJobManagement extends AbstractJobManagement {
+class RestJobManagement extends AbstractJobManagement implements DeferredJobManagement {
 
     public static final String STATUS_COULD_NOT_CREATE = 'COULD NOT CREATE'
     public static final String STATUS_COULD_NOT_UPDATE = 'COULD NOT UPDATE'
@@ -29,6 +30,17 @@ class RestJobManagement extends AbstractJobManagement {
     public static final String STATUS_UPDATED = 'UPDATED'
     public static final String STATUS_WOULD_BE_CREATED = 'WOULD BE CREATED'
     public static final String STATUS_WOULD_BE_UPDATED = 'WOULD BE UPDATED'
+
+    static class ItemRequest {
+        Item item
+        boolean ignoreExisting
+    }
+
+    static class ViewRequest {
+        String viewName
+        String config
+        boolean ignoreExisting
+    }
 
     static String getItemType(Item item) {
         return item.getClass().simpleName
@@ -49,6 +61,8 @@ class RestJobManagement extends AbstractJobManagement {
     Set<String> missingPlugins
     Set<String> outdatedPlugins
     Map<String, Integer> statusCounter
+    List<ItemRequest> itemRequests
+    List<ViewRequest> viewRequests
 
     RestJobManagement(ItemFilter filter, boolean dryRun, String jenkinsUrl, String jenkinsUser, String jenkinsPassword) {
         super(System.out)
@@ -65,6 +79,9 @@ class RestJobManagement extends AbstractJobManagement {
         missingPlugins = new TreeSet<>()
         outdatedPlugins = new TreeSet<>()
         statusCounter = [:]
+
+        itemRequests = []
+        viewRequests = []
 
         restClient = new RESTClient(jenkinsUrl)
         restClient.handler.failure = { it }
@@ -89,39 +106,13 @@ class RestJobManagement extends AbstractJobManagement {
 
     @Override
     boolean createOrUpdateConfig(Item item, boolean ignoreExisting) throws NameNotProvidedException {
-        if (filter.matches(item.name)) {
-            String existingXml = requestExistingItemXml(item)
-            if (!existingXml) {
-                return createItem(item)
-            } else if (!ignoreExisting) {
-                if (isXmlDifferent(existingXml, item.xml)) {
-                    return updateItem(item)
-                } else {
-                    logItemStatus(item, STATUS_UP_TO_DATE)
-                }
-            }
-        } else {
-            logItemStatus(item, STATUS_IGNORE)
-        }
+        itemRequests += new ItemRequest(item: item, ignoreExisting: ignoreExisting)
         return true
     }
 
     @Override
     void createOrUpdateView(String viewName, String config, boolean ignoreExisting) throws NameNotProvidedException, ConfigurationMissingException {
-        if (filter.matches(viewName)) {
-            String existingXml = requestExistingViewXml(viewName)
-            if (!existingXml) {
-                createView(viewName, config)
-            } else if (!ignoreExisting) {
-                if (isXmlDifferent(existingXml, config)) {
-                    updateView(viewName, config)
-                } else {
-                    logViewStatus(viewName, STATUS_UP_TO_DATE)
-                }
-            }
-        } else {
-            logViewStatus(viewName, STATUS_IGNORE)
-        }
+        viewRequests += new ViewRequest(viewName: viewName, config: config, ignoreExisting: ignoreExisting)
     }
 
     @Override
@@ -269,6 +260,60 @@ class RestJobManagement extends AbstractJobManagement {
     Map findPlugin(String pluginShortName) {
         return plugins.find { it.shortName == pluginShortName }
     }
+
+    @Override
+    void applyChanges() {
+        // Create folders first, to make sure they exist before trying to create items in them
+        itemRequests.findAll { it.item instanceof Folder }.each { itemRequest ->
+            performCreateOrUpdateConfig(itemRequest.item, itemRequest.ignoreExisting)
+        }
+
+        // Create all non-folder items
+        itemRequests.findAll { !(it.item instanceof Folder) }.each { itemRequest ->
+            performCreateOrUpdateConfig(itemRequest.item, itemRequest.ignoreExisting)
+        }
+
+        // Create all views
+        viewRequests.each { viewRequest ->
+            performCreateOrUpdateView(viewRequest.viewName, viewRequest.config, viewRequest.ignoreExisting)
+        }
+    }
+
+    boolean performCreateOrUpdateConfig(Item item, boolean ignoreExisting) throws NameNotProvidedException {
+        if (filter.matches(item.name)) {
+            String existingXml = requestExistingItemXml(item)
+            if (!existingXml) {
+                return createItem(item)
+            } else if (!ignoreExisting) {
+                if (isXmlDifferent(existingXml, item.xml)) {
+                    return updateItem(item)
+                } else {
+                    logItemStatus(item, STATUS_UP_TO_DATE)
+                }
+            }
+        } else {
+            logItemStatus(item, STATUS_IGNORE)
+        }
+        return true
+    }
+
+    void performCreateOrUpdateView(String viewName, String config, boolean ignoreExisting) throws NameNotProvidedException, ConfigurationMissingException {
+        if (filter.matches(viewName)) {
+            String existingXml = requestExistingViewXml(viewName)
+            if (!existingXml) {
+                createView(viewName, config)
+            } else if (!ignoreExisting) {
+                if (isXmlDifferent(existingXml, config)) {
+                    updateView(viewName, config)
+                } else {
+                    logViewStatus(viewName, STATUS_UP_TO_DATE)
+                }
+            }
+        } else {
+            logViewStatus(viewName, STATUS_IGNORE)
+        }
+    }
+
 
     String requestExistingItemXml(Item item) {
         HttpResponseDecorator response = restClient.get(

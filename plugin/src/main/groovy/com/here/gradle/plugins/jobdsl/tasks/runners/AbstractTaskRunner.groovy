@@ -1,5 +1,6 @@
 package com.here.gradle.plugins.jobdsl.tasks.runners
 
+import com.here.gradle.plugins.jobdsl.DeferredJobManagement
 import com.here.gradle.plugins.jobdsl.ItemFilter
 import com.here.gradle.plugins.jobdsl.util.DslConfig
 import groovy.json.JsonSlurper
@@ -30,8 +31,12 @@ abstract class AbstractTaskRunner {
 
         runProperties['inputFiles'].split(File.pathSeparator).each { String filename ->
             println "Loading ${filename}"
-            ScriptRequest sriptRequest = new ScriptRequest(new File(filename).text)
+            ScriptRequest scriptRequest = new ScriptRequest(new File(filename).text)
             loader.runScripts([scriptRequest])
+        }
+
+        if (jobManagement instanceof DeferredJobManagement) {
+            jobManagement.applyChanges()
         }
 
         postProcess()
