@@ -9,6 +9,7 @@ import javaposse.jobdsl.dsl.jobs.MavenJob
 import javaposse.jobdsl.dsl.jobs.MultiJob
 import javaposse.jobdsl.dsl.jobs.WorkflowJob
 
+@Deprecated
 class JobBuilder {
 
     DslFactory dslFactory
