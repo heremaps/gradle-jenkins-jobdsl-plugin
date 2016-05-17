@@ -21,22 +21,26 @@ class GenerateXmlRunner extends AbstractTaskRunner {
         outputDirectory.deleteDir()
         outputDirectory.mkdirs()
         jobManagement.savedConfigs.each { String name, String xml ->
-            def jobDirectory = outputDirectory
-            def jobName = name
-            if (name.contains('/')) {
-                def lastIndex = name.lastIndexOf('/')
-                def subDirectory = name.substring(0, lastIndex)
-                jobDirectory = new File("${outputDirectory}/${subDirectory}")
-                jobDirectory.mkdirs()
-                jobName = name.substring(lastIndex + 1)
-            }
-            def xmlFile = new File("${jobDirectory}/${jobName}.xml")
-            xmlFile.write(xml)
+            writeXml(outputDirectory, name, xml)
         }
 
         jobManagement.savedViews.each { String name, String xml ->
-            def xmlFile = new File("${outputDirectory}/${name}.xml")
-            xmlFile.write(xml)
+            writeXml(outputDirectory, name, xml)
         }
     }
+
+    void writeXml(File outputDirectory, String name, String xml) {
+        def targetDirectory = outputDirectory
+        def fileName = name
+        if (name.contains('/')) {
+            def lastIndex = name.lastIndexOf('/')
+            def subDirectory = name.substring(0, lastIndex)
+            targetDirectory = new File("${outputDirectory}/${subDirectory}")
+            targetDirectory.mkdirs()
+            fileName = name.substring(lastIndex + 1)
+        }
+        def xmlFile = new File("${targetDirectory}/${fileName}.xml")
+        xmlFile.write(xml)
+    }
+
 }
