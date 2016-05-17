@@ -133,6 +133,56 @@ class JobBuilder2 {
         dslClosures.add(closure)
     }
 
+    /**
+     * Convenience method to get full IDE support when adding a DSL closure for a @{link FreeStyleJob}. The closure is
+     * forwarded to {@link JobBuilder2#addDsl}.
+
+     * @param closure
+     */
+    void addFreeStyleDsl(@DelegatesTo(FreeStyleJob) Closure closure) {
+        addDsl(closure)
+    }
+
+    /**
+     * Convenience method to get full IDE support when adding a DSL closure for a @{link MatrixJob}. The closure is
+     * forwarded to {@link JobBuilder2#addDsl}.
+
+     * @param closure
+     */
+    void addMatrixDsl(@DelegatesTo(MatrixJob) Closure closure) {
+        addDsl(closure)
+    }
+
+    /**
+     * Convenience method to get full IDE support when adding a DSL closure for a @{link MavenJob}. The closure is
+     * forwarded to {@link JobBuilder2#addDsl}.
+
+     * @param closure
+     */
+    void addMavenDsl(@DelegatesTo(MavenJob) Closure closure) {
+        addDsl(closure)
+    }
+
+    /**
+     * Convenience method to get full IDE support when adding a DSL closure for a @{link MultiJob}. The closure is
+     * forwarded to {@link JobBuilder2#addDsl}.
+
+     * @param closure
+     */
+    void addMultiDsl(@DelegatesTo(MultiJob) Closure closure) {
+        addDsl(closure)
+    }
+
+    /**
+     * Convenience method to get full IDE support when adding a DSL closure for a @{link WorkflowJob}. The closure is
+     * forwarded to {@link JobBuilder2#addDsl}.
+
+     * @param closure
+     */
+    void addWorkflowDsl(@DelegatesTo(WorkflowJob) Closure closure) {
+        addDsl(closure)
+    }
+
     void checkJobClassNull() {
         if (jobClass != null) {
             throw new RuntimeException('The job methods cannot be called multiple times, job class is already set to ' +
