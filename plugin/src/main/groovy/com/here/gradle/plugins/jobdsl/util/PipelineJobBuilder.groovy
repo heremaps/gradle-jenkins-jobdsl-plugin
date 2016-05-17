@@ -16,7 +16,7 @@ class PipelineJobBuilder extends JobBuilder2 {
 
     @Override
     String fullJobName() {
-        return "${allFolders().join('/')}/${name}"
+        return (allFolders() + name).join('/')
     }
 
 }

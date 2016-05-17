@@ -104,7 +104,7 @@ class JobBuilder2 {
     }
 
     String fullJobName() {
-        return "${folders.join('/')}/${name}"
+        return (folders + name).join('/')
     }
 
 }
