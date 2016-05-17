@@ -36,6 +36,7 @@ class JobBuilder2 {
      * @throws RuntimeException if job type is null or not supported.
      */
     final Job build() {
+        checkNameIsValid()
         def dslClosure = concatenateDslClosures()
         switch (jobClass) {
             case BuildFlowJob:
@@ -201,6 +202,13 @@ class JobBuilder2 {
      */
     String fullJobName() {
         return (folders + name).join('/')
+    }
+
+    void checkNameIsValid() {
+        if (name.contains('/')) {
+            throw new RuntimeException('Job name may not contain "/", if the job is inside a folder use the folders ' +
+                    'field.')
+        }
     }
 
 }
