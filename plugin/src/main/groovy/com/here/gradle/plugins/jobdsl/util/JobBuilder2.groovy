@@ -29,6 +29,12 @@ class JobBuilder2 {
         this.dslFactory = dslFactory
     }
 
+    /**
+     * Create the job object using the configured DSL closures and job class.
+     *
+     * @return The created {@link Job} object.
+     * @throws RuntimeException if job type is null or not supported.
+     */
     final Job build() {
         def dslClosure = concatenateDslClosures()
         switch (jobClass) {
@@ -49,42 +55,77 @@ class JobBuilder2 {
         }
     }
 
+    /**
+     * Set the job type to {@link BuildFlowJob} and add the provided DSL closure to the list of closures.
+     *
+     * @param closure
+     */
     void buildFlowJob(@DelegatesTo(BuildFlowJob) Closure closure) {
         checkJobClassNull()
         addDsl(closure)
         jobClass = BuildFlowJob
     }
 
+    /**
+     * Set the job type to {@link FreeStyleJob} and add the provided DSL closure to the list of closures.
+     *
+     * @param closure
+     */
     void freeStyleJob(@DelegatesTo(FreeStyleJob) Closure closure) {
         checkJobClassNull()
         addDsl(closure)
         jobClass = FreeStyleJob
     }
 
+    /**
+     * Set the job type to {@link MatrixJob} and add the provided DSL closure to the list of closures.
+     *
+     * @param closure
+     */
     void matrixJob(@DelegatesTo(MatrixJob) Closure closure) {
         checkJobClassNull()
         addDsl(closure)
         jobClass = MatrixJob
     }
 
+    /**
+     * Set the job type to {@link MavenJob} and add the provided DSL closure to the list of closures.
+     *
+     * @param closure
+     */
     void mavenJob(@DelegatesTo(MavenJob) Closure closure) {
         checkJobClassNull()
         addDsl(closure)
         jobClass = MavenJob
     }
 
+    /**
+     * Set the job type to {@link MultiJob} and add the provided DSL closure to the list of closures.
+     *
+     * @param closure
+     */
     void multiJob(@DelegatesTo(MultiJob) Closure closure) {
         checkJobClassNull()
         addDsl(closure)
         jobClass = MultiJob
     }
 
+    /**
+     * Set the job type to {@link WorkflowJob} and add the provided DSL closure to the list of closures.
+     *
+     * @param closure
+     */
     void workflowJob(@DelegatesTo(WorkflowJob) Closure closure) {
         checkJobClassNull()
         addDsl(closure)
         jobClass = WorkflowJob
     }
 
+    /**
+     * Add a DSL closure to the list of closures that will be used to create the job.
+     *
+     * @param closure
+     */
     void addDsl(@DelegatesTo(Job) Closure closure) {
         if (closure == null) {
             throw new RuntimeException('Closure must not be null.')
@@ -103,6 +144,11 @@ class JobBuilder2 {
         return dslClosures.inject({}) { acc, val -> acc << val }
     }
 
+    /**
+     * Return the full job name including folders.
+     *
+     * @return
+     */
     String fullJobName() {
         return (folders + name).join('/')
     }
