@@ -11,7 +11,7 @@ class PipelineJobBuilder extends JobBuilder2 {
     }
 
     List<String> allFolders() {
-        return [*pipelineBuilder.baseFolders, *folders]
+        return pipelineBuilder?.baseFolders ? [*pipelineBuilder.baseFolders, *folders] : [*folders]
     }
 
     @Override
