@@ -192,7 +192,7 @@ class JobBuilder2 {
     }
 
     Closure concatenateDslClosures() {
-        return dslClosures.inject({}) { acc, val -> acc << val }
+        return dslClosures.inject({}) { acc, val -> acc >> val }
     }
 
     /**
