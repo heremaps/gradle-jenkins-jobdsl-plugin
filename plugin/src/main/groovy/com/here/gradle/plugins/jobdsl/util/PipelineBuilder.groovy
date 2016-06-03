@@ -10,6 +10,7 @@ class PipelineBuilder {
     Closure commonDsl = {}
 
     void addJob(PipelineJobBuilder jobBuilder) {
+        jobBuilder.pipelineBuilder = this
         jobBuilders.add(jobBuilder)
     }
 
@@ -27,7 +28,6 @@ class PipelineBuilder {
 
     void build() {
         jobBuilders.each { jobBuilder ->
-            jobBuilder.pipelineBuilder = this
             applyDefaultConfiguration(jobBuilder)
             applyCommonDsl(jobBuilder)
             jobBuilder.build()
