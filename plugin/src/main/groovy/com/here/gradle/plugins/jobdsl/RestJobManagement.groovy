@@ -52,6 +52,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
         return !XMLUnit.compareXML(control, test).similar()
     }
 
+    boolean disablePluginChecks
     boolean dryRun
     ItemFilter filter
     String jenkinsUrl
@@ -64,9 +65,11 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
     List<ItemRequest> itemRequests
     List<ViewRequest> viewRequests
 
-    RestJobManagement(ItemFilter filter, boolean dryRun, String jenkinsUrl, String jenkinsUser, String jenkinsPassword) {
+    RestJobManagement(ItemFilter filter, boolean disablePluginChecks, boolean dryRun, String jenkinsUrl,
+                      String jenkinsUser, String jenkinsPassword) {
         super(System.out)
 
+        this.disablePluginChecks = disablePluginChecks
         this.dryRun = dryRun
         this.filter = filter
         this.jenkinsUrl = jenkinsUrl
@@ -96,7 +99,9 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
                     }] as HttpRequestInterceptor)
         }
 
-        requestPlugins()
+        if (!disablePluginChecks) {
+            requestPlugins()
+        }
     }
 
     @Override
@@ -165,6 +170,9 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
 
     @Override
     void requirePlugin(String pluginShortName, boolean failIfMissing) {
+        if (disablePluginChecks) {
+            return
+        }
         def plugin = findPlugin(pluginShortName)
         if (plugin == null) {
             def message = "Required plugin ${pluginShortName} not installed."
@@ -178,7 +186,9 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
 
     @Override
     void requireMinimumPluginVersion(String pluginShortName, String version, boolean failIfMissing) {
-        if (!isMinimumPluginVersionInstalled(pluginShortName, version)) {
+        if (disablePluginChecks) {
+            return
+        } else if (!isMinimumPluginVersionInstalled(pluginShortName, version)) {
             def plugin = findPlugin(pluginShortName)
             def message
 
@@ -210,6 +220,9 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
 
     @Override
     boolean isMinimumPluginVersionInstalled(String pluginShortName, String version) {
+        if (disablePluginChecks) {
+            return true
+        }
         def actualVersionNumber = getPluginVersion(pluginShortName)
         if (actualVersionNumber == null) {
             return false

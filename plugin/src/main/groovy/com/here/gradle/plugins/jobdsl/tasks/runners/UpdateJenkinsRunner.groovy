@@ -13,12 +13,13 @@ class UpdateJenkinsRunner extends AbstractTaskRunner {
 
     @Override
     JobManagement createJobManagement(ItemFilter filter) {
+        boolean disablePluginChecks = runProperties['disablePluginChecks'].toBoolean()
         boolean dryRun = runProperties['dryRun'].toBoolean()
         String jenkinsUrl = runProperties['jenkinsUrl']
         String jenkinsUser = runProperties['jenkinsUser']
         String jenkinsApiToken = runProperties['jenkinsApiToken']
 
-        new RestJobManagement(filter, dryRun, jenkinsUrl, jenkinsUser, jenkinsApiToken)
+        new RestJobManagement(filter, disablePluginChecks, dryRun, jenkinsUrl, jenkinsUser, jenkinsApiToken)
     }
 
     @Override
@@ -34,9 +35,13 @@ class UpdateJenkinsRunner extends AbstractTaskRunner {
             println "${key.padRight(longestKey)}: ${restJobManagement.statusCounter[key]}"
         }
 
-        printPluginList(restJobManagement.deprecatedPlugins, 'Deprecated')
-        printPluginList(restJobManagement.missingPlugins, 'Missing')
-        printPluginList(restJobManagement.outdatedPlugins, 'Outdated')
+        if (restJobManagement.disablePluginChecks) {
+            println 'Plugin compatibility checks are disabled.'
+        } else {
+            printPluginList(restJobManagement.deprecatedPlugins, 'Deprecated')
+            printPluginList(restJobManagement.missingPlugins, 'Missing')
+            printPluginList(restJobManagement.outdatedPlugins, 'Outdated')
+        }
 
         if (restJobManagement.statusCounter[RestJobManagement.STATUS_COULD_NOT_CREATE] > 0
                 || restJobManagement.statusCounter[RestJobManagement.STATUS_COULD_NOT_UPDATE] > 0) {

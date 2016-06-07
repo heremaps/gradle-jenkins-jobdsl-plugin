@@ -4,6 +4,7 @@ import org.gradle.api.internal.tasks.options.Option
 
 class UpdateJenkinsTask extends AbstractDslTask {
 
+    boolean disablePluginChecks
     boolean dryRun
     String jenkinsUrl
     String jenkinsUser
@@ -12,6 +13,7 @@ class UpdateJenkinsTask extends AbstractDslTask {
     UpdateJenkinsTask() {
         super()
         description = 'Update jobs on Jenkins.'
+        disablePluginChecks = false
         dryRun = false
     }
 
@@ -37,11 +39,17 @@ class UpdateJenkinsTask extends AbstractDslTask {
         }
 
         return [
-                dryRun         : dryRun,
-                jenkinsUrl     : jenkinsUrl,
-                jenkinsUser    : jenkinsUser,
-                jenkinsApiToken: jenkinsApiToken
+                disablePluginChecks: disablePluginChecks,
+                dryRun             : dryRun,
+                jenkinsUrl         : jenkinsUrl,
+                jenkinsUser        : jenkinsUser,
+                jenkinsApiToken    : jenkinsApiToken
         ]
+    }
+
+    @Option(option = 'disablePluginChecks', description = 'Do not check compatibility of installed Jenkins plugins.')
+    void setDisablePluginChecks(boolean disablePluginChecks) {
+        this.disablePluginChecks = disablePluginChecks
     }
 
     @Option(option = 'dryRun', description = 'Do not upload jobs to Jenkins.')
