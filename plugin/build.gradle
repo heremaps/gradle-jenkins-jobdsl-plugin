@@ -37,6 +37,15 @@ dependencies {
     }
 }
 
+def pomConfig = {
+    licenses {
+        license {
+            name 'HERE Proprietary'
+            url 'https://legal.here.com/'
+        }
+    }
+}
+
 publishing {
     publications {
         maven(MavenPublication) {
@@ -50,8 +59,16 @@ publishing {
             }
 
             from components.java
+
+            pom.withXml {
+                asNode().children().last() + {
+                    def root = asNode()
+                    root.children().last() + pomConfig
+                }
+            }
         }
     }
+
     repositories {
         maven {
             url "${buildDir}/repo"
