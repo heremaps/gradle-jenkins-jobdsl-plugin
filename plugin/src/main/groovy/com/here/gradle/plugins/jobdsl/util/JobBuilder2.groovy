@@ -61,9 +61,11 @@ class JobBuilder2 {
      *
      * @param closure
      */
-    void buildFlowJob(@DelegatesTo(BuildFlowJob) Closure closure) {
+    void buildFlowJob(@DelegatesTo(BuildFlowJob) Closure closure = null) {
         checkJobClassNull()
-        addDsl(closure)
+        if (closure != null) {
+            addDsl(closure)
+        }
         jobClass = BuildFlowJob
     }
 
@@ -72,9 +74,11 @@ class JobBuilder2 {
      *
      * @param closure
      */
-    void freeStyleJob(@DelegatesTo(FreeStyleJob) Closure closure) {
+    void freeStyleJob(@DelegatesTo(FreeStyleJob) Closure closure = null) {
         checkJobClassNull()
-        addDsl(closure)
+        if (closure != null) {
+            addDsl(closure)
+        }
         jobClass = FreeStyleJob
     }
 
@@ -83,9 +87,11 @@ class JobBuilder2 {
      *
      * @param closure
      */
-    void matrixJob(@DelegatesTo(MatrixJob) Closure closure) {
+    void matrixJob(@DelegatesTo(MatrixJob) Closure closure = null) {
         checkJobClassNull()
-        addDsl(closure)
+        if (closure != null) {
+            addDsl(closure)
+        }
         jobClass = MatrixJob
     }
 
@@ -94,9 +100,11 @@ class JobBuilder2 {
      *
      * @param closure
      */
-    void mavenJob(@DelegatesTo(MavenJob) Closure closure) {
+    void mavenJob(@DelegatesTo(MavenJob) Closure closure = null) {
         checkJobClassNull()
-        addDsl(closure)
+        if (closure != null) {
+            addDsl(closure)
+        }
         jobClass = MavenJob
     }
 
@@ -105,9 +113,11 @@ class JobBuilder2 {
      *
      * @param closure
      */
-    void multiJob(@DelegatesTo(MultiJob) Closure closure) {
+    void multiJob(@DelegatesTo(MultiJob) Closure closure = null) {
         checkJobClassNull()
-        addDsl(closure)
+        if (closure != null) {
+            addDsl(closure)
+        }
         jobClass = MultiJob
     }
 
@@ -116,9 +126,11 @@ class JobBuilder2 {
      *
      * @param closure
      */
-    void workflowJob(@DelegatesTo(WorkflowJob) Closure closure) {
+    void workflowJob(@DelegatesTo(WorkflowJob) Closure closure = null) {
         checkJobClassNull()
-        addDsl(closure)
+        if (closure != null) {
+            addDsl(closure)
+        }
         jobClass = WorkflowJob
     }
 
