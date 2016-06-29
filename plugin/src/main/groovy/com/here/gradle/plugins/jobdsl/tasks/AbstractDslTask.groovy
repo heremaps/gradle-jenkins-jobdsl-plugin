@@ -42,7 +42,7 @@ abstract class AbstractDslTask extends JavaExec {
         setSystemProperties(properties)
 
         setMain(getMainClass())
-        setClasspath(project.sourceSets.main.runtimeClasspath)
+        setClasspath(project.sourceSets.main.runtimeClasspath + project.buildscript.configurations.classpath)
 
         super.exec()
     }
