@@ -1,0 +1,15 @@
+buildscript {
+    dependencies {
+        classpath files(CLASSPATH_STRING)
+    }
+}
+
+apply plugin: 'com.here.jobdsl'
+
+sourceSets {
+    jobdsl {
+        groovy {
+            srcDirs 'src/custom'
+        }
+    }
+}

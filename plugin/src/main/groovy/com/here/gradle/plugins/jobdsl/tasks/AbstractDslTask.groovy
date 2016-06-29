@@ -36,6 +36,7 @@ abstract class AbstractDslTask extends JavaExec {
         def properties = getProperties()
         properties['configuration'] = encodeBase64(new JsonBuilder(project.jobdsl.configuration).toString())
         properties['filter'] = encodeBase64(filter)
+        new File('/tmp/log') << project.sourceSets.jobdsl.allGroovy.asPath + "\n\n\n"
         properties['inputFiles'] = project.sourceSets.jobdsl.allGroovy.asPath
         properties['serverConfiguration'] = server != null ?
                 encodeBase64(new JsonBuilder(server.configuration).toString()) : ''

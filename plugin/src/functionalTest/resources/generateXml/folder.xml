@@ -1,0 +1,19 @@
+<com.cloudbees.hudson.plugins.folder.Folder>
+    <actions></actions>
+    <properties></properties>
+    <icon class='com.cloudbees.hudson.plugins.folder.icons.StockFolderIcon'></icon>
+    <views>
+        <hudson.model.AllView>
+            <owner class='com.cloudbees.hudson.plugins.folder.Folder' reference='../../..'></owner>
+            <name>All</name>
+            <filterExecutors>false</filterExecutors>
+            <filterQueue>false</filterQueue>
+            <properties class='hudson.model.View$PropertyList'></properties>
+        </hudson.model.AllView>
+    </views>
+    <viewsTabBar class='hudson.views.DefaultViewsTabBar'></viewsTabBar>
+    <primaryView>All</primaryView>
+    <healthMetrics>
+        <com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric></com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric>
+    </healthMetrics>
+</com.cloudbees.hudson.plugins.folder.Folder>

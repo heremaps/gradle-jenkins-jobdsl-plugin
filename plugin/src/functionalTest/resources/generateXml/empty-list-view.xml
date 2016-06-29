@@ -1,0 +1,10 @@
+<hudson.model.ListView>
+    <filterExecutors>false</filterExecutors>
+    <filterQueue>false</filterQueue>
+    <properties class='hudson.model.View$PropertyList'></properties>
+    <jobNames class='tree-set'>
+        <comparator class='hudson.util.CaseInsensitiveComparator'></comparator>
+    </jobNames>
+    <jobFilters></jobFilters>
+    <columns></columns>
+</hudson.model.ListView>

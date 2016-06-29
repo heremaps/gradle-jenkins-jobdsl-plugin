@@ -1,0 +1,11 @@
+/**
+ * Enable DSL support in IDEA, see https://confluence.jetbrains.com/display/GRVY/Scripting+IDE+for+DSL+awareness
+ * This only enables support for the jobdsl directory, if you want to have your scripts in another place you have to
+ * change this script. It is planned to move this file to the gradle-jobdsl-plugin so that you don't have to configure
+ * it on your own.
+ */
+
+def ctx = context(pathRegexp: /.*\/functionalTest\/resources\/.*groovy/)
+contributor(ctx, {
+    delegatesTo(findClass('javaposse.jobdsl.dsl.DslFactory'))
+})

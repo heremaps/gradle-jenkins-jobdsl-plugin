@@ -1,0 +1,23 @@
+buildscript {
+    dependencies {
+        classpath files(CLASSPATH_STRING)
+    }
+}
+
+apply plugin: 'com.here.jobdsl'
+
+jobdsl {
+    configuration = [
+            global    : 'global configuration',
+            concurrent: 'global value'
+    ]
+
+    servers {
+        localhost {
+            configuration = [
+                    server    : 'server specific configuration',
+                    concurrent: 'server specific value'
+            ]
+        }
+    }
+}
