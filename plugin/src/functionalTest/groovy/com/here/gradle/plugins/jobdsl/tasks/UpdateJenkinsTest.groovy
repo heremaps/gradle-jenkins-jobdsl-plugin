@@ -1,0 +1,362 @@
+package com.here.gradle.plugins.jobdsl.tasks
+
+import com.cloudbees.hudson.plugins.folder.Folder
+import hudson.model.FreeStyleProject
+import hudson.model.Item
+import hudson.model.ListView
+import hudson.model.User
+import hudson.model.View
+import jenkins.model.Jenkins
+import jenkins.security.ApiTokenProperty
+import org.custommonkey.xmlunit.XMLUnit
+import org.gradle.testkit.runner.TaskOutcome
+import org.junit.Rule
+import org.jvnet.hudson.test.JenkinsRule
+import org.jvnet.hudson.test.MockAuthorizationStrategy
+import org.jvnet.hudson.test.recipes.WithPlugin
+
+class UpdateJenkinsTest extends AbstractTaskTest {
+
+    @Rule
+    JenkinsRule jenkinsRule = new JenkinsRule()
+
+    def setup() {
+        jenkinsRule.contextPath = '/jenkins'
+    }
+
+    def jenkinsUrlParam() {
+        return "--jenkinsUrl=${jenkinsRule.getURL().toExternalForm()}"
+    }
+
+    def 'upload empty freestyle job'() {
+        given:
+        buildFile << readBuildGradle('updateJenkins/build.gradle')
+        copyResourceToTestDir('updateJenkins/empty-freestyle-job.groovy')
+
+        when:
+        def result = gradleRunner.withArguments('dslUpdateJenkins', jenkinsUrlParam()).build()
+
+        then:
+        result.task(':dslUpdateJenkins').outcome == TaskOutcome.SUCCESS
+        Item item = jenkinsRule.jenkins.getItemByFullName('job')
+        item instanceof FreeStyleProject
+        XMLUnit.compareXML(
+                item.getConfigFile().asString(),
+                readResource('updateJenkins/empty-freestyle-job.xml')
+        ).identical()
+    }
+
+    def 'upload empty list view'() {
+        given:
+        buildFile << readBuildGradle('updateJenkins/build.gradle')
+        copyResourceToTestDir('updateJenkins/empty-list-view.groovy')
+
+        when:
+        def result = gradleRunner.withArguments('dslUpdateJenkins', jenkinsUrlParam()).build()
+
+        then:
+        result.task(':dslUpdateJenkins').outcome == TaskOutcome.SUCCESS
+        View view = jenkinsRule.jenkins.getView('view')
+        view instanceof ListView
+        def output = new ByteArrayOutputStream()
+        view.writeXml(output)
+        XMLUnit.compareXML(output.toString(), readResource('updateJenkins/empty-list-view.xml')).identical()
+    }
+
+    @WithPlugin('cloudbees-folder-6.0.3.hpi')
+    def 'upload folder'() {
+        given:
+        buildFile << readBuildGradle('updateJenkins/build.gradle')
+        copyResourceToTestDir('updateJenkins/folder.groovy')
+
+        when:
+        def result = gradleRunner.withArguments('dslUpdateJenkins', jenkinsUrlParam()).build()
+
+        then:
+        result.task(':dslUpdateJenkins').outcome == TaskOutcome.SUCCESS
+        Item item = jenkinsRule.jenkins.getItemByFullName('folder')
+        item instanceof Folder
+        XMLUnit.compareXML(
+                item.getConfigFile().asString(),
+                readResource('updateJenkins/folder.xml')
+        ).identical()
+    }
+
+    @WithPlugin('cloudbees-folder-6.0.3.hpi')
+    def 'upload job in folder'() {
+        given:
+        buildFile << readBuildGradle('updateJenkins/build.gradle')
+        copyResourceToTestDir('updateJenkins/job-in-folder.groovy')
+
+        when:
+        def result = gradleRunner.withArguments('dslUpdateJenkins', jenkinsUrlParam()).build()
+
+        then:
+        result.task(':dslUpdateJenkins').outcome == TaskOutcome.SUCCESS
+        Item item = jenkinsRule.jenkins.getItemByFullName('folder/job')
+        item instanceof FreeStyleProject
+    }
+
+    @WithPlugin('cloudbees-folder-6.0.3.hpi')
+    def 'upload view in folder'() {
+        given:
+        buildFile << readBuildGradle('updateJenkins/build.gradle')
+        copyResourceToTestDir('updateJenkins/view-in-folder.groovy')
+
+        when:
+        def result = gradleRunner.withArguments('dslUpdateJenkins', jenkinsUrlParam()).build()
+
+        then:
+        result.task(':dslUpdateJenkins').outcome == TaskOutcome.SUCCESS
+        Folder folder = jenkinsRule.jenkins.getItemByFullName('folder')
+        View view = folder.getView('view')
+        view instanceof ListView
+    }
+
+    @WithPlugin('cloudbees-folder-6.0.3.hpi')
+    def 'filter applies to folders'() {
+        given:
+        buildFile << readBuildGradle('updateJenkins/build.gradle')
+        copyResourceToTestDir('updateJenkins/filter-folders.groovy')
+
+        when:
+        def result = gradleRunner.withArguments(
+                'dslUpdateJenkins',
+                jenkinsUrlParam(),
+                '--filter=.*unfiltered.*'
+        ).build()
+
+        then:
+        result.task(':dslUpdateJenkins').outcome == TaskOutcome.SUCCESS
+        jenkinsRule.jenkins.getItemByFullName('folder-unfiltered') instanceof Folder
+        jenkinsRule.jenkins.getItemByFullName('folder-unfiltered/subfolder') instanceof Folder
+        jenkinsRule.jenkins.getItemByFullName('folder-filtered') == null
+        jenkinsRule.jenkins.getItemByFullName('folder-filtered/subfolder') == null
+    }
+
+    @WithPlugin('cloudbees-folder-6.0.3.hpi')
+    def 'filter applies to jobs'() {
+        given:
+        buildFile << readBuildGradle('updateJenkins/build.gradle')
+        copyResourceToTestDir('updateJenkins/filter-jobs.groovy')
+
+        when:
+        def result = gradleRunner.withArguments(
+                'dslUpdateJenkins',
+                jenkinsUrlParam(),
+                '--filter=(folder|.*unfiltered.*)'
+        ).build()
+
+        then:
+        result.task(':dslUpdateJenkins').outcome == TaskOutcome.SUCCESS
+        jenkinsRule.jenkins.getItemByFullName('job-unfiltered') instanceof FreeStyleProject
+        jenkinsRule.jenkins.getItemByFullName('folder/job-unfiltered') instanceof FreeStyleProject
+        jenkinsRule.jenkins.getItemByFullName('job-filtered') == null
+        jenkinsRule.jenkins.getItemByFullName('folder/job-filtered') == null
+    }
+
+    @WithPlugin('cloudbees-folder-6.0.3.hpi')
+    def 'filter applies to views'() {
+        given:
+        buildFile << readBuildGradle('updateJenkins/build.gradle')
+        copyResourceToTestDir('updateJenkins/filter-views.groovy')
+
+        when:
+        def result = gradleRunner.withArguments(
+                'dslUpdateJenkins',
+                jenkinsUrlParam(),
+                '--filter=(folder|.*unfiltered.*)'
+        ).build()
+
+        then:
+        result.task(':dslUpdateJenkins').outcome == TaskOutcome.SUCCESS
+        Folder folder = jenkinsRule.jenkins.getItemByFullName('folder')
+        jenkinsRule.jenkins.getView('view-unfiltered') instanceof ListView
+        folder.getView('view-unfiltered') instanceof ListView
+        jenkinsRule.jenkins.getView('view-filtered') == null
+        folder.getView('view-filtered') == null
+    }
+
+    def 'unchanged job is not uploaded'() {
+        given:
+        buildFile << readBuildGradle('updateJenkins/build.gradle')
+        copyResourceToTestDir('updateJenkins/empty-freestyle-job.groovy')
+        gradleRunner.withArguments('dslUpdateJenkins', jenkinsUrlParam()).build()
+
+        when:
+        def result = gradleRunner.withArguments('dslUpdateJenkins', jenkinsUrlParam()).build()
+
+        then:
+        result.task(':dslUpdateJenkins').outcome == TaskOutcome.SUCCESS
+        result.output.contains('UP-TO-DATE: 1')
+        !result.output.contains('CREATED')
+        !result.output.contains('UPDATED')
+    }
+
+    def 'dry run does not change jenkins'() {
+        given:
+        buildFile << readBuildGradle('updateJenkins/build.gradle')
+        copyResourceToTestDir('updateJenkins/empty-freestyle-job.groovy')
+
+        when:
+        def result = gradleRunner.withArguments(
+                'dslUpdateJenkins',
+                jenkinsUrlParam(),
+                '--dryRun'
+        ).build()
+
+        then:
+        result.task(':dslUpdateJenkins').outcome == TaskOutcome.SUCCESS
+        jenkinsRule.jenkins.getItemByFullName('job') == null
+    }
+
+    def 'task fails on compile error in DSL script'() {
+        given:
+        buildFile << readBuildGradle('updateJenkins/build.gradle')
+        testProjectDir.newFile('src/jobdsl/jobdsl.groovy') << 'a'
+
+        when:
+        def result = gradleRunner.withArguments('dslUpdateJenkins', jenkinsUrlParam()).buildAndFail()
+
+        then:
+        result.task(':dslUpdateJenkins').outcome == TaskOutcome.FAILED
+    }
+
+    def 'task fails when no DSL scripts are found'() {
+        given:
+        buildFile << readBuildGradle('updateJenkins/build.gradle')
+
+        when:
+        def result = gradleRunner.withArguments('dslUpdateJenkins', jenkinsUrlParam()).buildAndFail()
+
+        then:
+        result.task(':dslUpdateJenkins').outcome == TaskOutcome.FAILED
+        result.output.contains('No files found in JobDSL source folder.')
+    }
+
+    def 'plugin checks fail without admin permission'() {
+        given:
+        def user = User.get('user', true)
+        jenkinsRule.jenkins.setAuthorizationStrategy(new MockAuthorizationStrategy())
+        jenkinsRule.jenkins.setSecurityRealm(jenkinsRule.createDummySecurityRealm())
+        def apiToken = user.getProperty(ApiTokenProperty).getApiToken()
+
+        buildFile << readBuildGradle('updateJenkins/build.gradle')
+        copyResourceToTestDir('updateJenkins/empty-freestyle-job.groovy')
+
+        when:
+        def result = gradleRunner.withArguments(
+                'dslUpdateJenkins',
+                jenkinsUrlParam(),
+                "--jenkinsUser=${user.id}",
+                "--jenkinsApiToken=${apiToken}"
+        ).buildAndFail()
+
+        then:
+        result.task(':dslUpdateJenkins').outcome == TaskOutcome.FAILED
+        result.output.contains('Could not load list of plugins from Jenkins server')
+        jenkinsRule.jenkins.getItemByFullName('job') == null
+    }
+
+    def 'plugin checks work with admin permission'() {
+        given:
+        def admin = User.get('admin', true)
+        jenkinsRule.jenkins.setAuthorizationStrategy(new MockAuthorizationStrategy().
+                grant(Jenkins.ADMINISTER).everywhere().to(admin))
+        jenkinsRule.jenkins.setSecurityRealm(jenkinsRule.createDummySecurityRealm())
+        def apiToken = admin.getProperty(ApiTokenProperty).getApiToken()
+
+        buildFile << readBuildGradle('updateJenkins/build.gradle')
+        copyResourceToTestDir('updateJenkins/empty-freestyle-job.groovy')
+
+        when:
+        def result = gradleRunner.withArguments(
+                'dslUpdateJenkins',
+                jenkinsUrlParam(),
+                "--jenkinsUser=${admin.id}",
+                "--jenkinsApiToken=${apiToken}"
+        ).build()
+
+        then:
+        result.task(':dslUpdateJenkins').outcome == TaskOutcome.SUCCESS
+        jenkinsRule.jenkins.getItemByFullName('job') instanceof FreeStyleProject
+    }
+
+    def 'disable plugin checks works without admin permission'() {
+        given:
+        def user = User.get('user', true)
+        jenkinsRule.jenkins.setAuthorizationStrategy(new MockAuthorizationStrategy().
+                grant(Jenkins.READ).everywhere().to(user).
+                grant(Item.CREATE).everywhere().to(user))
+        jenkinsRule.jenkins.setSecurityRealm(jenkinsRule.createDummySecurityRealm())
+        def apiToken = user.getProperty(ApiTokenProperty).getApiToken()
+
+        buildFile << readBuildGradle('updateJenkins/build.gradle')
+        copyResourceToTestDir('updateJenkins/empty-freestyle-job.groovy')
+
+        when:
+        def result = gradleRunner.withArguments(
+                'dslUpdateJenkins',
+                jenkinsUrlParam(),
+                "--jenkinsUser=${user.id}",
+                "--jenkinsApiToken=${apiToken}",
+                '--disablePluginChecks'
+        ).build()
+
+        then:
+        result.task(':dslUpdateJenkins').outcome == TaskOutcome.SUCCESS
+        jenkinsRule.jenkins.getItemByFullName('job') instanceof FreeStyleProject
+    }
+
+    @WithPlugin('gitlab-plugin-1.4.5.hpi')
+    def 'deprecated plugins are reported'() {
+        given:
+        buildFile << readBuildGradle('updateJenkins/build.gradle')
+        copyResourceToTestDir('updateJenkins/deprecated-plugins.groovy')
+
+        when:
+        def result = gradleRunner.withArguments('dslUpdateJenkins', jenkinsUrlParam()).build()
+
+        then:
+        result.task(':dslUpdateJenkins').outcome == TaskOutcome.SUCCESS
+        result.output.contains('''\
+            Deprecated plugins:
+              gitlab-plugin
+            '''.stripIndent())
+    }
+
+    def 'missing plugins are reported'() {
+        given:
+        buildFile << readBuildGradle('updateJenkins/build.gradle')
+        copyResourceToTestDir('updateJenkins/missing-plugins.groovy')
+
+        when:
+        def result = gradleRunner.withArguments('dslUpdateJenkins', jenkinsUrlParam()).build()
+
+        then:
+        result.task(':dslUpdateJenkins').outcome == TaskOutcome.SUCCESS
+        result.output.contains('''\
+            Missing plugins:
+              gradle
+              timestamper
+            '''.stripIndent())
+    }
+
+    @WithPlugin('gradle-1.22.hpi')
+    def 'outdated plugins are reported'() {
+        given:
+        buildFile << readBuildGradle('updateJenkins/build.gradle')
+        copyResourceToTestDir('updateJenkins/outdated-plugins.groovy')
+
+        when:
+        def result = gradleRunner.withArguments('dslUpdateJenkins', jenkinsUrlParam()).build()
+
+        then:
+        result.task(':dslUpdateJenkins').outcome == TaskOutcome.SUCCESS
+        result.output.contains('''\
+            Outdated plugins:
+              gradle
+            '''.stripIndent())
+    }
+
+}

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hudson.model.ListView>
+  <name>view</name>
+  <filterExecutors>false</filterExecutors>
+  <filterQueue>false</filterQueue>
+  <properties class='hudson.model.View$PropertyList'></properties>
+  <jobNames>
+    <comparator class='hudson.util.CaseInsensitiveComparator'></comparator>
+  </jobNames>
+  <jobFilters></jobFilters>
+  <columns></columns>
+  <recurse>false</recurse>
+</hudson.model.ListView>
