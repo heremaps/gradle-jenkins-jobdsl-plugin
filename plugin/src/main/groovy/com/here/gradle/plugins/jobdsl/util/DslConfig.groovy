@@ -20,7 +20,10 @@ class DslConfig {
         } else if (serverConfiguration.containsKey(key)) {
             return serverConfiguration[key]
         } else {
-            throw new DslException("Required configuration '${key}' does not exist.")
+            throw new DslException("""\
+                Required configuration '${key}' does not exist. Check if it is defined in the Gradle build file. Maybe \
+                it is a server specific configuration and you forgot to provide the --server argument.\
+                """.stripIndent())
         }
     }
 
