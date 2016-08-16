@@ -18,7 +18,7 @@ class JobDslPlugin implements Plugin<Project> {
         project.plugins.apply('groovy')
 
         execTasks.each { task ->
-            task.dependsOn classes
+            task.dependsOn 'classes'
         }
 
         project.sourceSets {
