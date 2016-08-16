@@ -212,7 +212,6 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
         throw new UnsupportedOperationException()
     }
 
-    @Override
     VersionNumber getPluginVersion(String pluginShortName) {
         def plugin = findPlugin(pluginShortName)
         return plugin == null ? null : new VersionNumber(plugin.version)
@@ -229,11 +228,6 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
         }
         def minimumVersionNumber = new VersionNumber(version)
         return !actualVersionNumber.isOlderThan(minimumVersionNumber)
-    }
-
-    @Override
-    VersionNumber getJenkinsVersion() {
-        throw new UnsupportedOperationException()
     }
 
     @Override
