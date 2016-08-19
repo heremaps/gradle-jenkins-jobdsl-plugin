@@ -118,15 +118,35 @@ def updateJobs(FilePath filePath, String namePrefix = '') {
 
 def workspace = build.workspace
 def xmlBase = new FilePath(workspace, 'XML_BASE_DIR_PLACEHOLDER')
-updateJobs(xmlBase)
+
+def localFile = new File("TEMPORARY_XML_DIR_PREFIX_PLACEHOLDER-${build.getNumber()}")
+println "Create local XML dir '${localFile.absolutePath}'"
+if (localFile.exists()) {
+    throw new RuntimeException("Local XML dir '${localFile.absolutePath}' already exists")
+}
+if (!localFile.mkdir()) {
+    throw new RuntimeException("Could not create local XML dir '${localFile.absolutePath}'")
+}
+def localXmlBase = new FilePath(localFile)
+
+println 'Copy remote files to local XML dir'
+xmlBase.copyRecursiveTo(localXmlBase)
+
+println 'Start updating jobs from local XML dir'
+updateJobs(localXmlBase)
+
+println "Delete local XML dir '${localFile.absolutePath}'"
+if (!localFile.deleteDir()) {
+    throw new RuntimeException("Could not delete local XML dir '${localFile.absolutePath}'")
+}
 
 println """\
-            SEED JOB SUMMARY
+    SEED JOB SUMMARY
 
-            Created items: ${createdItems}
-            Updated items: ${updatedItems}
-            Total items  : ${totalItems}
+    Created items: ${createdItems}
+    Updated items: ${updatedItems}
+    Total items  : ${totalItems}
 
-            Created views: ${createdViews}
-            Updated views: ${updatedViews}
-            Total views  : ${totalViews}""".stripIndent()
+    Created views: ${createdViews}
+    Updated views: ${updatedViews}
+    Total views  : ${totalViews}""".stripIndent()
