@@ -99,6 +99,11 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
                     }] as HttpRequestInterceptor)
         }
 
+        HttpResponseDecorator resp = restClient.get(path: 'crumbIssuer/api/xml')
+        if (resp.status == 200) {
+            restClient.headers[resp.data.crumbRequestField] = resp.data.crumb
+        }
+
         if (!disablePluginChecks) {
             requestPlugins()
         }
