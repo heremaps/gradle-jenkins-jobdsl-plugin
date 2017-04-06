@@ -1,0 +1,13 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.14.0'
+    }
+}
+
+subprojects {
+    apply plugin: 'com.github.ben-manes.versions'
+}

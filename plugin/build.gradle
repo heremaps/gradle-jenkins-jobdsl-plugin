@@ -1,18 +1,7 @@
 apply plugin: 'groovy'
 apply plugin: 'java-gradle-plugin'
 apply plugin: 'maven-publish'
-apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'idea'
-
-buildscript {
-    repositories {
-        jcenter()
-    }
-
-    dependencies {
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
-    }
-}
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
