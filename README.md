@@ -325,6 +325,10 @@ a build of the plugin to your local Maven repository first, as documented in "Bu
 
 ## Release Notes
 
+### 1.0.32 (upcoming)
+
+- Server specific configuration now overrides global configuration with the same key
+
 ### 1.0.31 (2016-12-16)
 
 - Add support for crumbs for Jenkins with enabled CSRF protection.

@@ -15,10 +15,10 @@ class DslConfig {
      * @return
      */
     def static get(String key) {
-        if (configuration.containsKey(key)) {
-            return configuration[key]
-        } else if (serverConfiguration.containsKey(key)) {
+        if (serverConfiguration.containsKey(key)) {
             return serverConfiguration[key]
+        } else if (configuration.containsKey(key)) {
+            return configuration[key]
         } else {
             throw new DslException("""\
                 Required configuration '${key}' does not exist. Check if it is defined in the Gradle build file. Maybe \
