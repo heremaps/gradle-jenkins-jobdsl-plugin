@@ -1,13 +1,23 @@
 package com.here.gradle.plugins.jobdsl.tasks
 
 import org.gradle.api.internal.tasks.options.Option
+import org.gradle.api.tasks.Input
 
 class UpdateJenkinsTask extends AbstractDslTask {
 
+    @Input
     boolean disablePluginChecks
+
+    @Input
     boolean dryRun
+
+    @Input
     String jenkinsUrl
+
+    @Input
     String jenkinsUser
+
+    @Input
     String jenkinsApiToken
 
     UpdateJenkinsTask() {

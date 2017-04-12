@@ -4,6 +4,7 @@ import com.here.gradle.plugins.jobdsl.ServerDefinition
 import groovy.json.JsonBuilder
 import org.gradle.api.GradleException
 import org.gradle.api.internal.tasks.options.Option
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.JavaExec
 
 abstract class AbstractDslTask extends JavaExec {
@@ -47,8 +48,10 @@ abstract class AbstractDslTask extends JavaExec {
         super.exec()
     }
 
+    @Internal
     abstract String getMainClass()
 
+    @Internal
     abstract Map<String, ?> getProperties()
 
     @Option(option = 'filter', description = 'Only evaluate item names that match this regular expression.')
