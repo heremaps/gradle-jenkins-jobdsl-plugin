@@ -300,6 +300,7 @@ class GenerateXmlTest extends Specification {
 
         then:
         result.task(':dslGenerateXml').outcome == TaskOutcome.FAILED
+        result.output.contains('No files found in JobDSL source folder.')
     }
 
 }

@@ -1,6 +1,7 @@
 package com.here.gradle.plugins.jobdsl.tasks.runners
 
 import com.here.gradle.plugins.jobdsl.DeferredJobManagement
+import com.here.gradle.plugins.jobdsl.GradleJobDslPluginException
 import com.here.gradle.plugins.jobdsl.ItemFilter
 import com.here.gradle.plugins.jobdsl.util.DslConfig
 import groovy.json.JsonSlurper
@@ -28,6 +29,10 @@ abstract class AbstractTaskRunner {
         def filter = new ItemFilter(decodeBase64(runProperties['filter']))
         jobManagement = createJobManagement(filter)
         DslScriptLoader loader = new DslScriptLoader(jobManagement)
+
+        if (!runProperties['inputFiles']) {
+            throw new GradleJobDslPluginException('No files found in JobDSL source folder.')
+        }
 
         runProperties['inputFiles'].split(File.pathSeparator).each { String filename ->
             println "Loading ${filename}"
