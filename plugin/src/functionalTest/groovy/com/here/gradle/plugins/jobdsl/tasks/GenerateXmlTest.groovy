@@ -1,7 +1,6 @@
 package com.here.gradle.plugins.jobdsl.tasks
 
 import org.gradle.testkit.runner.TaskOutcome
-import spock.lang.Unroll
 
 class GenerateXmlTest extends AbstractTaskTest {
 
@@ -76,7 +75,6 @@ class GenerateXmlTest extends AbstractTaskTest {
         new File(testProjectDir.root, 'build/jobdsl/xml/folder/job.xml').isFile()
     }
 
-    @Unroll
     def 'filter applies to folders'() {
         given:
         buildFile << readBuildGradle('generateXml/build.gradle')
