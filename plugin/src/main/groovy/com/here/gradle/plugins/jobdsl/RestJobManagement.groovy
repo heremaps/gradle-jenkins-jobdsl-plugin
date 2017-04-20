@@ -56,6 +56,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
     boolean dryRun
     ItemFilter filter
     String jenkinsUrl
+    VersionNumber jenkinsVersion
     RESTClient restClient
     List<Map> plugins
     Set<String> deprecatedPlugins
@@ -103,6 +104,9 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
         if (resp.status == 200) {
             restClient.headers[resp.data.crumbRequestField] = resp.data.crumb
         }
+
+        jenkinsVersion = requestJenkinsVersion()
+        println "Remote Jenkins is version ${jenkinsVersion}"
 
         if (!disablePluginChecks) {
             requestPlugins()
@@ -236,6 +240,11 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
     }
 
     @Override
+    boolean isMinimumCoreVersion(String version) {
+        return !jenkinsVersion.isOlderThan(new VersionNumber(version));
+    }
+
+    @Override
     Integer getVSphereCloudHash(String name) {
         throw new UnsupportedOperationException()
     }
@@ -253,6 +262,21 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
     @Override
     Node callExtension(String name, Item item, Class<? extends ExtensibleContext> contextType, Object... args) throws Throwable {
         return null
+    }
+
+    VersionNumber requestJenkinsVersion() {
+        HttpResponseDecorator response = restClient.get(
+                path: 'api/json',
+                contentType: ContentType.JSON
+        ) as HttpResponseDecorator
+
+        def jenkinsHeader = response.getFirstHeader('X-Jenkins')
+
+        if (!jenkinsHeader) {
+            throw new DslScriptException("Could not get version from Jenkins server '${jenkinsUrl}': ${response.statusLine}")
+        }
+
+        return new VersionNumber(jenkinsHeader.value)
     }
 
     void requestPlugins() {
