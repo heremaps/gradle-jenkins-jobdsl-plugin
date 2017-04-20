@@ -257,7 +257,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
 
     void requestPlugins() {
         HttpResponseDecorator response = restClient.get(
-                path: '/pluginManager/api/json',
+                path: 'pluginManager/api/json',
                 query: [depth: 2],
                 contentType: ContentType.JSON
         ) as HttpResponseDecorator
