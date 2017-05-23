@@ -325,7 +325,7 @@ a build of the plugin to your local Maven repository first, as documented in "Bu
 
 ## Release Notes
 
-### 1.0.32 (upcoming)
+### 1.0.32 (2017-05-23)
 
 - Upgrade job-dsl-core to 1.61
 - Server specific configuration now overrides global configuration with the same key
