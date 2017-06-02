@@ -325,6 +325,10 @@ a build of the plugin to your local Maven repository first, as documented in "Bu
 
 ## Release Notes
 
+### 1.0.33 (under development)
+
+- First public release published under the Apache-2.0 license
+
 ### 1.0.32 (2017-05-23)
 
 - Upgrade job-dsl-core to 1.61

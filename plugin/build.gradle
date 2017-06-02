@@ -123,8 +123,8 @@ task groovydocJar(type: Jar, dependsOn: groovydoc) {
 def pomConfig = {
     licenses {
         license {
-            name 'HERE Proprietary'
-            url 'https://legal.here.com/'
+            name 'Apache-2.0'
+            url 'http://www.apache.org/licenses/LICENSE-2.0'
         }
     }
 }
