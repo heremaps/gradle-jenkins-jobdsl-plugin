@@ -8,7 +8,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.here.gradle.plugins:gradle-jobdsl-plugin:1.0'
+        classpath 'com.here.gradle.plugins:gradle-job-dsl-plugin:1.0'
     }
 }
 
@@ -24,13 +24,13 @@ repositories {
 
 dependencies {
     compile localGroovy()
-    compile 'com.here.gradle.plugins:gradle-jobdsl-plugin:1.0'
+    compile 'com.here.gradle.plugins:gradle-job-dsl-plugin:1.0'
 }
 
 if (properties.buildAgainstPluginProject.toBoolean()) {
     configurations.all {
         resolutionStrategy.dependencySubstitution {
-            substitute module('com.here.gradle.plugins:gradle-jobdsl-plugin') with project(':plugin')
+            substitute module('com.here.gradle.plugins:gradle-job-dsl-plugin') with project(':plugin')
         }
     }
 }

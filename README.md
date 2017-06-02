@@ -49,7 +49,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath "com.here.gradle.plugins:gradle-jobdsl-plugin:${jobDslPluginVersion}"
+        classpath "com.here.gradle.plugins:gradle-job-dsl-plugin:${jobDslPluginVersion}"
     }
 }
 
@@ -67,7 +67,7 @@ repositories {
 
 dependencies {
     compile localGroovy()
-    compile "com.here.gradle.plugins:gradle-jobdsl-plugin:${jobDslPluginVersion}"
+    compile "com.here.gradle.plugins:gradle-job-dsl-plugin:${jobDslPluginVersion}"
 }
 ```
 
@@ -146,7 +146,7 @@ the Google Guava library:
 ```groovy
 dependencies {
     compile localGroovy()
-    compile "com.here.gradle.plugins:gradle-jobdsl-plugin:${jobDslPluginVersion}"
+    compile "com.here.gradle.plugins:gradle-job-dsl-plugin:${jobDslPluginVersion}"
     compile 'com.google.guava:guava:19.0'
 }
 ```
@@ -328,6 +328,7 @@ a build of the plugin to your local Maven repository first, as documented in "Bu
 ### 1.0.33 (under development)
 
 - First public release published under the Apache-2.0 license
+- Rename plugin to gradle-job-dsl-plugin
 
 ### 1.0.32 (2017-05-23)
 
