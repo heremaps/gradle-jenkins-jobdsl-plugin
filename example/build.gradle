@@ -1,0 +1,79 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        jcenter()
+        maven {
+            url 'http://repo.jenkins-ci.org/releases/'
+        }
+    }
+
+    dependencies {
+        classpath 'com.here.gradle.plugins:gradle-jobdsl-plugin:1.0'
+    }
+}
+
+apply plugin: 'com.here.jobdsl'
+
+repositories {
+    mavenLocal()
+    jcenter()
+    maven {
+        url 'http://repo.jenkins-ci.org/releases/'
+    }
+}
+
+dependencies {
+    compile localGroovy()
+    compile 'com.here.gradle.plugins:gradle-jobdsl-plugin:1.0'
+}
+
+if (properties.buildAgainstPluginProject.toBoolean()) {
+    configurations.all {
+        resolutionStrategy.dependencySubstitution {
+            substitute module('com.here.gradle.plugins:gradle-jobdsl-plugin') with project(':plugin')
+        }
+    }
+}
+
+jobdsl {
+    /**
+     * Example for configuring multiple servers. They can be selected by appending "--server=[servername] to the Gradle
+     * task. Server specific configuration is available in the Job DSL scripts by calling
+     * {@link com.here.gradle.plugins.jobdsl.util.DslConfig#get(java.lang.String)}. Server specific configuration is
+     * overwritten by global configuration.
+     */
+    servers {
+        localhost {
+            jenkinsUrl = 'http://localhost:8080/'
+            configuration = [
+                    serverName: 'Localhost'
+            ]
+        }
+
+        staging {
+            jenkinsUrl = 'http://localhost:8080/'
+            configuration = [
+                    serverName: 'Staging'
+            ]
+        }
+
+        production {
+            jenkinsUrl = 'http://localhost:8080/'
+            jenkinsUser = 'bot-account'
+            // jenkinsApiToken not provided to prevent accidental job deployment to production server.
+            // jenkinsApiToken = 'yourApiToken'
+            configuration = [
+                    serverName: 'Production'
+            ]
+        }
+    }
+
+    /**
+     * Example for a global configuration that is made available in the Job DSL scripts by calling
+     * {@link com.here.gradle.plugins.jobdsl.util.DslConfig#get(java.lang.String)}. In this case it's configured by
+     * a Gradle parameter that can be set in gradle.properties or with "-PenableJobs=true" on the command line.
+     */
+    configuration = [
+            enableJobs: project.properties['enableJobs'].toBoolean()
+    ]
+}
