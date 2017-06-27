@@ -324,6 +324,6 @@ a build of the plugin to your local Maven repository first, as documented in "Bu
 
 ## License
 
-Copyright (c) 2016 HERE Europe B.V.
+Copyright (c) 2016-2017 HERE Europe B.V.
 
 See the [LICENSE](LICENSE) file in the root of this project for license details.
