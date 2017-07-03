@@ -28,7 +28,7 @@ class JobBuilder {
             case MultiJob:
                 return dslFactory.multiJob(name, closure)
             case WorkflowJob:
-                return dslFactory.workflowJob(name, closure)
+                return dslFactory.pipelineJob(name, closure)
             default:
                 throw new RuntimeException("Job type ${jobClass} is not supported.")
         }
@@ -54,7 +54,7 @@ class JobBuilder {
         return build(MultiJob, closure)
     }
 
-    WorkflowJob buildWorkflowJob(@DelegatesTo(WorkflowJob) Closure closure) {
+    WorkflowJob buildPipelineJob(@DelegatesTo(WorkflowJob) Closure closure) {
         return build(WorkflowJob, closure)
     }
 
