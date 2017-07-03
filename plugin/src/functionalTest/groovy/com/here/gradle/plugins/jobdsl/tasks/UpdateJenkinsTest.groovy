@@ -28,6 +28,13 @@ class UpdateJenkinsTest extends AbstractTaskTest {
         return "--jenkinsUrl=${jenkinsRule.getURL().toExternalForm()}"
     }
 
+    def gradleSectionOutput(String output, String section) {
+        def lines = output.readLines()
+        def indexBegin = lines.findIndexOf { it == section }
+        def indexEnd = lines.findIndexOf(indexBegin) { it.empty }
+        return lines.subList(indexBegin + 1, indexEnd).collect { it.stripIndent() }
+    }
+
     def 'upload empty freestyle job'() {
         given:
         buildFile << readBuildGradle('updateJenkins/build.gradle')
@@ -319,10 +326,7 @@ class UpdateJenkinsTest extends AbstractTaskTest {
 
         then:
         result.task(':dslUpdateJenkins').outcome == TaskOutcome.SUCCESS
-        result.output.contains('''\
-            Deprecated plugins:
-              gitlab-plugin
-            '''.stripIndent())
+        gradleSectionOutput(result.output, 'Deprecated plugins:') == [ 'gitlab-plugin' ]
     }
 
     def 'missing plugins are reported'() {
@@ -335,11 +339,7 @@ class UpdateJenkinsTest extends AbstractTaskTest {
 
         then:
         result.task(':dslUpdateJenkins').outcome == TaskOutcome.SUCCESS
-        result.output.contains('''\
-            Missing plugins:
-              gradle
-              timestamper
-            '''.stripIndent())
+        gradleSectionOutput(result.output, 'Missing plugins:') == [ 'gradle', 'timestamper' ]
     }
 
     @WithPlugin('gradle-1.22.hpi')
@@ -353,10 +353,7 @@ class UpdateJenkinsTest extends AbstractTaskTest {
 
         then:
         result.task(':dslUpdateJenkins').outcome == TaskOutcome.SUCCESS
-        result.output.contains('''\
-            Outdated plugins:
-              gradle
-            '''.stripIndent())
+        gradleSectionOutput(result.output, 'Outdated plugins:') == [ 'gradle' ]
     }
 
 }
