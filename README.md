@@ -20,6 +20,8 @@ Gradle project.
 - [Development](#development)
     - [Build the Plugin](#build-the-plugin)
     - [Test the Plugin](#test-the-plugin)
+- [Examples](#examples)
+- [Credits](#credits)
 - [Known Bugs](#known-bugs)
 - [License](#license)
 
@@ -30,13 +32,13 @@ instance.
 
 ### Apply Plugin
 
-To apply the plugin you need to add the necessary Maven repositories to the build script. The minimum build script looks
+To apply the plugin you need to add the necessary Maven repositories to the build script. The minimal build script looks
 like this:
 
 ```groovy
-def jobDslPluginVersion = '1.0.19'
-
 buildscript {
+    ext.jobDslPluginVersion = '1.0.32'
+
     repositories {
         maven {
             url '[not yet published, URL will be added soon]'
@@ -312,6 +314,13 @@ To run the tests of the plugin execute:
 
 The repository contains an example project that demonstrates most features of the plugin. To run it you have to deploy
 a build of the plugin to your local Maven repository first, as documented in "Build the Plugin" above.
+
+## Credits
+
+The plugin was inspired by the following two projects, many thanks to their creators!
+
+- [gradle-jenkins-plugin](https://github.com/ghale/gradle-jenkins-plugin)
+- [job-dsl-gradle-example](https://github.com/sheehan/job-dsl-gradle-example)
 
 ## Known Bugs
 
