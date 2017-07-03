@@ -30,7 +30,7 @@ instance.
 
 ### Apply Plugin
 
-To apply the plugin you need to add the necessary Maven repositories to the build script. The minimum build script looks
+To apply the plugin you need to add the necessary Maven repositories to the build script. The minimal build script looks
 like this:
 
 ```groovy
