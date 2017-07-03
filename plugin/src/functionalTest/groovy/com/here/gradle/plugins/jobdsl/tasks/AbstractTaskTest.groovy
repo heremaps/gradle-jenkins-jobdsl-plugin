@@ -11,15 +11,14 @@ class AbstractTaskTest extends Specification {
     final TemporaryFolder testProjectDir = new TemporaryFolder()
 
     File buildFile
-    List<File> pluginClasspath
     GradleRunner gradleRunner
 
     def classpathString() {
-        def classpath = pluginClasspath
+        def classpath = gradleRunner
+                .pluginClasspath
                 .collect { it.absolutePath.replace('\\', '\\\\') } // escape backslashes in Windows paths
                 .collect { "'$it'" }
                 .join(', ')
-        new File('/tmp/classpath') << "${classpath.replace(', ', '\n')}\n"
         return classpath
     }
 
@@ -39,14 +38,7 @@ class AbstractTaskTest extends Specification {
         buildFile = testProjectDir.newFile('build.gradle')
         testProjectDir.newFolder('src', 'jobdsl')
 
-        gradleRunner = GradleRunner.create().withProjectDir(testProjectDir.root)
-
-        def resource = getClass().classLoader.findResource('plugin-under-test-metadata.properties')
-        if (resource == null) {
-            throw new IllegalStateException('Could not find metadata')
-        }
-
-        pluginClasspath = resource.readLines()[0].split('=')[1].split('\\\\:').collect { new File(it) }
+        gradleRunner = GradleRunner.create().withProjectDir(testProjectDir.root).withPluginClasspath()
     }
 
 }
