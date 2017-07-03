@@ -18,7 +18,7 @@ class GenerateXmlTest extends AbstractTaskTest {
         result.task(':dslGenerateXml').outcome == TaskOutcome.SUCCESS
 
         def generatedFile = new File(testProjectDir.root, 'build/jobdsl/xml/job.xml')
-        generatedFile.isFile()
+        generatedFile.file
         generatedFile.text == readResource('generateXml/empty-freestyle-job.xml')
     }
 
@@ -36,7 +36,7 @@ class GenerateXmlTest extends AbstractTaskTest {
         result.task(':dslGenerateXml').outcome == TaskOutcome.SUCCESS
 
         def generatedFile = new File(testProjectDir.root, 'build/jobdsl/xml/view.xml')
-        generatedFile.isFile()
+        generatedFile.file
         generatedFile.text == readResource('generateXml/empty-list-view.xml')
     }
 
@@ -54,7 +54,7 @@ class GenerateXmlTest extends AbstractTaskTest {
         result.task(':dslGenerateXml').outcome == TaskOutcome.SUCCESS
 
         def generatedFile = new File(testProjectDir.root, 'build/jobdsl/xml/folder.xml')
-        generatedFile.isFile()
+        generatedFile.file
         generatedFile.text == readResource('generateXml/folder.xml')
     }
 
@@ -71,8 +71,8 @@ class GenerateXmlTest extends AbstractTaskTest {
         then:
         result.task(':dslGenerateXml').outcome == TaskOutcome.SUCCESS
 
-        new File(testProjectDir.root, 'build/jobdsl/xml/folder.xml').isFile()
-        new File(testProjectDir.root, 'build/jobdsl/xml/folder/job.xml').isFile()
+        new File(testProjectDir.root, 'build/jobdsl/xml/folder.xml').file
+        new File(testProjectDir.root, 'build/jobdsl/xml/folder/job.xml').file
     }
 
     def 'filter applies to folders'() {
@@ -88,10 +88,10 @@ class GenerateXmlTest extends AbstractTaskTest {
         then:
         result.task(':dslGenerateXml').outcome == TaskOutcome.SUCCESS
 
-        new File(testProjectDir.root, 'build/jobdsl/xml/folder-unfiltered.xml').isFile()
-        new File(testProjectDir.root, 'build/jobdsl/xml/folder-unfiltered/subfolder.xml').isFile()
-        !new File(testProjectDir.root, 'build/jobdsl/xml/folder-filtered.xml').isFile()
-        !new File(testProjectDir.root, 'build/jobdsl/xml/folder-filtered/subfolder.xml').isFile()
+        new File(testProjectDir.root, 'build/jobdsl/xml/folder-unfiltered.xml').file
+        new File(testProjectDir.root, 'build/jobdsl/xml/folder-unfiltered/subfolder.xml').file
+        !new File(testProjectDir.root, 'build/jobdsl/xml/folder-filtered.xml').file
+        !new File(testProjectDir.root, 'build/jobdsl/xml/folder-filtered/subfolder.xml').file
     }
 
     def 'filter applies to jobs'() {
@@ -107,10 +107,10 @@ class GenerateXmlTest extends AbstractTaskTest {
         then:
         result.task(':dslGenerateXml').outcome == TaskOutcome.SUCCESS
 
-        new File(testProjectDir.root, 'build/jobdsl/xml/job-unfiltered.xml').isFile()
-        new File(testProjectDir.root, 'build/jobdsl/xml/folder/job-unfiltered.xml').isFile()
-        !new File(testProjectDir.root, 'build/jobdsl/xml/job-filtered.xml').isFile()
-        !new File(testProjectDir.root, 'build/jobdsl/xml/folder/job-filtered.xml').isFile()
+        new File(testProjectDir.root, 'build/jobdsl/xml/job-unfiltered.xml').file
+        new File(testProjectDir.root, 'build/jobdsl/xml/folder/job-unfiltered.xml').file
+        !new File(testProjectDir.root, 'build/jobdsl/xml/job-filtered.xml').file
+        !new File(testProjectDir.root, 'build/jobdsl/xml/folder/job-filtered.xml').file
     }
 
     def 'filter applies to views'() {
@@ -126,10 +126,10 @@ class GenerateXmlTest extends AbstractTaskTest {
         then:
         result.task(':dslGenerateXml').outcome == TaskOutcome.SUCCESS
 
-        new File(testProjectDir.root, 'build/jobdsl/xml/view-unfiltered.xml').isFile()
-        new File(testProjectDir.root, 'build/jobdsl/xml/folder/view-unfiltered.xml').isFile()
-        !new File(testProjectDir.root, 'build/jobdsl/xml/view-filtered.xml').isFile()
-        !new File(testProjectDir.root, 'build/jobdsl/xml/folder/view-filtered.xml').isFile()
+        new File(testProjectDir.root, 'build/jobdsl/xml/view-unfiltered.xml').file
+        new File(testProjectDir.root, 'build/jobdsl/xml/folder/view-unfiltered.xml').file
+        !new File(testProjectDir.root, 'build/jobdsl/xml/view-filtered.xml').file
+        !new File(testProjectDir.root, 'build/jobdsl/xml/folder/view-filtered.xml').file
     }
 
     def 'can create job in filtered folder'() {
@@ -145,8 +145,8 @@ class GenerateXmlTest extends AbstractTaskTest {
         then:
         result.task(':dslGenerateXml').outcome == TaskOutcome.SUCCESS
 
-        !new File(testProjectDir.root, 'build/jobdsl/xml/folder.xml').isFile()
-        new File(testProjectDir.root, 'build/jobdsl/xml/folder/job.xml').isFile()
+        !new File(testProjectDir.root, 'build/jobdsl/xml/folder.xml').file
+        new File(testProjectDir.root, 'build/jobdsl/xml/folder/job.xml').file
     }
 
     def 'global configuration is available in DSL scripts'() {

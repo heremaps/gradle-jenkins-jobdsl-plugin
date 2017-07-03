@@ -81,7 +81,7 @@ def findParentItem(String fullName) {
 def updateJobs(FilePath filePath, String namePrefix = '') {
     List<FilePath> directories = []
     filePath.list().each { file ->
-        if (file.isDirectory()) {
+        if (file.directory) {
             directories << file
         } else if (file.name.endsWith('.xml')) {
             def name = file.name[0..-5]
