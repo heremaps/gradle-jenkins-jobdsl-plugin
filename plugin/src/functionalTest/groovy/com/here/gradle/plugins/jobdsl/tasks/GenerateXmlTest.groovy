@@ -19,7 +19,9 @@ class GenerateXmlTest extends AbstractTaskTest {
 
         def generatedFile = new File(testProjectDir.root, 'build/jobdsl/xml/job.xml')
         generatedFile.file
-        generatedFile.text == readResource('generateXml/empty-freestyle-job.xml')
+        def actualText = generatedFile.text
+        def expectedText = readResource('generateXml/empty-freestyle-job.xml')
+        actualText == expectedText
     }
 
     def 'empty list view is generated correctly'() {
@@ -37,7 +39,9 @@ class GenerateXmlTest extends AbstractTaskTest {
 
         def generatedFile = new File(testProjectDir.root, 'build/jobdsl/xml/view.xml')
         generatedFile.file
-        generatedFile.text == readResource('generateXml/empty-list-view.xml')
+        def actualText = generatedFile.text
+        def expectedText = readResource('generateXml/empty-list-view.xml')
+        actualText == expectedText
     }
 
     def 'folder is generated correctly'() {
@@ -55,7 +59,9 @@ class GenerateXmlTest extends AbstractTaskTest {
 
         def generatedFile = new File(testProjectDir.root, 'build/jobdsl/xml/folder.xml')
         generatedFile.file
-        generatedFile.text == readResource('generateXml/folder.xml')
+        def actualText = generatedFile.text
+        def expectedText = readResource('generateXml/folder.xml')
+        actualText == expectedText
     }
 
     def 'job in folder is generated in the right subfolder'() {
