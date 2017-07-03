@@ -50,7 +50,7 @@ class JobBuilder2 {
             case MultiJob:
                 return dslFactory.multiJob(fullJobName(), dslClosure)
             case WorkflowJob:
-                return dslFactory.workflowJob(fullJobName(), dslClosure)
+                return dslFactory.pipelineJob(fullJobName(), dslClosure)
             default:
                 throw new RuntimeException("Job type ${jobClass} is not supported.")
         }
@@ -126,7 +126,7 @@ class JobBuilder2 {
      *
      * @param closure
      */
-    void workflowJob(@DelegatesTo(WorkflowJob) Closure closure = null) {
+    void pipelineJob(@DelegatesTo(WorkflowJob) Closure closure = null) {
         checkJobClassNull()
         if (closure != null) {
             addDsl(closure)
@@ -192,7 +192,7 @@ class JobBuilder2 {
 
      * @param closure
      */
-    void addWorkflowDsl(@DelegatesTo(WorkflowJob) Closure closure) {
+    void addPipelineDsl(@DelegatesTo(WorkflowJob) Closure closure) {
         addDsl(closure)
     }
 
