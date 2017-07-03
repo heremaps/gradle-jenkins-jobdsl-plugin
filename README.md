@@ -20,6 +20,7 @@ Gradle project.
 - [Development](#development)
     - [Build the Plugin](#build-the-plugin)
     - [Test the Plugin](#test-the-plugin)
+- [Examples](#examples)
 - [Credits](#credits)
 - [Known Bugs](#known-bugs)
 - [License](#license)
