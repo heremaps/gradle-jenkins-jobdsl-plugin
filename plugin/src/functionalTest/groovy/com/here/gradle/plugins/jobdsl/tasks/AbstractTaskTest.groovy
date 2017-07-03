@@ -19,7 +19,6 @@ class AbstractTaskTest extends Specification {
                 .collect { it.absolutePath.replace('\\', '\\\\') } // escape backslashes in Windows paths
                 .collect { "'$it'" }
                 .join(', ')
-        new File('/tmp/classpath') << "${classpath.replace(', ', '\n')}\n"
         return classpath
     }
 
