@@ -34,9 +34,9 @@ To apply the plugin you need to add the necessary Maven repositories to the buil
 like this:
 
 ```groovy
-def jobDslPluginVersion = '1.0.19'
-
 buildscript {
+    ext.jobDslPluginVersion = '1.0.32'
+
     repositories {
         maven {
             url '[not yet published, URL will be added soon]'
