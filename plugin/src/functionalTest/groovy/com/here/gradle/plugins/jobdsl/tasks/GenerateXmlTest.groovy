@@ -1,5 +1,6 @@
 package com.here.gradle.plugins.jobdsl.tasks
 
+import org.custommonkey.xmlunit.XMLUnit
 import org.gradle.testkit.runner.TaskOutcome
 
 class GenerateXmlTest extends AbstractTaskTest {
@@ -19,7 +20,9 @@ class GenerateXmlTest extends AbstractTaskTest {
 
         def generatedFile = new File(testProjectDir.root, 'build/jobdsl/xml/job.xml')
         generatedFile.file
-        generatedFile.text == readResource('generateXml/empty-freestyle-job.xml')
+        def actualText = generatedFile.text
+        def expectedText = readResource('generateXml/empty-freestyle-job.xml')
+        XMLUnit.compareXML(actualText, expectedText).identical()
     }
 
     def 'empty list view is generated correctly'() {
@@ -37,7 +40,9 @@ class GenerateXmlTest extends AbstractTaskTest {
 
         def generatedFile = new File(testProjectDir.root, 'build/jobdsl/xml/view.xml')
         generatedFile.file
-        generatedFile.text == readResource('generateXml/empty-list-view.xml')
+        def actualText = generatedFile.text
+        def expectedText = readResource('generateXml/empty-list-view.xml')
+        XMLUnit.compareXML(actualText, expectedText).identical()
     }
 
     def 'folder is generated correctly'() {
@@ -55,7 +60,9 @@ class GenerateXmlTest extends AbstractTaskTest {
 
         def generatedFile = new File(testProjectDir.root, 'build/jobdsl/xml/folder.xml')
         generatedFile.file
-        generatedFile.text == readResource('generateXml/folder.xml')
+        def actualText = generatedFile.text
+        def expectedText = readResource('generateXml/folder.xml')
+        XMLUnit.compareXML(actualText, expectedText).identical()
     }
 
     def 'job in folder is generated in the right subfolder'() {
