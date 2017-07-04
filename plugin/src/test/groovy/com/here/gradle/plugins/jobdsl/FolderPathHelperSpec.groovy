@@ -69,5 +69,4 @@ class FolderPathHelperSpec extends Specification {
                 'job/Folder1/job/Folder2/job/Folder3/method'
     }
 
-
 }

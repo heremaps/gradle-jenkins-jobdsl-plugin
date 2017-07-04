@@ -9,7 +9,6 @@ import javaposse.jobdsl.dsl.jobs.MavenJob
 import javaposse.jobdsl.dsl.jobs.MultiJob
 import javaposse.jobdsl.dsl.jobs.WorkflowJob
 
-
 /**
  * This is the new implementation of {@link JobBuilder}, because the API has changed the old version will be kept until
  * the next major release. This class will be renamed to JobBuilder with the next major release.

@@ -350,7 +350,6 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
         }
     }
 
-
     String requestExistingItemXml(Item item) {
         HttpResponseDecorator response = restClient.get(
                 path: FolderPathHelper.itemConfigPath(item.name),
