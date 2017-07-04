@@ -1,6 +1,6 @@
 import com.here.demo.jobdsl.TemplateJobBuilder
 
-[1,2,3].each { index ->
+1.upto(3) { index ->
     new TemplateJobBuilder(
             dslFactory: this,
             name: "Demo/TemplateJob${index}"
