@@ -8,52 +8,62 @@ folder('demo/pipeline/staging')
 
 // Configure pipeline builder
 def pipelineBuilder = new PipelineBuilder()
-pipelineBuilder.baseFolders(['demo', 'pipeline', 'master'])
-pipelineBuilder.defaultConfiguration([timeout: 10])
-pipelineBuilder.commonDsl {
-    wrappers {
-        timestamps()
+pipelineBuilder.with {
+    baseFolders(['demo', 'pipeline', 'master'])
+    defaultConfiguration([timeout: 10])
+    commonDsl {
+        wrappers {
+            timestamps()
+        }
     }
 }
 
 // Add jobs to pipeline
 def firstJob = new DemoPipelineJobBuilder(this)
-firstJob.name = 'First job'
-firstJob.shellCommand = 'ls'
-firstJob.freeStyleJob {
-    publishers {
-        archiveArtifacts('*')
+firstJob.with {
+    name = 'First job'
+    shellCommand = 'ls'
+    freeStyleJob {
+        publishers {
+            archiveArtifacts('*')
+        }
     }
 }
 
 def secondJob = new DemoPipelineJobBuilder(this)
-secondJob.name = 'Second job'
-secondJob.shellCommand = 'ls -a'
-secondJob.freeStyleJob {
-    publishers {
-        archiveArtifacts('*')
+secondJob.with {
+    name = 'Second job'
+    shellCommand = 'ls -a'
+    freeStyleJob {
+        publishers {
+            archiveArtifacts('*')
+        }
     }
 }
 
 def thirdJob = new DemoPipelineJobBuilder(this)
-thirdJob.name = 'Third job'
-thirdJob.shellCommand = 'ls -al'
-thirdJob.freeStyleJob {
-    publishers {
-        archiveArtifacts('*')
+thirdJob.with {
+    name = 'Third job'
+    shellCommand = 'ls -al'
+    freeStyleJob {
+        publishers {
+            archiveArtifacts('*')
+        }
     }
 }
 
-pipelineBuilder.addJob(firstJob)
-pipelineBuilder.addJob(secondJob)
-pipelineBuilder.addJob(thirdJob)
+pipelineBuilder.with {
+    addJob(firstJob)
+    addJob(secondJob)
+    addJob(thirdJob)
 
-// Build pipeline
-pipelineBuilder.build()
+    // Build pipeline
+    build()
 
-// Reconfigure pipeline
-pipelineBuilder.baseFolders(['demo', 'pipeline', 'staging'])
-pipelineBuilder.defaultConfiguration([timeout: 20])
+    // Reconfigure pipeline
+    baseFolders(['demo', 'pipeline', 'staging'])
+    defaultConfiguration([timeout: 20])
 
-// Build pipeline again
-pipelineBuilder.build()
+    // Build pipeline again
+    build()
+}
