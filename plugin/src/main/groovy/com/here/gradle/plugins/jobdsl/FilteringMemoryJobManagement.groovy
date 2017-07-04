@@ -6,7 +6,7 @@ import javaposse.jobdsl.dsl.NameNotProvidedException
 
 class FilteringMemoryJobManagement extends MemoryJobManagement {
 
-    private ItemFilter filter
+    private final ItemFilter filter
 
     public FilteringMemoryJobManagement(ItemFilter filter) {
         this.filter = filter

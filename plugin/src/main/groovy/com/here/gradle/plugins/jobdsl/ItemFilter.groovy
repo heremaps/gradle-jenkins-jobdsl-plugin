@@ -5,7 +5,7 @@ package com.here.gradle.plugins.jobdsl
  */
 class ItemFilter {
 
-    private String pattern
+    private final String pattern
 
     public ItemFilter(String pattern) {
         this.pattern = pattern
