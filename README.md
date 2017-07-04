@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/heremaps/gradle-job-dsl-plugin.svg?branch=master)](https://travis-ci.org/heremaps/gradle-job-dsl-plugin)
+
 # Gradle Job DSL Plugin
 
 This is a plugin to manage Jenkins [Job DSL](https://wiki.jenkins-ci.org/display/JENKINS/Job+DSL+Plugin) projects in a
