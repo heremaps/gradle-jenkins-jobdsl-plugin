@@ -24,6 +24,7 @@ Gradle project.
     - [Test the Plugin](#test-the-plugin)
     - [Contributing](#contributing)
 - [Examples](#examples)
+- [Hints](#hints)
 - [Credits](#credits)
 - [License](#license)
 
@@ -321,6 +322,23 @@ Contributions to the project are very welcome! Please be aware that you need to 
 
 The repository contains an example project that demonstrates most features of the plugin. To run it you have to deploy
 a build of the plugin to your local Maven repository first, as documented in "Build the Plugin" above.
+
+## Hints
+
+### Job DSL Plugin is not required
+
+Because the gradle-job-dsl-plugin can use the
+[Jenkins REST API](https://wiki.jenkins.io/display/JENKINS/Remote+access+API) to upload jobs to Jenkins the
+[Job DSL Plugin](https://wiki.jenkins.io/display/JENKINS/Job+DSL+Plugin) does not have to be installed on the Jenkins
+instance. This can be useful when you do not have permission to install Jenkins plugins or the plugin cannot be
+installed for another reason.
+ 
+### JobConfigHistory Plugin and seed jobs
+
+If you use the [JobConfigHistory Plugin](https://wiki.jenkins.io/display/JENKINS/JobConfigHistory+Plugin) in combination
+with a seed job you should configure retention for history entries in "Manage Jenkins" -> "Configure System". Otherwise
+you can quickly get a huge number of history entries which has a very negative impact on seed job performance and
+Jenkins performance in general.
 
 ## Credits
 
