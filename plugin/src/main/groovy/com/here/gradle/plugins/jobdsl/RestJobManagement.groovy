@@ -95,7 +95,8 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
                     process: { HttpRequest request, HttpContext context ->
                         request.addHeader(
                                 'Authorization',
-                                'Basic ' + "${jenkinsUser}:${jenkinsApiToken}".toString().bytes.encodeBase64().toString()
+                                'Basic ' + "${jenkinsUser}:${jenkinsApiToken}".toString().bytes.encodeBase64()
+                                        .toString()
                         )
                     }] as HttpRequestInterceptor)
         }
@@ -125,7 +126,8 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
     }
 
     @Override
-    void createOrUpdateView(String viewName, String config, boolean ignoreExisting) throws NameNotProvidedException, ConfigurationMissingException {
+    void createOrUpdateView(String viewName, String config, boolean ignoreExisting) throws NameNotProvidedException,
+            ConfigurationMissingException {
         viewRequests += new ViewRequest(viewName: viewName, config: config, ignoreExisting: ignoreExisting)
     }
 
@@ -260,7 +262,8 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
     }
 
     @Override
-    Node callExtension(String name, Item item, Class<? extends ExtensibleContext> contextType, Object... args) throws Throwable {
+    Node callExtension(String name, Item item, Class<? extends ExtensibleContext> contextType, Object... args) throws
+            Throwable {
         return null
     }
 
@@ -273,7 +276,8 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
         def jenkinsHeader = response.getFirstHeader('X-Jenkins')
 
         if (!jenkinsHeader) {
-            throw new DslScriptException("Could not get version from Jenkins server '${jenkinsUrl}': ${response.statusLine}")
+            throw new DslScriptException("Could not get version from Jenkins server '${jenkinsUrl}': " +
+                    "${response.statusLine}")
         }
 
         return new VersionNumber(jenkinsHeader.value)
@@ -287,7 +291,8 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
         ) as HttpResponseDecorator
 
         if (response.status != 200) {
-            throw new DslScriptException("Could not load list of plugins from Jenkins server '${jenkinsUrl}': ${response.statusLine}")
+            throw new DslScriptException("Could not load list of plugins from Jenkins server '${jenkinsUrl}': " +
+                    "${response.statusLine}")
         }
 
         plugins = response.data.plugins
@@ -333,7 +338,8 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
         return true
     }
 
-    void performCreateOrUpdateView(String viewName, String config, boolean ignoreExisting) throws NameNotProvidedException, ConfigurationMissingException {
+    void performCreateOrUpdateView(String viewName, String config, boolean ignoreExisting) throws
+            NameNotProvidedException, ConfigurationMissingException {
         if (filter.matches(viewName)) {
             String existingXml = requestExistingViewXml(viewName)
             if (!existingXml) {
