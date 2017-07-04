@@ -79,9 +79,9 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
             this.jenkinsUrl += '/'
         }
 
-        deprecatedPlugins = new TreeSet<>()
-        missingPlugins = new TreeSet<>()
-        outdatedPlugins = new TreeSet<>()
+        deprecatedPlugins = [] as SortedSet
+        missingPlugins = [] as SortedSet
+        outdatedPlugins = [] as SortedSet
         statusCounter = [:]
 
         itemRequests = []
