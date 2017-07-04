@@ -397,7 +397,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
         } else {
             logItemStatus(item, STATUS_COULD_NOT_CREATE, response.dump())
             if (response.status == 404) {
-                println "If the item is contained in a folder probably the folder does not exist"
+                println 'If the item is contained in a folder probably the folder does not exist'
             }
             return false
         }
