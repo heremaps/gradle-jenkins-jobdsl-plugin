@@ -34,10 +34,10 @@ class GenerateXmlRunner extends AbstractTaskRunner {
         def fileName = name
         if (name.contains('/')) {
             def lastIndex = name.lastIndexOf('/')
-            def subDirectory = name.substring(0, lastIndex)
+            def subDirectory = name[0..lastIndex]
             targetDirectory = new File("${outputDirectory}/${subDirectory}")
             targetDirectory.mkdirs()
-            fileName = name.substring(lastIndex + 1)
+            fileName = name.drop(lastIndex + 1)
         }
         def xmlFile = new File("${targetDirectory}/${fileName}.xml")
         xmlFile.write(xml)

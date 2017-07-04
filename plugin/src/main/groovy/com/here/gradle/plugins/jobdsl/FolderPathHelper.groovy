@@ -53,7 +53,7 @@ class FolderPathHelper {
      */
     static String removeFoldersFromName(String name) {
         int lastIndex = name.lastIndexOf('/')
-        return name.substring(lastIndex + 1)
+        return name.drop(lastIndex + 1)
     }
 
     /**
