@@ -8,7 +8,7 @@ class FilteringMemoryJobManagement extends MemoryJobManagement {
 
     private final ItemFilter filter
 
-    public FilteringMemoryJobManagement(ItemFilter filter) {
+    FilteringMemoryJobManagement(ItemFilter filter) {
         this.filter = filter
     }
 

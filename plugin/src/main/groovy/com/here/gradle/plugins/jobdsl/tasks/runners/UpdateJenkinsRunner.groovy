@@ -7,7 +7,7 @@ import javaposse.jobdsl.dsl.JobManagement
 
 class UpdateJenkinsRunner extends AbstractTaskRunner {
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
         new UpdateJenkinsRunner().run()
     }
 

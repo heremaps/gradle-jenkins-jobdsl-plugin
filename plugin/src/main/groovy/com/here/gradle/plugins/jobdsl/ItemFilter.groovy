@@ -7,7 +7,7 @@ class ItemFilter {
 
     private final String pattern
 
-    public ItemFilter(String pattern) {
+    ItemFilter(String pattern) {
         this.pattern = pattern
     }
 
@@ -17,7 +17,7 @@ class ItemFilter {
      * @param itemName Name of the Jenkins job or view.
      * @return True if filter is null or empty or itemName matches filter pattern.
      */
-    public boolean matches(String itemName) {
+    boolean matches(String itemName) {
         pattern ? itemName ==~ pattern : true
     }
 

@@ -1,15 +1,15 @@
 package com.here.gradle.plugins.jobdsl
 
 class GradleJobDslPluginException extends RuntimeException {
-    public GradleJobDslPluginException() {
+    GradleJobDslPluginException() {
         super()
     }
 
-    public GradleJobDslPluginException(String message) {
+    GradleJobDslPluginException(String message) {
         super(message)
     }
 
-    public GradleJobDslPluginException(String message, Throwable cause) {
+    GradleJobDslPluginException(String message, Throwable cause) {
         super(message, cause)
     }
 }
