@@ -172,7 +172,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
     @Override
     void logPluginDeprecationWarning(String pluginShortName, String minimumVersion) {
         if (!isMinimumPluginVersionInstalled(pluginShortName, minimumVersion)) {
-            logDeprecationWarning("Support for ${pluginShortName} versions older than ${minimumVersion}");
+            logDeprecationWarning("Support for ${pluginShortName} versions older than ${minimumVersion}")
             deprecatedPlugins.add(pluginShortName)
         }
     }
@@ -241,7 +241,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
 
     @Override
     boolean isMinimumCoreVersion(String version) {
-        return !jenkinsVersion.isOlderThan(new VersionNumber(version));
+        return !jenkinsVersion.isOlderThan(new VersionNumber(version))
     }
 
     @Override
