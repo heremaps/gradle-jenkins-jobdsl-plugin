@@ -18,7 +18,7 @@ import org.jvnet.hudson.test.recipes.WithPlugin
 class UpdateJenkinsTest extends AbstractTaskTest {
 
     @Rule
-    JenkinsRule jenkinsRule = new JenkinsRule()
+    private JenkinsRule jenkinsRule = new JenkinsRule()
 
     def setup() {
         jenkinsRule.contextPath = '/jenkins'

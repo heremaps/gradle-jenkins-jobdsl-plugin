@@ -8,7 +8,7 @@ import spock.lang.Specification
 
 class JobDslPluginTest extends Specification {
 
-    Project project
+    private Project project
 
     def setup() {
         project = ProjectBuilder.builder().build()

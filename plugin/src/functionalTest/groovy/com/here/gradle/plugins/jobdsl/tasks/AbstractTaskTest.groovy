@@ -8,10 +8,10 @@ import spock.lang.Specification
 class AbstractTaskTest extends Specification {
 
     @Rule
-    final TemporaryFolder testProjectDir = new TemporaryFolder()
+    protected final TemporaryFolder testProjectDir = new TemporaryFolder()
 
-    File buildFile
-    GradleRunner gradleRunner
+    protected File buildFile
+    protected GradleRunner gradleRunner
 
     def classpathString() {
         def classpath = gradleRunner
