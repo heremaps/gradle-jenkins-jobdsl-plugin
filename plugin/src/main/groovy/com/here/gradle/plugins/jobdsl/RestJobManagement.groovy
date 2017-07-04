@@ -67,7 +67,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
     List<ViewRequest> viewRequests
 
     RestJobManagement(ItemFilter filter, boolean disablePluginChecks, boolean dryRun, String jenkinsUrl,
-                      String jenkinsUser, String jenkinsPassword) {
+                      String jenkinsUser, String jenkinsApiToken) {
         super(System.out)
 
         this.disablePluginChecks = disablePluginChecks
@@ -90,12 +90,12 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
         restClient = new RESTClient(jenkinsUrl)
         restClient.handler.failure = { it }
 
-        if (jenkinsUser != null && jenkinsPassword != null) {
+        if (jenkinsUser != null && jenkinsApiToken != null) {
             restClient.client.addRequestInterceptor([
                     process: { HttpRequest request, HttpContext context ->
                         request.addHeader(
                                 'Authorization',
-                                'Basic ' + "${jenkinsUser}:${jenkinsPassword}".toString().bytes.encodeBase64().toString()
+                                'Basic ' + "${jenkinsUser}:${jenkinsApiToken}".toString().bytes.encodeBase64().toString()
                         )
                     }] as HttpRequestInterceptor)
         }
