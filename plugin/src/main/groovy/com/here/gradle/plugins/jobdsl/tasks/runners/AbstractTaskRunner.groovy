@@ -15,7 +15,7 @@ abstract class AbstractTaskRunner {
     protected Properties runProperties
 
     void run() {
-        runProperties = System.getProperties()
+        runProperties = System.properties
 
         def slurper = new JsonSlurper()
 

@@ -19,6 +19,7 @@ abstract class AbstractDslTask extends JavaExec {
     }
 
     @Override
+    @SuppressWarnings('UnnecessaryGetter') // getProperties() is much more readable than just properties in this case.
     void exec() {
         // Pull serverName to local variable, otherwise Gradle throws this exception for an unknown reason:
         // groovy.lang.GroovyRuntimeException: Cannot get the value of write-only property 'serverName'
@@ -42,7 +43,7 @@ abstract class AbstractDslTask extends JavaExec {
                 encodeBase64(new JsonBuilder(server.configuration).toString()) : ''
         setSystemProperties(properties)
 
-        setMain(getMainClass())
+        setMain(mainClass)
         setClasspath(project.sourceSets.main.runtimeClasspath + project.buildscript.configurations.classpath)
 
         super.exec()
