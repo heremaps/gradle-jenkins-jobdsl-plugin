@@ -22,6 +22,7 @@ Gradle project.
 - [Development](#development)
     - [Build the Plugin](#build-the-plugin)
     - [Test the Plugin](#test-the-plugin)
+    - [Contributing](#contributing)
 - [Examples](#examples)
 - [Credits](#credits)
 - [License](#license)
@@ -310,6 +311,11 @@ To run the tests of the plugin execute:
 ```bash
 ./gradlew plugin:check
 ```
+
+### Contributing
+
+Contributions to the project are very welcome! Please be aware that you need to sign the
+[HERE CLA](https://cla-assistant.io/heremaps/gradle-job-dsl-plugin) if you want to contribute to the project.
 
 ## Examples
 
