@@ -32,7 +32,7 @@ class UpdateJenkinsTest extends AbstractTaskTest {
         def lines = output.readLines()
         def indexBegin = lines.findIndexOf { it == section }
         def indexEnd = lines.findIndexOf(indexBegin) { it.empty }
-        return lines.subList(indexBegin + 1, indexEnd).collect { it.stripIndent() }
+        return lines.subList(indexBegin + 1, indexEnd)*.stripIndent()
     }
 
     def 'upload empty freestyle job'() {
