@@ -13,7 +13,7 @@ abstract class AbstractDslTask extends JavaExec {
     protected ServerDefinition server
     protected String serverName
 
-    AbstractDslTask() {
+    protected AbstractDslTask() {
         super()
         group = 'Job DSL'
     }
