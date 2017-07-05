@@ -33,6 +33,8 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
     public static final String STATUS_WOULD_BE_CREATED = 'WOULD BE CREATED'
     public static final String STATUS_WOULD_BE_UPDATED = 'WOULD BE UPDATED'
 
+    private static final HEADER_ACCEPT_XML = [Accept: 'application/xml']
+
     static class ItemRequest {
         Item item
         boolean ignoreExisting
@@ -364,7 +366,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
         HttpResponseDecorator response = restClient.get(
                 path: FolderPathHelper.itemConfigPath(item.name),
                 contentType: ContentType.TEXT,
-                headers: [Accept: 'application/xml']
+                headers: HEADER_ACCEPT_XML
         ) as HttpResponseDecorator
 
         if (response?.data) {
@@ -378,7 +380,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
         HttpResponseDecorator response = restClient.get(
                 path: FolderPathHelper.viewConfigPath(viewName),
                 contentType: ContentType.TEXT,
-                headers: [Accept: 'application/xml']
+                headers: HEADER_ACCEPT_XML
         ) as HttpResponseDecorator
 
         if (response?.data) {
