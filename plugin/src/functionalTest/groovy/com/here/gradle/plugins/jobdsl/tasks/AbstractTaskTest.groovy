@@ -5,13 +5,16 @@ import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
 
+/**
+ * Common code for tests of plugin tasks.
+ */
 class AbstractTaskTest extends Specification {
 
     @Rule
-    final TemporaryFolder testProjectDir = new TemporaryFolder()
+    protected final TemporaryFolder testProjectDir = new TemporaryFolder()
 
-    File buildFile
-    GradleRunner gradleRunner
+    protected File buildFile
+    protected GradleRunner gradleRunner
 
     def classpathString() {
         def classpath = gradleRunner

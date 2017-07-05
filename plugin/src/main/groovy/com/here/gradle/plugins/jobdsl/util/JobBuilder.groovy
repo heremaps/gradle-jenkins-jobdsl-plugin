@@ -1,5 +1,7 @@
 package com.here.gradle.plugins.jobdsl.util
 
+import com.here.gradle.plugins.jobdsl.GradleJobDslPluginException
+
 import javaposse.jobdsl.dsl.DslFactory
 import javaposse.jobdsl.dsl.Job
 import javaposse.jobdsl.dsl.jobs.BuildFlowJob
@@ -9,6 +11,10 @@ import javaposse.jobdsl.dsl.jobs.MavenJob
 import javaposse.jobdsl.dsl.jobs.MultiJob
 import javaposse.jobdsl.dsl.jobs.WorkflowJob
 
+/**
+ * Simple build class that provides build methods for all job types. It can be extended to create job templates. For
+ * details of usage see the plugin documentation.
+ */
 @Deprecated
 class JobBuilder {
 
@@ -30,7 +36,7 @@ class JobBuilder {
             case WorkflowJob:
                 return dslFactory.pipelineJob(name, closure)
             default:
-                throw new RuntimeException("Job type ${jobClass} is not supported.")
+                throw new GradleJobDslPluginException("Job type ${jobClass} is not supported.")
         }
     }
 

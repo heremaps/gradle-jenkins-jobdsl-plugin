@@ -5,9 +5,13 @@ import com.here.gradle.plugins.jobdsl.ItemFilter
 import com.here.gradle.plugins.jobdsl.RestJobManagement
 import javaposse.jobdsl.dsl.JobManagement
 
+/**
+ * Performs the action of the {@link com.here.gradle.plugins.jobdsl.tasks.UpdateJenkinsTask} to upload all items and
+ * views to a Jenkins instance using the REST API.
+ */
 class UpdateJenkinsRunner extends AbstractTaskRunner {
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
         new UpdateJenkinsRunner().run()
     }
 

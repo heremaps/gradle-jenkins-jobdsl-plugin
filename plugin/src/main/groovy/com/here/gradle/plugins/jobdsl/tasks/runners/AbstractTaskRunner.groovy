@@ -9,13 +9,18 @@ import javaposse.jobdsl.dsl.DslScriptLoader
 import javaposse.jobdsl.dsl.JobManagement
 import javaposse.jobdsl.dsl.ScriptRequest
 
+/**
+ * Common code for all tasks that extend {@link com.here.gradle.plugins.jobdsl.tasks.AbstractDslTask} to perform their
+ * actions in another process. This class takes care of receiving and decoding the configuration options for the tasks.
+ */
 abstract class AbstractTaskRunner {
 
     protected JobManagement jobManagement
     protected Properties runProperties
 
+    @SuppressWarnings('Instanceof') // No other way to check if jobManagement is a DeferredJobManagement.
     void run() {
-        runProperties = System.getProperties()
+        runProperties = System.properties
 
         def slurper = new JsonSlurper()
 
@@ -49,6 +54,7 @@ abstract class AbstractTaskRunner {
 
     abstract JobManagement createJobManagement(ItemFilter filter)
 
+    @SuppressWarnings('EmptyMethodInAbstractClass')
     void postProcess() {
         // do nothing by default
     }

@@ -1,5 +1,8 @@
 package com.here.gradle.plugins.jobdsl
 
+/**
+ * Class holding the configuration for a Jenkins server.
+ */
 class ServerDefinition {
 
     String name

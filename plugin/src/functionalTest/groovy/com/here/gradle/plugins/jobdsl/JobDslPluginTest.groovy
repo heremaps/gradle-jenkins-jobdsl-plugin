@@ -6,9 +6,12 @@ import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
 import spock.lang.Specification
 
+/**
+ * Test the Gradle configuration of the plugin.
+ */
 class JobDslPluginTest extends Specification {
 
-    Project project
+    private Project project
 
     def setup() {
         project = ProjectBuilder.builder().build()

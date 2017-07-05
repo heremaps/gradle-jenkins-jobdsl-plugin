@@ -17,9 +17,15 @@ import javaposse.jobdsl.dsl.NameNotProvidedException
 import javaposse.jobdsl.dsl.UserContent
 import org.apache.http.HttpRequest
 import org.apache.http.HttpRequestInterceptor
+import org.apache.http.HttpStatus
 import org.apache.http.protocol.HttpContext
 import org.custommonkey.xmlunit.XMLUnit
 
+/**
+ * Implementation of {@link javaposse.jobdsl.dsl.JobManagement} that performs all actions using the REST API of Jenkins.
+ * Only methods required by the plugin are implemented, all others throw an {@link UnsupportedOperationException}.
+ */
+@SuppressWarnings('MethodCount') // High method count required because of super class.
 class RestJobManagement extends AbstractJobManagement implements DeferredJobManagement {
 
     public static final String STATUS_COULD_NOT_CREATE = 'COULD NOT CREATE'
@@ -30,6 +36,8 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
     public static final String STATUS_UPDATED = 'UPDATED'
     public static final String STATUS_WOULD_BE_CREATED = 'WOULD BE CREATED'
     public static final String STATUS_WOULD_BE_UPDATED = 'WOULD BE UPDATED'
+
+    private static final HEADER_ACCEPT_XML = [Accept: 'application/xml']
 
     static class ItemRequest {
         Item item
@@ -66,8 +74,9 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
     List<ItemRequest> itemRequests
     List<ViewRequest> viewRequests
 
+    @SuppressWarnings('ParameterCount')
     RestJobManagement(ItemFilter filter, boolean disablePluginChecks, boolean dryRun, String jenkinsUrl,
-                      String jenkinsUser, String jenkinsPassword) {
+                      String jenkinsUser, String jenkinsApiToken) {
         super(System.out)
 
         this.disablePluginChecks = disablePluginChecks
@@ -79,9 +88,9 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
             this.jenkinsUrl += '/'
         }
 
-        deprecatedPlugins = new TreeSet<>()
-        missingPlugins = new TreeSet<>()
-        outdatedPlugins = new TreeSet<>()
+        deprecatedPlugins = [] as SortedSet
+        missingPlugins = [] as SortedSet
+        outdatedPlugins = [] as SortedSet
         statusCounter = [:]
 
         itemRequests = []
@@ -90,18 +99,19 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
         restClient = new RESTClient(jenkinsUrl)
         restClient.handler.failure = { it }
 
-        if (jenkinsUser != null && jenkinsPassword != null) {
+        if (jenkinsUser != null && jenkinsApiToken != null) {
             restClient.client.addRequestInterceptor([
                     process: { HttpRequest request, HttpContext context ->
                         request.addHeader(
                                 'Authorization',
-                                'Basic ' + "${jenkinsUser}:${jenkinsPassword}".toString().bytes.encodeBase64().toString()
+                                'Basic ' + "${jenkinsUser}:${jenkinsApiToken}".toString().bytes.encodeBase64()
+                                        .toString()
                         )
                     }] as HttpRequestInterceptor)
         }
 
         HttpResponseDecorator resp = restClient.get(path: 'crumbIssuer/api/xml')
-        if (resp.status == 200) {
+        if (resp.status == HttpStatus.SC_OK) {
             restClient.headers[resp.data.crumbRequestField] = resp.data.crumb
         }
 
@@ -125,7 +135,8 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
     }
 
     @Override
-    void createOrUpdateView(String viewName, String config, boolean ignoreExisting) throws NameNotProvidedException, ConfigurationMissingException {
+    void createOrUpdateView(String viewName, String config, boolean ignoreExisting) throws NameNotProvidedException,
+            ConfigurationMissingException {
         viewRequests += new ViewRequest(viewName: viewName, config: config, ignoreExisting: ignoreExisting)
     }
 
@@ -172,7 +183,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
     @Override
     void logPluginDeprecationWarning(String pluginShortName, String minimumVersion) {
         if (!isMinimumPluginVersionInstalled(pluginShortName, minimumVersion)) {
-            logDeprecationWarning("Support for ${pluginShortName} versions older than ${minimumVersion}");
+            logDeprecationWarning("Support for ${pluginShortName} versions older than ${minimumVersion}")
             deprecatedPlugins.add(pluginShortName)
         }
     }
@@ -241,7 +252,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
 
     @Override
     boolean isMinimumCoreVersion(String version) {
-        return !jenkinsVersion.isOlderThan(new VersionNumber(version));
+        return !jenkinsVersion.isOlderThan(new VersionNumber(version))
     }
 
     @Override
@@ -260,7 +271,8 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
     }
 
     @Override
-    Node callExtension(String name, Item item, Class<? extends ExtensibleContext> contextType, Object... args) throws Throwable {
+    Node callExtension(String name, Item item, Class<? extends ExtensibleContext> contextType, Object... args) throws
+            Throwable {
         return null
     }
 
@@ -273,7 +285,8 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
         def jenkinsHeader = response.getFirstHeader('X-Jenkins')
 
         if (!jenkinsHeader) {
-            throw new DslScriptException("Could not get version from Jenkins server '${jenkinsUrl}': ${response.statusLine}")
+            throw new DslScriptException("Could not get version from Jenkins server '${jenkinsUrl}': " +
+                    "${response.statusLine}")
         }
 
         return new VersionNumber(jenkinsHeader.value)
@@ -286,8 +299,9 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
                 contentType: ContentType.JSON
         ) as HttpResponseDecorator
 
-        if (response.status != 200) {
-            throw new DslScriptException("Could not load list of plugins from Jenkins server '${jenkinsUrl}': ${response.statusLine}")
+        if (response.status != HttpStatus.SC_OK) {
+            throw new DslScriptException("Could not load list of plugins from Jenkins server '${jenkinsUrl}': " +
+                    "${response.statusLine}")
         }
 
         plugins = response.data.plugins
@@ -298,6 +312,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
     }
 
     @Override
+    @SuppressWarnings('Instanceof') // No other way to check if an item is a Folder.
     void applyChanges() {
         // Create folders first, to make sure they exist before trying to create items in them
         itemRequests.findAll { it.item instanceof Folder }.each { itemRequest ->
@@ -333,7 +348,8 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
         return true
     }
 
-    void performCreateOrUpdateView(String viewName, String config, boolean ignoreExisting) throws NameNotProvidedException, ConfigurationMissingException {
+    void performCreateOrUpdateView(String viewName, String config, boolean ignoreExisting) throws
+            NameNotProvidedException, ConfigurationMissingException {
         if (filter.matches(viewName)) {
             String existingXml = requestExistingViewXml(viewName)
             if (!existingXml) {
@@ -350,12 +366,11 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
         }
     }
 
-
     String requestExistingItemXml(Item item) {
         HttpResponseDecorator response = restClient.get(
                 path: FolderPathHelper.itemConfigPath(item.name),
                 contentType: ContentType.TEXT,
-                headers: [Accept: 'application/xml']
+                headers: HEADER_ACCEPT_XML
         ) as HttpResponseDecorator
 
         if (response?.data) {
@@ -369,7 +384,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
         HttpResponseDecorator response = restClient.get(
                 path: FolderPathHelper.viewConfigPath(viewName),
                 contentType: ContentType.TEXT,
-                headers: [Accept: 'application/xml']
+                headers: HEADER_ACCEPT_XML
         ) as HttpResponseDecorator
 
         if (response?.data) {
@@ -392,13 +407,13 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
                 requestContentType: 'application/xml'
         ) as HttpResponseDecorator
 
-        if (response.status == 200) {
+        if (response.status == HttpStatus.SC_OK) {
             logItemStatus(item, STATUS_CREATED)
             return true
         } else {
             logItemStatus(item, STATUS_COULD_NOT_CREATE, response.dump())
-            if (response.status == 404) {
-                println "If the item is contained in a folder probably the folder does not exist"
+            if (response.status == HttpStatus.SC_NOT_FOUND) {
+                println 'If the item is contained in a folder probably the folder does not exist'
             }
             return false
         }
@@ -417,7 +432,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
                 requestContentType: 'application/xml'
         ) as HttpResponseDecorator
 
-        if (response.status == 200) {
+        if (response.status == HttpStatus.SC_OK) {
             logViewStatus(viewName, STATUS_CREATED)
             return true
         } else {
@@ -438,7 +453,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
                 requestContentType: 'application/xml'
         ) as HttpResponseDecorator
 
-        if (response.status == 200) {
+        if (response.status == HttpStatus.SC_OK) {
             logItemStatus(item, STATUS_UPDATED)
             return true
         } else {
@@ -459,7 +474,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
                 requestContentType: 'application/xml'
         ) as HttpResponseDecorator
 
-        if (response.status == 200) {
+        if (response.status == HttpStatus.SC_OK) {
             logViewStatus(viewName, STATUS_UPDATED)
             return true
         } else {
@@ -479,10 +494,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
     }
 
     private void countStatus(String status) {
-        if (!statusCounter[status]) {
-            statusCounter[status] = 0
-        }
-        statusCounter[status] = statusCounter[status] + 1
+        statusCounter[status] = (statusCounter[status] ?: 0) + 1
     }
 
 }

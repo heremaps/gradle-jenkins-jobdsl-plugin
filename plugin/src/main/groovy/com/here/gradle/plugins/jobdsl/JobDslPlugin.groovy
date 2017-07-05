@@ -5,6 +5,9 @@ import com.here.gradle.plugins.jobdsl.tasks.UpdateJenkinsTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
+/**
+ * Gradle plugin configuration for the Job DSL plugin. Configures tasks, extensions, and source sets.
+ */
 class JobDslPlugin implements Plugin<Project> {
 
     @Override

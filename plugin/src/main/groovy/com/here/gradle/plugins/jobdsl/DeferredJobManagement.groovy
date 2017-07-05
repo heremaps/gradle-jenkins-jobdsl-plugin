@@ -6,6 +6,6 @@ package com.here.gradle.plugins.jobdsl
  */
 interface DeferredJobManagement {
 
-    void applyChanges();
+    void applyChanges()
 
 }

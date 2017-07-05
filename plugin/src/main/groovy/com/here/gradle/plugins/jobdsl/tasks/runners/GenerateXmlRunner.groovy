@@ -4,9 +4,13 @@ import com.here.gradle.plugins.jobdsl.FilteringMemoryJobManagement
 import com.here.gradle.plugins.jobdsl.ItemFilter
 import javaposse.jobdsl.dsl.JobManagement
 
+/**
+ * Performs the action of the {@link com.here.gradle.plugins.jobdsl.tasks.GenerateXmlTask} to generate XML files for all
+ * items and views.
+ */
 class GenerateXmlRunner extends AbstractTaskRunner {
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
         new GenerateXmlRunner().run()
     }
 
@@ -34,10 +38,10 @@ class GenerateXmlRunner extends AbstractTaskRunner {
         def fileName = name
         if (name.contains('/')) {
             def lastIndex = name.lastIndexOf('/')
-            def subDirectory = name.substring(0, lastIndex)
+            def subDirectory = name[0..lastIndex]
             targetDirectory = new File("${outputDirectory}/${subDirectory}")
             targetDirectory.mkdirs()
-            fileName = name.substring(lastIndex + 1)
+            fileName = name.drop(lastIndex + 1)
         }
         def xmlFile = new File("${targetDirectory}/${fileName}.xml")
         xmlFile.write(xml)

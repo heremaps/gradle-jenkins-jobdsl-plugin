@@ -7,18 +7,24 @@ import org.gradle.api.internal.tasks.options.Option
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.JavaExec
 
+/**
+ * Shared code for all tasks of the plugin that call an implementation of
+ * {@link com.here.gradle.plugins.jobdsl.tasks.runners.AbstractTaskRunner} to perform the action in another process.
+ * This class takes care of forwarding all configuration options and the classpath to the external process.
+ */
 abstract class AbstractDslTask extends JavaExec {
 
     protected String filter = ''
     protected ServerDefinition server
     protected String serverName
 
-    AbstractDslTask() {
+    protected AbstractDslTask() {
         super()
         group = 'Job DSL'
     }
 
     @Override
+    @SuppressWarnings('UnnecessaryGetter') // getProperties() is much more readable than just properties in this case.
     void exec() {
         // Pull serverName to local variable, otherwise Gradle throws this exception for an unknown reason:
         // groovy.lang.GroovyRuntimeException: Cannot get the value of write-only property 'serverName'
@@ -42,7 +48,7 @@ abstract class AbstractDslTask extends JavaExec {
                 encodeBase64(new JsonBuilder(server.configuration).toString()) : ''
         setSystemProperties(properties)
 
-        setMain(getMainClass())
+        setMain(mainClass)
         setClasspath(project.sourceSets.main.runtimeClasspath + project.buildscript.configurations.classpath)
 
         super.exec()

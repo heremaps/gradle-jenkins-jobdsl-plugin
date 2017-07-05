@@ -2,6 +2,9 @@ package com.here.gradle.plugins.jobdsl
 
 import spock.lang.Specification
 
+/**
+ * Tests for the {@link ItemFilter}.
+ */
 class ItemFilterSpec extends Specification {
 
     def 'filter is ignored when null'() {

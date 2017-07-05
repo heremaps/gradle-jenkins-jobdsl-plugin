@@ -1,5 +1,8 @@
 package com.here.gradle.plugins.jobdsl
 
+/**
+ * Static helper methods for URL paths to items in folders.
+ */
 class FolderPathHelper {
 
     /**
@@ -53,7 +56,7 @@ class FolderPathHelper {
      */
     static String removeFoldersFromName(String name) {
         int lastIndex = name.lastIndexOf('/')
-        return name.substring(lastIndex + 1)
+        return name.drop(lastIndex + 1)
     }
 
     /**

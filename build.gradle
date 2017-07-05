@@ -9,7 +9,13 @@ buildscript {
 }
 
 subprojects {
+    apply plugin: 'codenarc'
     apply plugin: 'com.github.ben-manes.versions'
+
+    codenarc {
+        configFile rootProject.file('config/codenarc.groovy')
+        toolVersion '0.27.0'
+    }
 
     if (System.env.TRAVIS == 'true') {
         // Reduce memory pressure on Travis CI nodes, see
