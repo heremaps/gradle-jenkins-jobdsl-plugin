@@ -17,6 +17,7 @@ import javaposse.jobdsl.dsl.NameNotProvidedException
 import javaposse.jobdsl.dsl.UserContent
 import org.apache.http.HttpRequest
 import org.apache.http.HttpRequestInterceptor
+import org.apache.http.HttpStatus
 import org.apache.http.protocol.HttpContext
 import org.custommonkey.xmlunit.XMLUnit
 
@@ -102,7 +103,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
         }
 
         HttpResponseDecorator resp = restClient.get(path: 'crumbIssuer/api/xml')
-        if (resp.status == 200) {
+        if (resp.status == HttpStatus.SC_OK) {
             restClient.headers[resp.data.crumbRequestField] = resp.data.crumb
         }
 
@@ -290,7 +291,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
                 contentType: ContentType.JSON
         ) as HttpResponseDecorator
 
-        if (response.status != 200) {
+        if (response.status != HttpStatus.SC_OK) {
             throw new DslScriptException("Could not load list of plugins from Jenkins server '${jenkinsUrl}': " +
                     "${response.statusLine}")
         }
@@ -397,12 +398,12 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
                 requestContentType: 'application/xml'
         ) as HttpResponseDecorator
 
-        if (response.status == 200) {
+        if (response.status == HttpStatus.SC_OK) {
             logItemStatus(item, STATUS_CREATED)
             return true
         } else {
             logItemStatus(item, STATUS_COULD_NOT_CREATE, response.dump())
-            if (response.status == 404) {
+            if (response.status == HttpStatus.SC_NOT_FOUND) {
                 println 'If the item is contained in a folder probably the folder does not exist'
             }
             return false
@@ -422,7 +423,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
                 requestContentType: 'application/xml'
         ) as HttpResponseDecorator
 
-        if (response.status == 200) {
+        if (response.status == HttpStatus.SC_OK) {
             logViewStatus(viewName, STATUS_CREATED)
             return true
         } else {
@@ -443,7 +444,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
                 requestContentType: 'application/xml'
         ) as HttpResponseDecorator
 
-        if (response.status == 200) {
+        if (response.status == HttpStatus.SC_OK) {
             logItemStatus(item, STATUS_UPDATED)
             return true
         } else {
@@ -464,7 +465,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
                 requestContentType: 'application/xml'
         ) as HttpResponseDecorator
 
-        if (response.status == 200) {
+        if (response.status == HttpStatus.SC_OK) {
             logViewStatus(viewName, STATUS_UPDATED)
             return true
         } else {
