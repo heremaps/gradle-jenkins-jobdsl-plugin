@@ -14,7 +14,7 @@ class DslConfig {
      * @param key
      * @return
      */
-    def static get(String key) {
+    static get(String key) {
         if (serverConfiguration.containsKey(key)) {
             return serverConfiguration[key]
         } else if (configuration.containsKey(key)) {
@@ -27,11 +27,11 @@ class DslConfig {
         }
     }
 
-    def static setConfiguration(Map<String, ?> configuration) {
+    static setConfiguration(Map<String, ?> configuration) {
         this.configuration = configuration
     }
 
-    def static setServerConfiguration(Map<String, ?> serverConfiguration) {
+    static setServerConfiguration(Map<String, ?> serverConfiguration) {
         this.serverConfiguration = serverConfiguration
     }
 
