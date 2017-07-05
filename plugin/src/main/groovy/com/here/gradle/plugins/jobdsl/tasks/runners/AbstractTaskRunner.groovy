@@ -14,6 +14,7 @@ abstract class AbstractTaskRunner {
     protected JobManagement jobManagement
     protected Properties runProperties
 
+    @SuppressWarnings('Instanceof') // No other way to check if jobManagement is a DeferredJobManagement.
     void run() {
         runProperties = System.properties
 
@@ -49,6 +50,7 @@ abstract class AbstractTaskRunner {
 
     abstract JobManagement createJobManagement(ItemFilter filter)
 
+    @SuppressWarnings('EmptyMethodInAbstractClass')
     void postProcess() {
         // do nothing by default
     }

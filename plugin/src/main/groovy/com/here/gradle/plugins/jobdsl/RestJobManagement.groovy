@@ -21,6 +21,7 @@ import org.apache.http.HttpStatus
 import org.apache.http.protocol.HttpContext
 import org.custommonkey.xmlunit.XMLUnit
 
+@SuppressWarnings('MethodCount') // High method count required because of super class.
 class RestJobManagement extends AbstractJobManagement implements DeferredJobManagement {
 
     public static final String STATUS_COULD_NOT_CREATE = 'COULD NOT CREATE'
@@ -67,6 +68,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
     List<ItemRequest> itemRequests
     List<ViewRequest> viewRequests
 
+    @SuppressWarnings('ParameterCount')
     RestJobManagement(ItemFilter filter, boolean disablePluginChecks, boolean dryRun, String jenkinsUrl,
                       String jenkinsUser, String jenkinsApiToken) {
         super(System.out)
@@ -304,6 +306,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
     }
 
     @Override
+    @SuppressWarnings('Instanceof') // No other way to check if an item is a Folder.
     void applyChanges() {
         // Create folders first, to make sure they exist before trying to create items in them
         itemRequests.findAll { it.item instanceof Folder }.each { itemRequest ->

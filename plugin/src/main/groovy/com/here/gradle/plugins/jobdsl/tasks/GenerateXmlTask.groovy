@@ -8,6 +8,7 @@ class GenerateXmlTask extends AbstractDslTask {
     }
 
     @Override
+    @SuppressWarnings('GetterMethodCouldBeProperty') // Implements abstract method
     String getMainClass() {
         'com.here.gradle.plugins.jobdsl.tasks.runners.GenerateXmlRunner'
     }
