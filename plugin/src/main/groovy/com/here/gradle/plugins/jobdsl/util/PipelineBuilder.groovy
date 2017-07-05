@@ -7,7 +7,7 @@ class PipelineBuilder {
     List<PipelineJobBuilder> jobBuilders = []
     List<String> baseFolders
     Map<String, Object> defaultConfiguration = [:]
-    Closure commonDsl = {}
+    Closure commonDsl = { }
 
     void addJob(PipelineJobBuilder jobBuilder) {
         jobBuilder.pipelineBuilder = this
