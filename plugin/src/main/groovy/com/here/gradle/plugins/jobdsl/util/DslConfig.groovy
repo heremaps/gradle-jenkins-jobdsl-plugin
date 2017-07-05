@@ -2,6 +2,9 @@ package com.here.gradle.plugins.jobdsl.util
 
 import javaposse.jobdsl.dsl.DslException
 
+/**
+ * This class holds the global and server specific configuration maps.
+ */
 class DslConfig {
 
     private static Map<String, ?> configuration

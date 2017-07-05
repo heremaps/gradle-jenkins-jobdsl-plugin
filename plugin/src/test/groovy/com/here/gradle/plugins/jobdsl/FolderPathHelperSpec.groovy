@@ -6,6 +6,9 @@ import javaposse.jobdsl.dsl.MemoryJobManagement
 import javaposse.jobdsl.dsl.jobs.FreeStyleJob
 import spock.lang.Specification
 
+/**
+ * Tests for the {@link FolderPathHelper}.
+ */
 class FolderPathHelperSpec extends Specification {
 
     JobManagement jobManagement = new MemoryJobManagement()

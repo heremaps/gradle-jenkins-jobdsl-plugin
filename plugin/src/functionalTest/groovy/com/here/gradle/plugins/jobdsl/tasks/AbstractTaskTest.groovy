@@ -5,6 +5,9 @@ import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
 
+/**
+ * Common code for tests of plugin tasks.
+ */
 class AbstractTaskTest extends Specification {
 
     @Rule

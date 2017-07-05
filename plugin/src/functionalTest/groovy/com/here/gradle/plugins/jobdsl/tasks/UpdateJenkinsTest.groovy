@@ -15,6 +15,9 @@ import org.jvnet.hudson.test.JenkinsRule
 import org.jvnet.hudson.test.MockAuthorizationStrategy
 import org.jvnet.hudson.test.recipes.WithPlugin
 
+/**
+ * Test for the dslUpdateJenkins test. Uses {@link JenkinsRule} to create a Jenkins instance to run the tests against.
+ */
 class UpdateJenkinsTest extends AbstractTaskTest {
 
     @Rule

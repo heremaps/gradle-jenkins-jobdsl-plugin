@@ -4,6 +4,10 @@ import org.gradle.api.internal.tasks.options.Option
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Optional
 
+/**
+ * Task that calls {@link com.here.gradle.plugins.jobdsl.tasks.runners.UpdateJenkinsRunner} to upload all items and
+ * views configured in the project to a Jenkins instance using the REST API.
+ */
 class UpdateJenkinsTask extends AbstractDslTask {
 
     @Input

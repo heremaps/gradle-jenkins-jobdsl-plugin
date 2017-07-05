@@ -21,6 +21,10 @@ import org.apache.http.HttpStatus
 import org.apache.http.protocol.HttpContext
 import org.custommonkey.xmlunit.XMLUnit
 
+/**
+ * Implementation of {@link javaposse.jobdsl.dsl.JobManagement} that performs all actions using the REST API of Jenkins.
+ * Only methods required by the plugin are implemented, all others throw an {@link UnsupportedOperationException}.
+ */
 @SuppressWarnings('MethodCount') // High method count required because of super class.
 class RestJobManagement extends AbstractJobManagement implements DeferredJobManagement {
 

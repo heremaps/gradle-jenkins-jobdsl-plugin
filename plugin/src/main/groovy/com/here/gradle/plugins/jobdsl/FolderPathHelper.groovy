@@ -1,5 +1,8 @@
 package com.here.gradle.plugins.jobdsl
 
+/**
+ * Static helper methods for URL paths to items in folders.
+ */
 class FolderPathHelper {
 
     /**

@@ -9,6 +9,10 @@ import javaposse.jobdsl.dsl.DslScriptLoader
 import javaposse.jobdsl.dsl.JobManagement
 import javaposse.jobdsl.dsl.ScriptRequest
 
+/**
+ * Common code for all tasks that extend {@link com.here.gradle.plugins.jobdsl.tasks.AbstractDslTask} to perform their
+ * actions in another process. This class takes care of receiving and decoding the configuration options for the tasks.
+ */
 abstract class AbstractTaskRunner {
 
     protected JobManagement jobManagement

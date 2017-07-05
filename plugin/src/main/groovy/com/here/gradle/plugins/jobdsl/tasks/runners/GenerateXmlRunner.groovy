@@ -4,6 +4,10 @@ import com.here.gradle.plugins.jobdsl.FilteringMemoryJobManagement
 import com.here.gradle.plugins.jobdsl.ItemFilter
 import javaposse.jobdsl.dsl.JobManagement
 
+/**
+ * Performs the action of the {@link com.here.gradle.plugins.jobdsl.tasks.GenerateXmlTask} to generate XML files for all
+ * items and views.
+ */
 class GenerateXmlRunner extends AbstractTaskRunner {
 
     static void main(String[] args) {

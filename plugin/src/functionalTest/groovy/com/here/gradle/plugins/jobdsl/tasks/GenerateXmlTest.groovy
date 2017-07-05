@@ -3,6 +3,9 @@ package com.here.gradle.plugins.jobdsl.tasks
 import org.custommonkey.xmlunit.XMLUnit
 import org.gradle.testkit.runner.TaskOutcome
 
+/**
+ * Test for the dslGenerateXml task.
+ */
 class GenerateXmlTest extends AbstractTaskTest {
 
     def 'empty freestyle job is generated correctly'() {

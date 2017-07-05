@@ -4,6 +4,9 @@ import javaposse.jobdsl.dsl.Item
 import javaposse.jobdsl.dsl.MemoryJobManagement
 import javaposse.jobdsl.dsl.NameNotProvidedException
 
+/**
+ * Implementation of {@link MemoryJobManagement} that supports an {@link ItemFilter} to filter items.
+ */
 class FilteringMemoryJobManagement extends MemoryJobManagement {
 
     private final ItemFilter filter

@@ -11,6 +11,10 @@ import javaposse.jobdsl.dsl.jobs.MavenJob
 import javaposse.jobdsl.dsl.jobs.MultiJob
 import javaposse.jobdsl.dsl.jobs.WorkflowJob
 
+/**
+ * Simple build class that provides build methods for all job types. It can be extended to create job templates. For
+ * details of usage see the plugin documentation.
+ */
 @Deprecated
 class JobBuilder {
 

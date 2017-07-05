@@ -1,5 +1,8 @@
 package com.here.gradle.plugins.jobdsl
 
+/**
+ * {@link RuntimeException} used for plugin specific exceptions.
+ */
 class GradleJobDslPluginException extends RuntimeException {
     GradleJobDslPluginException() {
         super()

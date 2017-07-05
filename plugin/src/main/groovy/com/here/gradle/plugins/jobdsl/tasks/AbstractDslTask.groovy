@@ -7,6 +7,11 @@ import org.gradle.api.internal.tasks.options.Option
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.JavaExec
 
+/**
+ * Shared code for all tasks of the plugin that call an implementation of
+ * {@link com.here.gradle.plugins.jobdsl.tasks.runners.AbstractTaskRunner} to perform the action in another process.
+ * This class takes care of forwarding all configuration options and the classpath to the external process.
+ */
 abstract class AbstractDslTask extends JavaExec {
 
     protected String filter = ''
