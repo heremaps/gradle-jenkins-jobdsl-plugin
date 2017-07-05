@@ -488,10 +488,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
     }
 
     private void countStatus(String status) {
-        if (!statusCounter[status]) {
-            statusCounter[status] = 0
-        }
-        statusCounter[status] = statusCounter[status] + 1
+        statusCounter[status] = (statusCounter[status] ?: 0) + 1
     }
 
 }
