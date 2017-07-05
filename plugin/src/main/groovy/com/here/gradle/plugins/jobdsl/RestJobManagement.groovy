@@ -91,7 +91,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
         deprecatedPlugins = [] as SortedSet
         missingPlugins = [] as SortedSet
         outdatedPlugins = [] as SortedSet
-        statusCounter = [:]
+        statusCounter = [:].withDefault { 0 }
 
         itemRequests = []
         viewRequests = []
@@ -494,7 +494,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
     }
 
     private void countStatus(String status) {
-        statusCounter[status] = (statusCounter[status] ?: 0) + 1
+        ++statusCounter[status]
     }
 
 }
