@@ -1,5 +1,7 @@
 package com.here.gradle.plugins.jobdsl.util
 
+import com.here.gradle.plugins.jobdsl.GradleJobDslPluginException
+
 import javaposse.jobdsl.dsl.DslFactory
 import javaposse.jobdsl.dsl.Job
 import javaposse.jobdsl.dsl.jobs.BuildFlowJob
@@ -32,7 +34,6 @@ class JobBuilder2 {
      * Create the job object using the configured DSL closures and job class.
      *
      * @return The created {@link Job} object.
-     * @throws RuntimeException if job type is null or not supported.
      */
     final Job build() {
         checkNameIsValid()
@@ -51,7 +52,7 @@ class JobBuilder2 {
             case WorkflowJob:
                 return dslFactory.pipelineJob(fullJobName(), dslClosure)
             default:
-                throw new RuntimeException("Job type ${jobClass} is not supported.")
+                throw new GradleJobDslPluginException("Job type ${jobClass} is not supported.")
         }
     }
 
@@ -140,7 +141,7 @@ class JobBuilder2 {
      */
     void addDsl(@DelegatesTo(Job) Closure closure) {
         if (closure == null) {
-            throw new RuntimeException('Closure must not be null.')
+            throw new GradleJobDslPluginException('Closure must not be null.')
         }
         dslClosures.add(closure)
     }
@@ -197,8 +198,8 @@ class JobBuilder2 {
 
     void checkJobClassNull() {
         if (jobClass != null) {
-            throw new RuntimeException('The job methods cannot be called multiple times, job class is already set to ' +
-                    "${jobClass.name}.")
+            throw new GradleJobDslPluginException('The job methods cannot be called multiple times, job class is ' +
+                    "already set to ${jobClass.name}.")
         }
     }
 
@@ -217,8 +218,8 @@ class JobBuilder2 {
 
     void checkNameIsValid() {
         if (name.contains('/')) {
-            throw new RuntimeException('Job name may not contain "/", if the job is inside a folder use the folders ' +
-                    'field.')
+            throw new GradleJobDslPluginException('Job name may not contain "/", if the job is inside a folder use ' +
+                    'the folders field.')
         }
     }
 

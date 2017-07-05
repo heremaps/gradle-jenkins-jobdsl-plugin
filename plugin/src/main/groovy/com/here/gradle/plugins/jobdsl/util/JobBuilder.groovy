@@ -1,5 +1,7 @@
 package com.here.gradle.plugins.jobdsl.util
 
+import com.here.gradle.plugins.jobdsl.GradleJobDslPluginException
+
 import javaposse.jobdsl.dsl.DslFactory
 import javaposse.jobdsl.dsl.Job
 import javaposse.jobdsl.dsl.jobs.BuildFlowJob
@@ -30,7 +32,7 @@ class JobBuilder {
             case WorkflowJob:
                 return dslFactory.pipelineJob(name, closure)
             default:
-                throw new RuntimeException("Job type ${jobClass} is not supported.")
+                throw new GradleJobDslPluginException("Job type ${jobClass} is not supported.")
         }
     }
 
