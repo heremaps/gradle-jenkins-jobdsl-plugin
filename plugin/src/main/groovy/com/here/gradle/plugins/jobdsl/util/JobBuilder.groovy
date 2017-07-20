@@ -13,10 +13,10 @@ import javaposse.jobdsl.dsl.jobs.WorkflowJob
 
 /**
  * This is the base class for all job builders. It can be extended to create templates for job configurations. It can
- * store multiple DSL closures which are concatenated when {@link JobBuilder2#build()} is called. They are executed in
+ * store multiple DSL closures which are concatenated when {@link JobBuilder#build()} is called. They are executed in
  * the order they are added to the builder. For detailed usage see the README file and the examples.
  */
-class JobBuilder2 {
+class JobBuilder {
 
     DslFactory dslFactory
     Class<? extends Job> jobClass
@@ -24,7 +24,7 @@ class JobBuilder2 {
     List<String> folders = []
     List<Closure> dslClosures = []
 
-    JobBuilder2(DslFactory dslFactory) {
+    JobBuilder(DslFactory dslFactory) {
         this.dslFactory = dslFactory
     }
 
@@ -146,7 +146,7 @@ class JobBuilder2 {
 
     /**
      * Convenience method to get full IDE support when adding a DSL closure for a @{link FreeStyleJob}. The closure is
-     * forwarded to {@link JobBuilder2#addDsl}.
+     * forwarded to {@link JobBuilder#addDsl}.
 
      * @param closure
      */
@@ -156,7 +156,7 @@ class JobBuilder2 {
 
     /**
      * Convenience method to get full IDE support when adding a DSL closure for a @{link MatrixJob}. The closure is
-     * forwarded to {@link JobBuilder2#addDsl}.
+     * forwarded to {@link JobBuilder#addDsl}.
 
      * @param closure
      */
@@ -166,7 +166,7 @@ class JobBuilder2 {
 
     /**
      * Convenience method to get full IDE support when adding a DSL closure for a @{link MavenJob}. The closure is
-     * forwarded to {@link JobBuilder2#addDsl}.
+     * forwarded to {@link JobBuilder#addDsl}.
 
      * @param closure
      */
@@ -176,7 +176,7 @@ class JobBuilder2 {
 
     /**
      * Convenience method to get full IDE support when adding a DSL closure for a @{link MultiJob}. The closure is
-     * forwarded to {@link JobBuilder2#addDsl}.
+     * forwarded to {@link JobBuilder#addDsl}.
 
      * @param closure
      */
@@ -186,7 +186,7 @@ class JobBuilder2 {
 
     /**
      * Convenience method to get full IDE support when adding a DSL closure for a @{link WorkflowJob}. The closure is
-     * forwarded to {@link JobBuilder2#addDsl}.
+     * forwarded to {@link JobBuilder#addDsl}.
 
      * @param closure
      */

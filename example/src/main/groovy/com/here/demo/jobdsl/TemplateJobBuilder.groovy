@@ -1,7 +1,7 @@
 package com.here.demo.jobdsl
 
 import com.here.gradle.plugins.jobdsl.util.DslConfig
-import com.here.gradle.plugins.jobdsl.util.JobBuilder2
+import com.here.gradle.plugins.jobdsl.util.JobBuilder
 import javaposse.jobdsl.dsl.DslFactory
 
 /**
@@ -9,7 +9,7 @@ import javaposse.jobdsl.dsl.DslFactory
  * you want to create a template for the common behaviour of many different jobs.<br>
  * This example also uses {@link DslConfig} to retrieve the configuration of the project.
  */
-class TemplateJobBuilder extends JobBuilder2 {
+class TemplateJobBuilder extends JobBuilder {
 
     TemplateJobBuilder(DslFactory dslFactory) {
         super(dslFactory)
