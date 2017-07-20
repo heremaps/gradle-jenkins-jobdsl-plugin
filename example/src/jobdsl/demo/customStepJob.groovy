@@ -1,11 +1,13 @@
 import com.here.demo.jobdsl.CustomStep
 import com.here.demo.jobdsl.TemplateJobBuilder
+import javaposse.jobdsl.dsl.DslFactory
 
-new TemplateJobBuilder(
-        dslFactory: this,
-        name: 'Demo/CustomStepJob'
-).buildFreeStyleJob {
+def job = new TemplateJobBuilder(this as DslFactory)
+job.name = 'CustomStepJob'
+job.folders = ['Demo']
+job.freeStyleJob {
     steps {
         CustomStep.echo(delegate, 'Hello custom build step!')
     }
 }
+job.build()
