@@ -12,11 +12,9 @@ import javaposse.jobdsl.dsl.jobs.MultiJob
 import javaposse.jobdsl.dsl.jobs.WorkflowJob
 
 /**
- * This is the new implementation of {@link JobBuilder}, because the API has changed the old version will be kept until
- * the next major release. This class will be renamed to JobBuilder with the next major release.
- * The main difference to the old implementation is that the DSL script can be provided before calling the build method
- * and the build method does not take any parameters anymore. This makes it possible to reuse the same builder instance
- * and build the job again after changing the configuration of the builder.
+ * This is the base class for all job builders. It can be extended to create templates for job configurations. It can
+ * store multiple DSL closures which are concatenated when {@link JobBuilder2#build()} is called. They are executed in
+ * the order they are added to the builder. For detailed usage see the README file and the examples.
  */
 class JobBuilder2 {
 
