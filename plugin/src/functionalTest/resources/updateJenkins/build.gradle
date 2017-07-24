@@ -5,3 +5,7 @@ buildscript {
 }
 
 apply plugin: 'com.here.jobdsl'
+
+dependencies {
+    compile localGroovy()
+}
