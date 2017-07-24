@@ -98,7 +98,7 @@ those classes in your Job DSL scripts, because they are automatically added to t
 
 The recommended way to implement job templates are job builder classes. The plugin provides a basic `JobBuilder` class
 that can be extended to create templates. Below you can find an example of how to create a template that automatically
-enables the timestamp plugin for all your jobs:
+enables the timestamp plugin for all jobs that use the template:
 
 ```groovy
 import com.here.gradle.plugins.jobdsl.util.JobBuilder
@@ -106,31 +106,31 @@ import javaposse.jobdsl.dsl.Job
 
 class CustomJobBuilder extends JobBuilder {
 
-    @Override
-    Job build(Class<? extends Job> jobClass, @DelegatesTo(Job.class) Closure closure) {
-        def job = super.build(jobClass, closure)
-        job.with {
+    GenericJob(DslFactory dslFactory) {
+        super(dslFactory)
+
+        addDsl {
             wrappers {
                 timestamps()
             }
         }
-        return job
     }
 
 }
 ```
 
-It is important to keep the `@DelegatesTo` annotation to enable code completion support in your IDE.
-
-To use the template you have to create an instance of your custom job builder class. The `JobBuilder` provides
-convenience methods like `buildFreeStyleJob` or `buildMatrixJob` for each job type that optimize IDE support compared to
-using the generic `build` method.
+To use the template you have to create an instance of your custom job builder class. You can add additional DSL code by
+passing it to the `addDsl` method. The builder will concatenate all closures and execute them in the order they were
+added when `build` is called. The `JobBuilder` provides convenience methods like `addFreeStyleDsl` or `addMatrixdsl` for
+each job type that optimize IDE support compared to using the generic `addDsl` method. You also have to set the job type
+by calling any of `freestyleJob`, `matrixJob` and so on. These methods optionally take a DSL closure argument for
+convenience.
 
 ```groovy
-new CustomJobBuilder(
+def job = new CustomJobBuilder(
         dslFactory: this,
         name: 'MyExampleJob'
-).buildFreeStyleJob {
+).freeStyleJob {
 
     description 'My example job'
 
@@ -138,6 +138,8 @@ new CustomJobBuilder(
         shell('Hello World!')
     }
 }
+
+job.build()
 ```
 
 #### Thirdparty Libraries

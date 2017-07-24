@@ -1,4 +1,6 @@
 buildscript {
+    ext.jobDslPluginVersion = '2.0.0'
+
     repositories {
         mavenLocal()
         jcenter()
@@ -8,7 +10,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.here.gradle.plugins:gradle-job-dsl-plugin:1.0'
+        classpath "com.here.gradle.plugins:gradle-job-dsl-plugin:${jobDslPluginVersion}"
     }
 }
 
@@ -24,7 +26,7 @@ repositories {
 
 dependencies {
     compile localGroovy()
-    compile 'com.here.gradle.plugins:gradle-job-dsl-plugin:1.0'
+    compile "com.here.gradle.plugins:gradle-job-dsl-plugin:${jobDslPluginVersion}"
 }
 
 if (properties.buildAgainstPluginProject.toBoolean()) {

@@ -12,56 +12,213 @@ import javaposse.jobdsl.dsl.jobs.MultiJob
 import javaposse.jobdsl.dsl.jobs.WorkflowJob
 
 /**
- * Simple build class that provides build methods for all job types. It can be extended to create job templates. For
- * details of usage see the plugin documentation.
+ * This is the base class for all job builders. It can be extended to create templates for job configurations. It can
+ * store multiple DSL closures which are concatenated when {@link JobBuilder#build()} is called. They are executed in
+ * the order they are added to the builder. For detailed usage see the README file and the examples.
  */
-@Deprecated
 class JobBuilder {
 
     DslFactory dslFactory
+    Class<? extends Job> jobClass
     String name
+    List<String> folders = []
+    List<Closure> dslClosures = []
 
-    Job build(Class<? extends Job> jobClass, @DelegatesTo(Job) Closure closure) {
+    JobBuilder(DslFactory dslFactory) {
+        this.dslFactory = dslFactory
+    }
+
+    /**
+     * Create the job object using the configured DSL closures and job class.
+     *
+     * @return The created {@link Job} object.
+     */
+    final Job build() {
+        checkNameIsValid()
+        def dslClosure = concatenateDslClosures()
         switch (jobClass) {
             case BuildFlowJob:
-                return dslFactory.buildFlowJob(name, closure)
+                return dslFactory.buildFlowJob(fullJobName(), dslClosure)
             case FreeStyleJob:
-                return dslFactory.freeStyleJob(name, closure)
+                return dslFactory.freeStyleJob(fullJobName(), dslClosure)
             case MatrixJob:
-                return dslFactory.matrixJob(name, closure)
+                return dslFactory.matrixJob(fullJobName(), dslClosure)
             case MavenJob:
-                return dslFactory.mavenJob(name, closure)
+                return dslFactory.mavenJob(fullJobName(), dslClosure)
             case MultiJob:
-                return dslFactory.multiJob(name, closure)
+                return dslFactory.multiJob(fullJobName(), dslClosure)
             case WorkflowJob:
-                return dslFactory.pipelineJob(name, closure)
+                return dslFactory.pipelineJob(fullJobName(), dslClosure)
             default:
                 throw new GradleJobDslPluginException("Job type ${jobClass} is not supported.")
         }
     }
 
-    BuildFlowJob buildBuildFlowJob(@DelegatesTo(BuildFlowJob) Closure closure) {
-        return build(BuildFlowJob, closure)
+    /**
+     * Set the job type to {@link BuildFlowJob} and add the provided DSL closure to the list of closures.
+     *
+     * @param closure
+     */
+    void buildFlowJob(@DelegatesTo(BuildFlowJob) Closure closure = null) {
+        checkJobClassNull()
+        if (closure != null) {
+            addDsl(closure)
+        }
+        jobClass = BuildFlowJob
     }
 
-    FreeStyleJob buildFreeStyleJob(@DelegatesTo(FreeStyleJob) Closure closure) {
-        return build(FreeStyleJob, closure)
+    /**
+     * Set the job type to {@link FreeStyleJob} and add the provided DSL closure to the list of closures.
+     *
+     * @param closure
+     */
+    void freeStyleJob(@DelegatesTo(FreeStyleJob) Closure closure = null) {
+        checkJobClassNull()
+        if (closure != null) {
+            addDsl(closure)
+        }
+        jobClass = FreeStyleJob
     }
 
-    MatrixJob buildMatrixJob(@DelegatesTo(MatrixJob) Closure closure) {
-        return build(MatrixJob, closure)
+    /**
+     * Set the job type to {@link MatrixJob} and add the provided DSL closure to the list of closures.
+     *
+     * @param closure
+     */
+    void matrixJob(@DelegatesTo(MatrixJob) Closure closure = null) {
+        checkJobClassNull()
+        if (closure != null) {
+            addDsl(closure)
+        }
+        jobClass = MatrixJob
     }
 
-    MavenJob buildMavenJob(@DelegatesTo(MavenJob) Closure closure) {
-        return build(MavenJob, closure)
+    /**
+     * Set the job type to {@link MavenJob} and add the provided DSL closure to the list of closures.
+     *
+     * @param closure
+     */
+    void mavenJob(@DelegatesTo(MavenJob) Closure closure = null) {
+        checkJobClassNull()
+        if (closure != null) {
+            addDsl(closure)
+        }
+        jobClass = MavenJob
     }
 
-    MultiJob buildMultiJob(@DelegatesTo(MultiJob) Closure closure) {
-        return build(MultiJob, closure)
+    /**
+     * Set the job type to {@link MultiJob} and add the provided DSL closure to the list of closures.
+     *
+     * @param closure
+     */
+    void multiJob(@DelegatesTo(MultiJob) Closure closure = null) {
+        checkJobClassNull()
+        if (closure != null) {
+            addDsl(closure)
+        }
+        jobClass = MultiJob
     }
 
-    WorkflowJob buildPipelineJob(@DelegatesTo(WorkflowJob) Closure closure) {
-        return build(WorkflowJob, closure)
+    /**
+     * Set the job type to {@link WorkflowJob} and add the provided DSL closure to the list of closures.
+     *
+     * @param closure
+     */
+    void pipelineJob(@DelegatesTo(WorkflowJob) Closure closure = null) {
+        checkJobClassNull()
+        if (closure != null) {
+            addDsl(closure)
+        }
+        jobClass = WorkflowJob
+    }
+
+    /**
+     * Add a DSL closure to the list of closures that will be used to create the job.
+     *
+     * @param closure
+     */
+    void addDsl(@DelegatesTo(Job) Closure closure) {
+        if (closure == null) {
+            throw new GradleJobDslPluginException('Closure must not be null.')
+        }
+        dslClosures.add(closure)
+    }
+
+    /**
+     * Convenience method to get full IDE support when adding a DSL closure for a @{link FreeStyleJob}. The closure is
+     * forwarded to {@link JobBuilder#addDsl}.
+
+     * @param closure
+     */
+    void addFreeStyleDsl(@DelegatesTo(FreeStyleJob) Closure closure) {
+        addDsl(closure)
+    }
+
+    /**
+     * Convenience method to get full IDE support when adding a DSL closure for a @{link MatrixJob}. The closure is
+     * forwarded to {@link JobBuilder#addDsl}.
+
+     * @param closure
+     */
+    void addMatrixDsl(@DelegatesTo(MatrixJob) Closure closure) {
+        addDsl(closure)
+    }
+
+    /**
+     * Convenience method to get full IDE support when adding a DSL closure for a @{link MavenJob}. The closure is
+     * forwarded to {@link JobBuilder#addDsl}.
+
+     * @param closure
+     */
+    void addMavenDsl(@DelegatesTo(MavenJob) Closure closure) {
+        addDsl(closure)
+    }
+
+    /**
+     * Convenience method to get full IDE support when adding a DSL closure for a @{link MultiJob}. The closure is
+     * forwarded to {@link JobBuilder#addDsl}.
+
+     * @param closure
+     */
+    void addMultiDsl(@DelegatesTo(MultiJob) Closure closure) {
+        addDsl(closure)
+    }
+
+    /**
+     * Convenience method to get full IDE support when adding a DSL closure for a @{link WorkflowJob}. The closure is
+     * forwarded to {@link JobBuilder#addDsl}.
+
+     * @param closure
+     */
+    void addPipelineDsl(@DelegatesTo(WorkflowJob) Closure closure) {
+        addDsl(closure)
+    }
+
+    void checkJobClassNull() {
+        if (jobClass != null) {
+            throw new GradleJobDslPluginException('The job methods cannot be called multiple times, job class is ' +
+                    "already set to ${jobClass.name}.")
+        }
+    }
+
+    Closure concatenateDslClosures() {
+        return dslClosures.inject({ }) { acc, val -> acc >> val }
+    }
+
+    /**
+     * Return the full job name including folders.
+     *
+     * @return
+     */
+    String fullJobName() {
+        return (folders + name).join('/')
+    }
+
+    void checkNameIsValid() {
+        if (name.contains('/')) {
+            throw new GradleJobDslPluginException('Job name may not contain "/", if the job is inside a folder use ' +
+                    'the folders field.')
+        }
     }
 
 }

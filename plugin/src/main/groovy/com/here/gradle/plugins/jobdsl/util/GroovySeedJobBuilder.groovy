@@ -3,14 +3,14 @@ package com.here.gradle.plugins.jobdsl.util
 import javaposse.jobdsl.dsl.DslFactory
 
 /**
- * A {@link JobBuilder2} that creates a seed job that runs the dslGenerateXml Gradle task to create the XML files and
+ * A {@link JobBuilder} that creates a seed job that runs the dslGenerateXml Gradle task to create the XML files and
  * then uses a system groovy script build step to update the jobs. This is a replacement for using the dslUpdateJenkins
  * task in a seed job and promises a much better performance because it uses the internal Jenkins API instead of the
  * REST API.<br>
  * The builder does not provide a default way to get the files of the Gradle project, this has to be added by calling
- * {@link JobBuilder2#addDsl(groovy.lang.Closure)}. Usually this will be a copy artifacts step or a SCM configuration.
+ * {@link JobBuilder#addDsl(groovy.lang.Closure)}. Usually this will be a copy artifacts step or a SCM configuration.
  */
-class GroovySeedJobBuilder extends JobBuilder2 {
+class GroovySeedJobBuilder extends JobBuilder {
 
     /**
      * Provide the script that will execute the dslGenerateXml Gradle task for your project. It defaults to the basic
