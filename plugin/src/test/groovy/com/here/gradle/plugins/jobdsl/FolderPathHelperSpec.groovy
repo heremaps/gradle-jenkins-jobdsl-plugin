@@ -15,8 +15,7 @@ class FolderPathHelperSpec extends Specification {
 
     def 'config path for non-folder item is generated correctly'() {
         setup:
-        Item item = new FreeStyleJob(jobManagement)
-        item.setName('FreeStyleJob')
+        Item item = new FreeStyleJob(jobManagement, 'FreeStyleJob')
 
         expect:
         FolderPathHelper.itemConfigPath(item.name) == 'job/FreeStyleJob/config.xml'
@@ -24,8 +23,7 @@ class FolderPathHelperSpec extends Specification {
 
     def 'config path for item in folder is generated correctly'() {
         setup:
-        Item item = new FreeStyleJob(jobManagement)
-        item.setName('Folder/FreeStyleJob')
+        Item item = new FreeStyleJob(jobManagement, 'Folder/FreeStyleJob')
 
         expect:
         FolderPathHelper.itemConfigPath(item.name) == 'job/Folder/job/FreeStyleJob/config.xml'
@@ -33,8 +31,7 @@ class FolderPathHelperSpec extends Specification {
 
     def 'config path for item in nested folders is generated correctly'() {
         setup:
-        Item item = new FreeStyleJob(jobManagement)
-        item.setName('Folder1/Folder2/Folder3/FreeStyleJob')
+        Item item = new FreeStyleJob(jobManagement, 'Folder1/Folder2/Folder3/FreeStyleJob')
 
         expect:
         FolderPathHelper.itemConfigPath(item.name) == 'job/Folder1/job/Folder2/job/Folder3/job/FreeStyleJob/config.xml'
