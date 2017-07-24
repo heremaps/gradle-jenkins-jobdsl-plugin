@@ -4,7 +4,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'idea'
 
 ext {
-    jenkinsVersion = '2.54'
+    jenkinsVersion = '2.71'
 }
 
 sourceCompatibility = 1.7
@@ -48,11 +48,11 @@ dependencies {
         exclude(module: 'xercesImpl')
     }
 
-    testCompile('org.spockframework:spock-core:1.0-groovy-2.4') {
+    testCompile('org.spockframework:spock-core:1.1-groovy-2.4') {
         exclude(module: 'groovy-all')
     }
 
-    functionalTestCompile('org.spockframework:spock-core:1.0-groovy-2.4') {
+    functionalTestCompile('org.spockframework:spock-core:1.1-groovy-2.4') {
         exclude(module: 'groovy-all')
     }
 
@@ -60,12 +60,12 @@ dependencies {
         exclude(module: 'groovy-all')
     }
 
-    functionalTestCompile 'org.jenkins-ci.main:jenkins-test-harness:2.19'
-    functionalTestCompile "org.jenkins-ci.main:jenkins-war:${jenkinsVersion}:war-for-test@jar"
-    functionalTestCompile 'org.jenkins-ci.plugins:cloudbees-folder:6.0.3@jar'
+    functionalTestCompile 'org.jenkins-ci.main:jenkins-test-harness:2.23'
+    functionalTestCompile "org.jenkins-ci.main:jenkins-war:${jenkinsVersion}"
+    functionalTestCompile 'org.jenkins-ci.plugins:cloudbees-folder:6.1.0@jar'
 
     // Plugins to be available for single tests using the @WithPlugin annotation.
-    jenkinsPlugins 'org.jenkins-ci.plugins:cloudbees-folder:6.0.3'
+    jenkinsPlugins 'org.jenkins-ci.plugins:cloudbees-folder:6.1.0'
     jenkinsPlugins 'org.jenkins-ci.plugins:gradle:1.22' // Old version used to test reporting of outdated plugins.
     jenkinsPlugins 'org.jenkins-ci.plugins:gitlab-plugin:1.4.5' // Used to test reporting of deprecated plugins.
 }
@@ -97,6 +97,7 @@ task functionalTest(type: Test, dependsOn: resolveTestPlugins) {
 
     // Set build directory for Jenkins test harness, see https://issues.jenkins-ci.org/browse/JENKINS-26331.
     systemProperty 'buildDirectory', project.buildDir.absolutePath
+    systemProperty 'hudson.Main.development', 'true'
 }
 
 check.dependsOn functionalTest
