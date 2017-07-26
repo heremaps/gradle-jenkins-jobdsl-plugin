@@ -331,39 +331,51 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
     }
 
     boolean performCreateOrUpdateConfig(Item item, boolean ignoreExisting) throws NameNotProvidedException {
-        if (filter.matches(item.name)) {
-            String existingXml = requestExistingItemXml(item)
-            if (!existingXml) {
-                return createItem(item)
-            } else if (!ignoreExisting) {
-                if (isXmlDifferent(existingXml, item.xml)) {
-                    return updateItem(item)
-                } else {
-                    logItemStatus(item, STATUS_UP_TO_DATE)
-                }
-            }
-        } else {
+        if (!filter.matches(item.name)) {
             logItemStatus(item, STATUS_IGNORE)
+            return true
         }
+
+        String existingXml = requestExistingItemXml(item)
+        if (!existingXml) {
+            return createItem(item)
+        }
+
+        if (ignoreExisting) {
+            return true
+        }
+
+        if (isXmlDifferent(existingXml, item.xml)) {
+            return updateItem(item)
+        }
+
+        logItemStatus(item, STATUS_UP_TO_DATE)
+
         return true
     }
 
     boolean performCreateOrUpdateView(String viewName, String config, boolean ignoreExisting) throws
             NameNotProvidedException, ConfigurationMissingException {
-        if (filter.matches(viewName)) {
-            String existingXml = requestExistingViewXml(viewName)
-            if (!existingXml) {
-                return createView(viewName, config)
-            } else if (!ignoreExisting) {
-                if (isXmlDifferent(existingXml, config)) {
-                    return updateView(viewName, config)
-                } else {
-                    logViewStatus(viewName, STATUS_UP_TO_DATE)
-                }
-            }
-        } else {
+        if (!filter.matches(viewName)) {
             logViewStatus(viewName, STATUS_IGNORE)
+            return true
         }
+
+        String existingXml = requestExistingViewXml(viewName)
+        if (!existingXml) {
+            return createView(viewName, config)
+        }
+
+        if (ignoreExisting) {
+            return true
+        }
+
+        if (isXmlDifferent(existingXml, config)) {
+            return updateView(viewName, config)
+        }
+
+        logViewStatus(viewName, STATUS_UP_TO_DATE)
+
         return true
     }
 
