@@ -51,8 +51,8 @@ class UpdateJenkinsTest extends AbstractTaskTest {
         Item item = jenkinsRule.jenkins.getItemByFullName('job')
         item instanceof FreeStyleProject
         XMLUnit.compareXML(
-                item.configFile.asString(),
-                readResource('updateJenkins/empty-freestyle-job.xml')
+                readResource('updateJenkins/empty-freestyle-job.xml'),
+                item.configFile.asString()
         ).identical()
     }
 
@@ -70,7 +70,10 @@ class UpdateJenkinsTest extends AbstractTaskTest {
         view instanceof ListView
         def output = new ByteArrayOutputStream()
         view.writeXml(output)
-        XMLUnit.compareXML(output.toString(), readResource('updateJenkins/empty-list-view.xml')).identical()
+        XMLUnit.compareXML(
+                readResource('updateJenkins/empty-list-view.xml'),
+                output.toString()
+        ).identical()
     }
 
     @WithPlugin('cloudbees-folder-6.1.0.hpi')
@@ -87,8 +90,8 @@ class UpdateJenkinsTest extends AbstractTaskTest {
         Item item = jenkinsRule.jenkins.getItemByFullName('folder')
         item instanceof Folder
         XMLUnit.compareXML(
-                item.configFile.asString(),
-                readResource('updateJenkins/folder.xml')
+                readResource('updateJenkins/folder.xml'),
+                item.configFile.asString()
         ).identical()
     }
 
