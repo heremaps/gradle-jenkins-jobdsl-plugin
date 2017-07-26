@@ -23,7 +23,7 @@ class GenerateXmlTest extends AbstractTaskTest {
 
         def generatedFile = new File(testProjectDir.root, 'build/jobdsl/xml/job.xml')
         generatedFile.file
-        def actualText = generatedFile.text
+        def actualText = generatedFile.getText('UTF-8')
         def expectedText = readResource('generateXml/empty-freestyle-job.xml')
         XMLUnit.compareXML(expectedText, actualText).identical()
     }
@@ -43,7 +43,7 @@ class GenerateXmlTest extends AbstractTaskTest {
 
         def generatedFile = new File(testProjectDir.root, 'build/jobdsl/xml/view.xml')
         generatedFile.file
-        def actualText = generatedFile.text
+        def actualText = generatedFile.getText('UTF-8')
         def expectedText = readResource('generateXml/empty-list-view.xml')
         XMLUnit.compareXML(expectedText, actualText).identical()
     }
@@ -63,7 +63,7 @@ class GenerateXmlTest extends AbstractTaskTest {
 
         def generatedFile = new File(testProjectDir.root, 'build/jobdsl/xml/folder.xml')
         generatedFile.file
-        def actualText = generatedFile.text
+        def actualText = generatedFile.getText('UTF-8')
         def expectedText = readResource('generateXml/folder.xml')
         XMLUnit.compareXML(expectedText, actualText).identical()
     }

@@ -41,7 +41,7 @@ abstract class AbstractTaskRunner {
 
         runProperties['inputFiles'].split(File.pathSeparator).each { String filename ->
             println "Loading ${filename}"
-            ScriptRequest scriptRequest = new ScriptRequest(new File(filename).text)
+            ScriptRequest scriptRequest = new ScriptRequest(new File(filename).getText('UTF-8'))
             loader.runScripts([scriptRequest])
         }
 

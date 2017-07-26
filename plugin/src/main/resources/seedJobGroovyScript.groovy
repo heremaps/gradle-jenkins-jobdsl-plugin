@@ -22,7 +22,7 @@ def updateItem(Item item, String name, FilePath file) {
 
     try {
         String oldConfig = item.getConfigFile().asString()
-        String newConfig = file.read().text
+        String newConfig = file.read().getText('UTF-8')
         Diff diff = XMLUnit.compareXML(oldConfig, newConfig)
         if (diff.identical()) {
             println "  Item ${name} did not change"

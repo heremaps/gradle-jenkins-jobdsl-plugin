@@ -26,7 +26,7 @@ class AbstractTaskTest extends Specification {
     }
 
     def readResource(String path) {
-        getClass().classLoader.getResource(path).text
+        getClass().classLoader.getResource(path).getText('UTF-8')
     }
 
     def readBuildGradle(String path) {
