@@ -268,4 +268,24 @@ class GenerateXmlTest extends AbstractTaskTest {
         result.output.contains('No files found in JobDSL source folder.')
     }
 
+    def 'groovy postbuild step with UTF-8 characters is generated correctly'() {
+        given:
+        buildFile << readBuildGradle('generateXml/build.gradle')
+        copyResourceToTestDir('generateXml/groovy-postbuild-with-utf-8.groovy')
+
+        when:
+        def result = gradleRunner
+                .withArguments('dslGenerateXml')
+                .build()
+
+        then:
+        result.task(':dslGenerateXml').outcome == TaskOutcome.SUCCESS
+
+        def generatedFile = new File(testProjectDir.root, 'build/jobdsl/xml/job.xml')
+        generatedFile.file
+        def actualText = generatedFile.getText('UTF-8')
+        def expectedText = readResource('generateXml/groovy-postbuild-with-utf-8.xml')
+        XMLUnit.compareXML(expectedText, actualText).identical()
+    }
+
 }

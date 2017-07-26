@@ -1,0 +1,27 @@
+<project>
+    <actions></actions>
+    <description></description>
+    <keepDependencies>false</keepDependencies>
+    <properties></properties>
+    <scm class='hudson.scm.NullSCM'></scm>
+    <canRoam>true</canRoam>
+    <disabled>false</disabled>
+    <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+    <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+    <triggers></triggers>
+    <concurrentBuild>false</concurrentBuild>
+    <builders></builders>
+    <publishers>
+        <org.jvnet.hudson.plugins.groovypostbuild.GroovyPostbuildRecorder>
+            <script>
+                <script>def summary = manager.createSummary(&apos;completed.gif&apos;)
+summary.appendText(&apos;✔&apos; /* UTF-8 encoded checkmark */, false, false, false, &apos;green&apos;)
+summary.appendText(&apos;✖&apos; /* UTF-8 encoded cross */, false, false, false, &apos;red&apos;)
+</script>
+                <sandbox>false</sandbox>
+            </script>
+            <behavior>0</behavior>
+        </org.jvnet.hudson.plugins.groovypostbuild.GroovyPostbuildRecorder>
+    </publishers>
+    <buildWrappers></buildWrappers>
+</project>
