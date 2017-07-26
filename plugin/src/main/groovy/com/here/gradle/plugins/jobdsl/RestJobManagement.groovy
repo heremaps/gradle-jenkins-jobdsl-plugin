@@ -31,7 +31,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
     public static final String STATUS_COULD_NOT_CREATE = 'COULD NOT CREATE'
     public static final String STATUS_COULD_NOT_UPDATE = 'COULD NOT UPDATE'
     public static final String STATUS_CREATED = 'CREATED'
-    public static final String STATUS_IGNORE = 'IGNORE'
+    public static final String STATUS_IGNORED = 'IGNORED'
     public static final String STATUS_UP_TO_DATE = 'UP-TO-DATE'
     public static final String STATUS_UPDATED = 'UPDATED'
     public static final String STATUS_WOULD_BE_CREATED = 'WOULD BE CREATED'
@@ -332,7 +332,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
 
     boolean performCreateOrUpdateConfig(Item item, boolean ignoreExisting) throws NameNotProvidedException {
         if (!filter.matches(item.name)) {
-            logItemStatus(item, STATUS_IGNORE)
+            logItemStatus(item, STATUS_IGNORED)
             return true
         }
 
@@ -357,7 +357,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
     boolean performCreateOrUpdateView(String viewName, String config, boolean ignoreExisting) throws
             NameNotProvidedException, ConfigurationMissingException {
         if (!filter.matches(viewName)) {
-            logViewStatus(viewName, STATUS_IGNORE)
+            logViewStatus(viewName, STATUS_IGNORED)
             return true
         }
 
