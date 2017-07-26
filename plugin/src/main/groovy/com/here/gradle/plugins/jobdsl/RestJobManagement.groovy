@@ -348,15 +348,15 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
         return true
     }
 
-    void performCreateOrUpdateView(String viewName, String config, boolean ignoreExisting) throws
+    boolean performCreateOrUpdateView(String viewName, String config, boolean ignoreExisting) throws
             NameNotProvidedException, ConfigurationMissingException {
         if (filter.matches(viewName)) {
             String existingXml = requestExistingViewXml(viewName)
             if (!existingXml) {
-                createView(viewName, config)
+                return createView(viewName, config)
             } else if (!ignoreExisting) {
                 if (isXmlDifferent(existingXml, config)) {
-                    updateView(viewName, config)
+                    return updateView(viewName, config)
                 } else {
                     logViewStatus(viewName, STATUS_UP_TO_DATE)
                 }
@@ -364,6 +364,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
         } else {
             logViewStatus(viewName, STATUS_IGNORE)
         }
+        return true
     }
 
     String requestExistingItemXml(Item item) {
