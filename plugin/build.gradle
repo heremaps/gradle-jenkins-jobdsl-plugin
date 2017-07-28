@@ -58,6 +58,7 @@ dependencies {
 
     functionalTestCompile ("org.jenkins-ci.main:jenkins-war:${jenkinsVersion}") {
         exclude(module: 'groovy-all')
+        exclude(module: 'slf4j-jdk14')
     }
 
     functionalTestCompile 'org.jenkins-ci.main:jenkins-test-harness:2.23'
