@@ -30,11 +30,11 @@ class AbstractTaskTest extends Specification {
     }
 
     def readBuildGradle(String path) {
-        readResource(path).replace('CLASSPATH_STRING', classpathString())
+        readResource(path).replace('CLASSPATH_STRING', classpathString()).getBytes('UTF-8')
     }
 
     def copyResourceToTestDir(String from, String to = 'src/jobdsl/jobdsl.groovy') {
-        testProjectDir.newFile(to) << readResource(from)
+        testProjectDir.newFile(to) << readResource(from).getBytes('UTF-8')
     }
 
     def setup() {
