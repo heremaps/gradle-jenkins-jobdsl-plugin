@@ -1,7 +1,6 @@
 apply plugin: 'groovy'
 apply plugin: 'java-gradle-plugin'
 apply plugin: 'maven-publish'
-apply plugin: 'idea'
 
 ext {
     jenkinsVersion = '2.71'
@@ -68,12 +67,6 @@ dependencies {
     jenkinsPlugins 'org.jenkins-ci.plugins:cloudbees-folder:6.1.0'
     jenkinsPlugins 'org.jenkins-ci.plugins:gradle:1.22' // Old version used to test reporting of outdated plugins.
     jenkinsPlugins 'org.jenkins-ci.plugins:gitlab-plugin:1.4.5' // Used to test reporting of deprecated plugins.
-}
-
-idea {
-    module {
-        scopes.TEST.plus += [configurations.functionalTestCompile]
-    }
 }
 
 task resolveTestPlugins(type: Copy) {
