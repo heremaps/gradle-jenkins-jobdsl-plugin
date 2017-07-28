@@ -61,7 +61,6 @@ dependencies {
     }
 
     functionalTestCompile 'org.jenkins-ci.main:jenkins-test-harness:2.23'
-    functionalTestCompile "org.jenkins-ci.main:jenkins-war:${jenkinsVersion}"
     functionalTestCompile 'org.jenkins-ci.plugins:cloudbees-folder:6.1.0@jar'
 
     // Plugins to be available for single tests using the @WithPlugin annotation.
