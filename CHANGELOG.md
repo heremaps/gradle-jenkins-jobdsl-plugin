@@ -5,7 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## 2.0.0 (under development)
 
 - First public release published under the Apache-2.0 license
-- Rename plugin to gradle-job-dsl-plugin
+- Rename plugin to gradle-jenkins-jobdsl-plugin
 - Rename JobBuilder2 to JobBuilder, replacing the original JobBuilder
 
 ## 1.0.32 (2017-05-23)
