@@ -36,6 +36,7 @@ class GenerateXmlRunner extends AbstractTaskRunner {
     void writeXml(File outputDirectory, String name, String xml) {
         def targetDirectory = outputDirectory
         def fileName = name
+
         if (name.contains('/')) {
             def lastIndex = name.lastIndexOf('/')
             def subDirectory = name[0..lastIndex]
@@ -43,8 +44,10 @@ class GenerateXmlRunner extends AbstractTaskRunner {
             targetDirectory.mkdirs()
             fileName = name.drop(lastIndex + 1)
         }
-        def xmlFile = new File("${targetDirectory}/${fileName}.xml")
-        xmlFile.write(xml)
+
+        new File("${targetDirectory}/${fileName}.xml").withWriter('UTF-8') {
+            it.write(xml)
+        }
     }
 
 }

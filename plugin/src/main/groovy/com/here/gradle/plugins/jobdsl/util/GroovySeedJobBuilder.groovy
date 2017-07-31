@@ -41,7 +41,7 @@ class GroovySeedJobBuilder extends JobBuilder {
      * Views in the Jenkins root will always be updated, views inside folders will always be re-created.<br>
      * <em>Only change this value if you know what you are doing!</em>
      */
-    String seedJobGroovyScript = getClass().classLoader.getResource('seedJobGroovyScript.groovy').text
+    String seedJobGroovyScript = getClass().classLoader.getResource('seedJobGroovyScript.groovy').getText('UTF-8')
 
     GroovySeedJobBuilder(DslFactory dslFactory) {
         super(dslFactory)
