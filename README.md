@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.org/heremaps/gradle-job-dsl-plugin.svg?branch=master)](https://travis-ci.org/heremaps/gradle-job-dsl-plugin)
+[![Build Status](https://travis-ci.org/heremaps/gradle-jenkins-jobdsl-plugin.svg?branch=master)](https://travis-ci.org/heremaps/gradle-jenkins-jobdsl-plugin)
 
-# Gradle Job DSL Plugin
+# Gradle Jenkins Job DSL Plugin
 
 This is a plugin to manage Jenkins [Job DSL](https://wiki.jenkins-ci.org/display/JENKINS/Job+DSL+Plugin) projects in a
 Gradle project.
@@ -52,7 +52,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath "com.here.gradle.plugins:gradle-job-dsl-plugin:${jobDslPluginVersion}"
+        classpath "com.here.gradle.plugins:gradle-jenkins-jobdsl-plugin:${jobDslPluginVersion}"
     }
 }
 
@@ -70,7 +70,7 @@ repositories {
 
 dependencies {
     compile localGroovy()
-    compile "com.here.gradle.plugins:gradle-job-dsl-plugin:${jobDslPluginVersion}"
+    compile "com.here.gradle.plugins:gradle-jenkins-jobdsl-plugin:${jobDslPluginVersion}"
 }
 ```
 
@@ -151,7 +151,7 @@ the Google Guava library:
 ```groovy
 dependencies {
     compile localGroovy()
-    compile "com.here.gradle.plugins:gradle-job-dsl-plugin:${jobDslPluginVersion}"
+    compile "com.here.gradle.plugins:gradle-jenkins-jobdsl-plugin:${jobDslPluginVersion}"
     compile 'com.google.guava:guava:19.0'
 }
 ```
@@ -318,7 +318,7 @@ To run the tests of the plugin execute:
 ### Contributing
 
 Contributions to the project are very welcome! Please be aware that you need to sign the
-[HERE CLA](https://cla-assistant.io/heremaps/gradle-job-dsl-plugin) if you want to contribute to the project.
+[HERE CLA](https://cla-assistant.io/heremaps/gradle-jenkins-jobdsl-plugin) if you want to contribute to the project.
 
 ## Examples
 
@@ -329,7 +329,7 @@ a build of the plugin to your local Maven repository first, as documented in "Bu
 
 ### Job DSL Plugin is not required
 
-Because the gradle-job-dsl-plugin can use the
+Because the gradle-jenkins-jobdsl-plugin can use the
 [Jenkins REST API](https://wiki.jenkins.io/display/JENKINS/Remote+access+API) to upload jobs to Jenkins the
 [Job DSL Plugin](https://wiki.jenkins.io/display/JENKINS/Job+DSL+Plugin) does not have to be installed on the Jenkins
 instance. This can be useful when you do not have permission to install Jenkins plugins or the plugin cannot be
