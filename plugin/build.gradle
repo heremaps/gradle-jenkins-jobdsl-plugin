@@ -1,6 +1,19 @@
+buildscript {
+    repositories {
+        maven {
+            url 'https://plugins.gradle.org/m2'
+        }
+    }
+
+    dependencies {
+        classpath 'com.gradle.publish:plugin-publish-plugin:0.9.7'
+    }
+}
+
 apply plugin: 'groovy'
 apply plugin: 'java-gradle-plugin'
 apply plugin: 'maven-publish'
+apply plugin: 'com.gradle.plugin-publish'
 
 ext {
     jenkinsVersion = '2.71'
@@ -55,7 +68,7 @@ dependencies {
         exclude(module: 'groovy-all')
     }
 
-    functionalTestCompile ("org.jenkins-ci.main:jenkins-war:${jenkinsVersion}") {
+    functionalTestCompile("org.jenkins-ci.main:jenkins-war:${jenkinsVersion}") {
         exclude(module: 'groovy-all')
         exclude(module: 'slf4j-jdk14')
     }
@@ -125,6 +138,7 @@ def pomConfig = {
     }
 }
 
+// Configuration for manual publication, e.g. to Maven local.
 publishing {
     publications {
         maven(MavenPublication) {
@@ -150,5 +164,27 @@ publishing {
         maven {
             url "${buildDir}/repo"
         }
+    }
+}
+
+// Configuration for publication to the Gradle plugin registry.
+pluginBundle {
+    website = 'https://github.com/heremaps/gradle-jenkins-jobdsl-plugin'
+    vcsUrl = 'git@github.com:heremaps/gradle-jenkins-jobdsl-plugin.git'
+    description = 'A Gradle plugin to manage Jenkins Job DSL scripts.'
+
+    plugins {
+        jobDslPlugin {
+            id = 'com.here.jobdsl'
+            displayName = 'Gradle Job DSL Plugin'
+            tags = ['jenkins', 'job-dsl']
+            version = project.properties['maven.version']
+        }
+    }
+
+    mavenCoordinates {
+        groupId = project.properties['maven.groupId']
+        artifactId = project.properties['maven.artifactId']
+        version = project.properties['maven.version']
     }
 }
