@@ -16,18 +16,4 @@ subprojects {
         configFile rootProject.file('config/codenarc.groovy')
         toolVersion '0.27.0'
     }
-
-    if (System.env.TRAVIS == 'true') {
-        // Reduce memory pressure on Travis CI nodes, see
-        // https://discuss.gradle.org/t/travis-ci-org-gradle-launcher-daemon-client-daemondisappearedexception-gradle-build-daemon-disappeared-unexpectedly-it-may-have-been-killed-or-may-have-crashed/13106/3
-        tasks.withType(GroovyCompile) {
-            groovyOptions.fork = false
-        }
-
-        tasks.withType(Test) {
-            // Travis CI nodes (currently) have 2 dedicated cores and 4 GB of memory.
-            maxParallelForks = 2
-            minHeapSize = '128m'
-        }
-    }
 }
