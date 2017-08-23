@@ -104,6 +104,10 @@ task functionalTest(type: Test, dependsOn: resolveTestPlugins) {
     // Set build directory for Jenkins test harness, see https://issues.jenkins-ci.org/browse/JENKINS-26331.
     systemProperty 'buildDirectory', project.buildDir.absolutePath
     systemProperty 'hudson.Main.development', 'true'
+
+    testLogging {
+        events 'started', 'passed', 'skipped', 'failed'
+    }
 }
 
 check.dependsOn functionalTest
