@@ -15,10 +15,6 @@ apply plugin: 'java-gradle-plugin'
 apply plugin: 'maven-publish'
 apply plugin: 'com.gradle.plugin-publish'
 
-ext {
-    jenkinsVersion = '2.71'
-}
-
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
@@ -68,12 +64,12 @@ dependencies {
         exclude(module: 'groovy-all')
     }
 
-    functionalTestCompile("org.jenkins-ci.main:jenkins-war:${jenkinsVersion}") {
+    functionalTestCompile('org.jenkins-ci.main:jenkins-war:2.72') {
         exclude(module: 'groovy-all')
         exclude(module: 'slf4j-jdk14')
     }
 
-    functionalTestCompile 'org.jenkins-ci.main:jenkins-test-harness:2.23'
+    functionalTestCompile 'org.jenkins-ci.main:jenkins-test-harness:2.24'
     functionalTestCompile 'org.jenkins-ci.plugins:cloudbees-folder:6.1.0@jar'
 
     // Plugins to be available for single tests using the @WithPlugin annotation.
