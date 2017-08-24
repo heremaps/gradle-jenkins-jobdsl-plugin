@@ -40,37 +40,31 @@ like this:
 
 ```groovy
 buildscript {
-    ext.jobDslPluginVersion = '1.0.32'
+    ext.jenkinsJobdslPluginVersion = '2.0.0'
 
     repositories {
         maven {
-            url '[not yet published, URL will be added soon]'
-        }
-        jcenter()
-        maven {
-            url 'http://repo.jenkins-ci.org/releases/'
+            url 'https://plugins.gradle.org/m2'
         }
     }
+
     dependencies {
-        classpath "com.here.gradle.plugins:gradle-jenkins-jobdsl-plugin:${jobDslPluginVersion}"
+        classpath "com.here.gradle.plugins:gradle-jenkins-jobdsl-plugin:${jenkinsJobdslPluginVersion}"
     }
 }
 
 apply plugin: 'com.here.jobdsl'
 
 repositories {
-    maven {
-        url '[not yet published, URL will be added soon]'
-    }
     jcenter()
+
     maven {
-        url 'http://repo.jenkins-ci.org/releases/'
+        url 'https://plugins.gradle.org/m2'
     }
 }
 
 dependencies {
-    compile localGroovy()
-    compile "com.here.gradle.plugins:gradle-jenkins-jobdsl-plugin:${jobDslPluginVersion}"
+    compile "com.here.gradle.plugins:gradle-jenkins-jobdsl-plugin:${jenkinsJobdslPluginVersion}"
 }
 ```
 
