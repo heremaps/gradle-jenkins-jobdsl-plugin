@@ -8,7 +8,7 @@ import org.gradle.api.Project
 /**
  * Gradle plugin configuration for the Job DSL plugin. Configures tasks, extensions, and source sets.
  */
-class JobDslPlugin implements Plugin<Project> {
+class JobDslPlugin2 implements Plugin<Project> {
 
     @Override
     void apply(Project project) {

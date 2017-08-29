@@ -24,14 +24,6 @@ dependencies {
     compile "com.here.gradle.plugins:gradle-jenkins-jobdsl-plugin:${jenkinsJobdslPluginVersion}"
 }
 
-if (properties.buildAgainstPluginProject.toBoolean()) {
-    configurations.all {
-        resolutionStrategy.dependencySubstitution {
-            substitute module('com.here.gradle.plugins:gradle-jenkins-jobdsl-plugin') with project(':plugin')
-        }
-    }
-}
-
 jobdsl {
     /**
      * Example for configuring multiple servers. They can be selected by appending "--server=[servername] to the Gradle

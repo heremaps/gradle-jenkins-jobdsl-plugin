@@ -13,11 +13,6 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 
-# Avoid Travis to run the default of "gradle assemble" at this stage by
-# already building and installing the plugin here.
-install:
-  - ./gradlew plugin:publishToMavenLocal
-
 script:
-  - ./gradlew --stacktrace plugin:check
-  - ./gradlew example:assemble
+  - WRAPPER=$(find . -type f -executable -name gradlew -print -quit)
+  - $WRAPPER buildAll
