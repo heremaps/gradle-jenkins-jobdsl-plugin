@@ -1,5 +1,5 @@
 job('deprecated-plugins') {
-    triggers {
-        gitlabPush {}
+    publishers {
+        publishHtml {}
     }
 }

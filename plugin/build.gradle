@@ -46,7 +46,7 @@ sourceSets {
 
 dependencies {
     compile localGroovy()
-    compile('org.jenkins-ci.plugins:job-dsl-core:1.64') {
+    compile('org.jenkins-ci.plugins:job-dsl-core:1.65') {
         exclude(module: 'groovy-all')
     }
     compile 'org.jenkins-ci:version-number:1.4'
@@ -75,7 +75,7 @@ dependencies {
     // Plugins to be available for single tests using the @WithPlugin annotation.
     jenkinsPlugins 'org.jenkins-ci.plugins:cloudbees-folder:6.1.0'
     jenkinsPlugins 'org.jenkins-ci.plugins:gradle:1.22' // Old version used to test reporting of outdated plugins.
-    jenkinsPlugins 'org.jenkins-ci.plugins:gitlab-plugin:1.4.5' // Used to test reporting of deprecated plugins.
+    jenkinsPlugins 'org.jenkins-ci.plugins:htmlpublisher:1.12' // Used to test reporting of deprecated plugins.
 }
 
 task resolveTestPlugins(type: Copy) {
