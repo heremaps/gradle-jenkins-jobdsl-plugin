@@ -64,7 +64,7 @@ dependencies {
         exclude(module: 'groovy-all')
     }
 
-    functionalTestCompile('org.jenkins-ci.main:jenkins-war:2.72') {
+    functionalTestCompile('org.jenkins-ci.main:jenkins-war:2.77') {
         exclude(module: 'groovy-all')
         exclude(module: 'slf4j-jdk14')
     }
