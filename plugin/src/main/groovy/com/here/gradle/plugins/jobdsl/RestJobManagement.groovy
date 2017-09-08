@@ -5,8 +5,6 @@ import groovyx.net.http.HttpResponseDecorator
 import groovyx.net.http.RESTClient
 import hudson.util.VersionNumber
 import javaposse.jobdsl.dsl.AbstractJobManagement
-import javaposse.jobdsl.dsl.ConfigFile
-import javaposse.jobdsl.dsl.ConfigFileType
 import javaposse.jobdsl.dsl.ConfigurationMissingException
 import javaposse.jobdsl.dsl.DslScriptException
 import javaposse.jobdsl.dsl.ExtensibleContext
@@ -141,11 +139,6 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
     }
 
     @Override
-    String createOrUpdateConfigFile(ConfigFile configFile, boolean ignoreExisting) {
-        throw new UnsupportedOperationException()
-    }
-
-    @Override
     void createOrUpdateUserContent(UserContent userContent, boolean ignoreExisting) {
         throw new UnsupportedOperationException()
     }
@@ -257,11 +250,6 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
 
     @Override
     Integer getVSphereCloudHash(String name) {
-        throw new UnsupportedOperationException()
-    }
-
-    @Override
-    String getConfigFileId(ConfigFileType type, String name) {
         throw new UnsupportedOperationException()
     }
 
