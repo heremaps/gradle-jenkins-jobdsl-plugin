@@ -241,9 +241,7 @@ adapted build method of the `CustomJobBuilder` class looks like this:
 Job build(Class<? extends Job> jobClass, @DelegatesTo(Job.class) Closure closure) {
     def job = super.build(jobClass, closure)
     job.with {
-        if (!DslConfig.get('enableJobs')) {
-            disabled()
-        }
+        disabled(!DslConfig.get('enableJobs'))
     }
     return job
 }
