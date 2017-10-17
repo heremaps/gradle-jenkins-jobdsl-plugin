@@ -228,7 +228,7 @@ to add a parameter to enable or disable all jobs:
 ```groovy
 jobdsl {
     configuration = [
-        enableJobs: project.properties['enableJobs'].toBoolean()
+        disableJobs: project.properties['disableJobs']?.toBoolean() ?: false
     ]
 }
 ```
@@ -241,9 +241,7 @@ adapted build method of the `CustomJobBuilder` class looks like this:
 Job build(Class<? extends Job> jobClass, @DelegatesTo(Job.class) Closure closure) {
     def job = super.build(jobClass, closure)
     job.with {
-        if (!DslConfig.get('enableJobs')) {
-            disabled()
-        }
+        disabled(DslConfig.get('disableJobs'))
     }
     return job
 }
@@ -256,7 +254,7 @@ Now you can provide a value for the property on the command line to enable or di
 default value for the property in your `gradle.properties` file.
 
 ```bash
-./gradlew -PenableJobs=true dslGenerateXml
+./gradlew -PdisableJobs=true dslGenerateXml
 ```
 
 You can also have server specific configuration in the `build.gradle` file which can be accessed by calling
