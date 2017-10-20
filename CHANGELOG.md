@@ -4,7 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 2.1.0 (under development)
 
-- Upgrade job-dsl-core to 1.65
+- Upgrade job-dsl-core to 1.66
 
 ## 2.0.0 (2017-08-03)
 
