@@ -46,7 +46,7 @@ sourceSets {
 
 dependencies {
     compile localGroovy()
-    compile('org.jenkins-ci.plugins:job-dsl-core:1.65') {
+    compile('org.jenkins-ci.plugins:job-dsl-core:1.66') {
         exclude(module: 'groovy-all')
     }
     compile 'org.jenkins-ci:version-number:1.4'
