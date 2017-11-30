@@ -46,6 +46,10 @@ buildscript {
         maven {
             url 'https://plugins.gradle.org/m2'
         }
+
+        maven {
+            url 'https://repo.jenkins-ci.org/releases/'
+        }
     }
 
     dependencies {
@@ -60,6 +64,10 @@ repositories {
 
     maven {
         url 'https://plugins.gradle.org/m2'
+    }
+
+    maven {
+        url 'https://repo.jenkins-ci.org/releases/'
     }
 }
 

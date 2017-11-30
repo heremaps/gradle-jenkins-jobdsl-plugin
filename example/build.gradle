@@ -5,6 +5,10 @@ buildscript {
         maven {
             url 'https://plugins.gradle.org/m2'
         }
+
+        maven {
+            url 'https://repo.jenkins-ci.org/releases/'
+        }
     }
 
     dependencies {
@@ -17,6 +21,10 @@ apply plugin: 'com.here.jobdsl'
 repositories {
     maven {
         url 'https://plugins.gradle.org/m2'
+    }
+
+    maven {
+        url 'https://repo.jenkins-ci.org/releases/'
     }
 }
 
