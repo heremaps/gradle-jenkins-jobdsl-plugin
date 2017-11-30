@@ -3,6 +3,7 @@ language: groovy
 jdk:
   - oraclejdk8
 
+# Relax CI memory constraints by not running in containers.
 sudo: required
 
 before_cache:
