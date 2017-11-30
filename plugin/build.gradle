@@ -19,11 +19,15 @@ sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
 repositories {
-    jcenter()
-
     maven {
         url 'https://repo.jenkins-ci.org/releases/'
     }
+
+    maven {
+        url 'https://plugins.gradle.org/m2'
+    }
+
+    jcenter()
 }
 
 configurations {
@@ -65,12 +69,15 @@ dependencies {
         exclude(module: 'groovy-all')
     }
 
-    functionalTestCompile('org.jenkins-ci.main:jenkins-war:2.77') {
+    functionalTestCompile('org.jenkins-ci.main:jenkins-war:2.92') {
         exclude(module: 'groovy-all')
         exclude(module: 'slf4j-jdk14')
     }
 
-    functionalTestCompile 'org.jenkins-ci.main:jenkins-test-harness:2.24'
+    functionalTestCompile('org.jenkins-ci.main:jenkins-test-harness:2.32') {
+        exclude(module: 'org-netbeans-insane')
+    }
+
     functionalTestCompile 'org.jenkins-ci.plugins:cloudbees-folder:6.1.0@jar'
 
     // Plugins to be available for single tests using the @WithPlugin annotation.
