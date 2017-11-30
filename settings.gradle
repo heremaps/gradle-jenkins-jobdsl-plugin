@@ -1,2 +1,4 @@
+rootProject.name = 'gradle-jenkins-jobdsl-plugin'
+
 include ':plugin'
 include ':example'
