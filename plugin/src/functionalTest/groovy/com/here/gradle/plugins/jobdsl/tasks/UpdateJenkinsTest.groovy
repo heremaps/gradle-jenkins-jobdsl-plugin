@@ -250,8 +250,8 @@ class UpdateJenkinsTest extends AbstractTaskTest {
     def 'plugin checks fail without admin permission'() {
         given:
         def user = User.get('user', true)
-        jenkinsRule.jenkins.setAuthorizationStrategy(new MockAuthorizationStrategy())
-        jenkinsRule.jenkins.setSecurityRealm(jenkinsRule.createDummySecurityRealm())
+        jenkinsRule.jenkins.authorizationStrategy = new MockAuthorizationStrategy()
+        jenkinsRule.jenkins.securityRealm = jenkinsRule.createDummySecurityRealm()
         def apiToken = user.getProperty(ApiTokenProperty).apiToken
 
         buildFile << readBuildGradle('updateJenkins/build.gradle')
@@ -274,9 +274,9 @@ class UpdateJenkinsTest extends AbstractTaskTest {
     def 'plugin checks work with admin permission'() {
         given:
         def admin = User.get('admin', true)
-        jenkinsRule.jenkins.setAuthorizationStrategy(new MockAuthorizationStrategy().
-                grant(Jenkins.ADMINISTER).everywhere().to(admin))
-        jenkinsRule.jenkins.setSecurityRealm(jenkinsRule.createDummySecurityRealm())
+        jenkinsRule.jenkins.authorizationStrategy = new MockAuthorizationStrategy().
+                grant(Jenkins.ADMINISTER).everywhere().to(admin)
+        jenkinsRule.jenkins.securityRealm = jenkinsRule.createDummySecurityRealm()
         def apiToken = admin.getProperty(ApiTokenProperty).apiToken
 
         buildFile << readBuildGradle('updateJenkins/build.gradle')
@@ -298,10 +298,10 @@ class UpdateJenkinsTest extends AbstractTaskTest {
     def 'disable plugin checks works without admin permission'() {
         given:
         def user = User.get('user', true)
-        jenkinsRule.jenkins.setAuthorizationStrategy(new MockAuthorizationStrategy().
+        jenkinsRule.jenkins.authorizationStrategy = new MockAuthorizationStrategy().
                 grant(Jenkins.READ).everywhere().to(user).
-                grant(Item.CREATE).everywhere().to(user))
-        jenkinsRule.jenkins.setSecurityRealm(jenkinsRule.createDummySecurityRealm())
+                grant(Item.CREATE).everywhere().to(user)
+        jenkinsRule.jenkins.securityRealm = jenkinsRule.createDummySecurityRealm()
         def apiToken = user.getProperty(ApiTokenProperty).apiToken
 
         buildFile << readBuildGradle('updateJenkins/build.gradle')

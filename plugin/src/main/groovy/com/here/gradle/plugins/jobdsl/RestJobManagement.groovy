@@ -53,8 +53,8 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
     }
 
     private static boolean isXmlDifferent(String control, String test) {
-        XMLUnit.setIgnoreComments(true)
-        XMLUnit.setIgnoreWhitespace(true)
+        XMLUnit.ignoreComments = true
+        XMLUnit.ignoreWhitespace = true
         return !XMLUnit.compareXML(control, test).similar()
     }
 
