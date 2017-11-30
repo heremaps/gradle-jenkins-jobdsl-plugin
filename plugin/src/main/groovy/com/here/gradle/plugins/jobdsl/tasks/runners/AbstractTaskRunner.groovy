@@ -25,11 +25,11 @@ abstract class AbstractTaskRunner {
         def slurper = new JsonSlurper()
 
         def configuration = slurper.parseText(decodeBase64(runProperties['configuration'].toString()))
-        DslConfig.setConfiguration(configuration)
+        DslConfig.configuration = configuration
 
         def serverConfiguration = runProperties['serverConfiguration'].toString().length() == 0 ?
                 [:] : slurper.parseText(decodeBase64(runProperties['serverConfiguration'].toString()))
-        DslConfig.setServerConfiguration(serverConfiguration)
+        DslConfig.serverConfiguration = serverConfiguration
 
         def filter = new ItemFilter(decodeBase64(runProperties['filter']))
         jobManagement = createJobManagement(filter)

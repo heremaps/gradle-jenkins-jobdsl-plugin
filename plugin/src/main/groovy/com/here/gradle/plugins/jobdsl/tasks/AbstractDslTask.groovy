@@ -46,10 +46,10 @@ abstract class AbstractDslTask extends JavaExec {
         properties['inputFiles'] = project.sourceSets.jobdsl.allGroovy.asPath
         properties['serverConfiguration'] = server != null ?
                 encodeBase64(new JsonBuilder(server.configuration).toString()) : ''
-        setSystemProperties(properties)
+        systemProperties = properties
 
-        setMain(mainClass)
-        setClasspath(project.sourceSets.main.runtimeClasspath + project.buildscript.configurations.classpath)
+        main = mainClass
+        classpath = project.sourceSets.main.runtimeClasspath + project.buildscript.configurations.classpath
 
         super.exec()
     }
