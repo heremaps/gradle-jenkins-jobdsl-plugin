@@ -95,6 +95,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
         viewRequests = []
 
         restClient = new RESTClient(jenkinsUrl)
+        restClient.encoder.charset = 'UTF-8'
         restClient.handler.failure = { it }
 
         if (jenkinsUser != null && jenkinsApiToken != null) {
