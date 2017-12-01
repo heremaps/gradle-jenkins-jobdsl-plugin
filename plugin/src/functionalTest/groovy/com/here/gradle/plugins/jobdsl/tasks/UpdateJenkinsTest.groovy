@@ -362,4 +362,22 @@ class UpdateJenkinsTest extends AbstractTaskTest {
         gradleSectionOutput(result.output, 'Outdated plugins:') == [ 'gradle' ]
     }
 
+    def 'groovy postbuild step with UTF-8 characters is uploaded correctly'() {
+        given:
+        buildFile << readBuildGradle('updateJenkins/build.gradle')
+        copyResourceToTestDir('updateJenkins/groovy-postbuild-with-utf-8.groovy')
+
+        when:
+        def result = gradleRunner.withArguments('dslUpdateJenkins', jenkinsUrlParam()).build()
+
+        then:
+        result.task(':dslUpdateJenkins').outcome == TaskOutcome.SUCCESS
+        Item item = jenkinsRule.jenkins.getItemByFullName('job')
+        item instanceof FreeStyleProject
+        XMLUnit.compareXML(
+                readResource('updateJenkins/groovy-postbuild-with-utf-8.xml'),
+                item.configFile.asString()
+        ).identical()
+    }
+
 }
