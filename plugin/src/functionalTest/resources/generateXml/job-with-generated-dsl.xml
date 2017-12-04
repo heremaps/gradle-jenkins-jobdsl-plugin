@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <actions/>
+    <description/>
+    <keepDependencies>false</keepDependencies>
+    <properties/>
+    <canRoam>true</canRoam>
+    <disabled>false</disabled>
+    <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+    <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+    <triggers/>
+    <concurrentBuild>false</concurrentBuild>
+    <builders/>
+    <publishers/>
+    <buildWrappers/>
+    <scm plugin="cvs@2.13" class="hudson.scm.CVSSCM">
+        <flatten>true</flatten>
+        <repositories>
+            <hudson.scm.CvsRepository>
+                <cvsRoot>:pserver:username@hostname:/opt/path/to/a/repo</cvsRoot>
+                <repositoryItems>
+                    <hudson.scm.CvsRepositoryItem>
+                        <modules>
+                            <hudson.scm.CvsModule>
+                                <localName>bar</localName>
+                                <remoteName>foo</remoteName>
+                                <projectsetFileName>bar</projectsetFileName>
+                            </hudson.scm.CvsModule>
+                        </modules>
+                        <location class="hudson.scm.CvsRepositoryLocation$TagRepositoryLocation">
+                            <locationType>TAG</locationType>
+                            <locationName>test</locationName>
+                            <useHeadIfNotFound>false</useHeadIfNotFound>
+                        </location>
+                    </hudson.scm.CvsRepositoryItem>
+                </repositoryItems>
+                <compressionLevel>-1</compressionLevel>
+                <excludedRegions/>
+                <passwordRequired>false</passwordRequired>
+            </hudson.scm.CvsRepository>
+        </repositories>
+        <canUseUpdate>true</canUseUpdate>
+        <skipChangeLog>false</skipChangeLog>
+        <pruneEmptyDirectories>true</pruneEmptyDirectories>
+        <disableCvsQuiet>false</disableCvsQuiet>
+        <cleanOnFailedUpdate>false</cleanOnFailedUpdate>
+        <forceCleanCopy>false</forceCleanCopy>
+        <checkoutCurrentTimestamp>true</checkoutCurrentTimestamp>
+    </scm>
+</project>

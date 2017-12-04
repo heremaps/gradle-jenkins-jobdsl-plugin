@@ -332,7 +332,7 @@ class UpdateJenkinsTest extends AbstractTaskTest {
 
         then:
         result.task(':dslUpdateJenkins').outcome == TaskOutcome.SUCCESS
-        gradleSectionOutput(result.output, 'Deprecated plugins:') == [ 'htmlpublisher' ]
+        gradleSectionOutput(result.output, 'Deprecated plugins:') == ['htmlpublisher']
     }
 
     def 'missing plugins are reported'() {
@@ -345,7 +345,7 @@ class UpdateJenkinsTest extends AbstractTaskTest {
 
         then:
         result.task(':dslUpdateJenkins').outcome == TaskOutcome.SUCCESS
-        gradleSectionOutput(result.output, 'Missing plugins:') == [ 'gradle', 'timestamper' ]
+        gradleSectionOutput(result.output, 'Missing plugins:') == ['gradle', 'timestamper']
     }
 
     @WithPlugin('gradle-1.22.hpi')
@@ -359,7 +359,7 @@ class UpdateJenkinsTest extends AbstractTaskTest {
 
         then:
         result.task(':dslUpdateJenkins').outcome == TaskOutcome.SUCCESS
-        gradleSectionOutput(result.output, 'Outdated plugins:') == [ 'gradle' ]
+        gradleSectionOutput(result.output, 'Outdated plugins:') == ['gradle']
     }
 
     def 'groovy postbuild step with UTF-8 characters is uploaded correctly'() {
@@ -378,6 +378,81 @@ class UpdateJenkinsTest extends AbstractTaskTest {
                 readResource('updateJenkins/groovy-postbuild-with-utf-8.xml'),
                 item.configFile.asString()
         ).identical()
+    }
+
+    def 'job with generated DSL is uploaded correctly'() {
+        given:
+        buildFile << readBuildGradle('updateJenkins/build-with-generated-dsl.gradle')
+        copyResourceToTestDir('updateJenkins/job-with-generated-dsl.groovy')
+
+        when:
+        def result = gradleRunner
+                .withArguments('dslUpdateJenkins', jenkinsUrlParam())
+                .build()
+
+        then:
+        result.task(':dslUpdateJenkins').outcome == TaskOutcome.SUCCESS
+
+        Item item = jenkinsRule.jenkins.getItemByFullName('job')
+        item instanceof FreeStyleProject
+        XMLUnit.compareXML(
+                readResource('updateJenkins/job-with-generated-dsl.xml'),
+                item.configFile.asString()
+        ).identical()
+    }
+
+    def 'task fails when plugin for generated DSL is missing'() {
+        given:
+        buildFile << readBuildGradle('updateJenkins/build.gradle')
+        copyResourceToTestDir('updateJenkins/job-with-generated-dsl.groovy')
+
+        when:
+        def result = gradleRunner
+                .withArguments('dslUpdateJenkins', jenkinsUrlParam())
+                .buildAndFail()
+
+        then:
+        result.task(':dslUpdateJenkins').outcome == TaskOutcome.FAILED
+        result.output.contains('No signature of method: javaposse.jobdsl.dsl.helpers.ScmContext.cvsscm() is ' +
+                'applicable for argument types')
+    }
+
+    def 'job with Job DSL extension is uploaded correctly'() {
+        given:
+        buildFile << readBuildGradle('updateJenkins/build-with-jobdsl-extension.gradle')
+        copyResourceToTestDir('updateJenkins/job-with-job-dsl-extension.groovy')
+
+        when:
+        def result = gradleRunner
+                .withArguments('dslUpdateJenkins', jenkinsUrlParam())
+                .build()
+
+        then:
+        result.task(':dslUpdateJenkins').outcome == TaskOutcome.SUCCESS
+
+        Item item = jenkinsRule.jenkins.getItemByFullName('job')
+        item instanceof FreeStyleProject
+        XMLUnit.compareXML(
+                readResource('updateJenkins/job-with-job-dsl-extension.xml'),
+                item.configFile.asString()
+        ).identical()
+    }
+
+    def 'task fails when plugin for Job DSL extension is missing'() {
+        given:
+        buildFile << readBuildGradle('updateJenkins/build.gradle')
+        copyResourceToTestDir('updateJenkins/job-with-job-dsl-extension.groovy')
+
+        when:
+        def result = gradleRunner
+                .withArguments('dslUpdateJenkins', jenkinsUrlParam())
+                .buildAndFail()
+
+        then:
+        result.task(':dslUpdateJenkins').outcome == TaskOutcome.FAILED
+        result.output.contains(
+                'No signature of method: javaposse.jobdsl.dsl.helpers.publisher.PublisherContext.jgivenReports() is ' +
+                        'applicable for argument types')
     }
 
 }

@@ -14,6 +14,7 @@ import org.gradle.api.tasks.JavaExec
  */
 abstract class AbstractDslTask extends JavaExec {
 
+    private String buildDirectoryPath = ''
     protected String filter = ''
     protected ServerDefinition server
     protected String serverName
@@ -21,6 +22,11 @@ abstract class AbstractDslTask extends JavaExec {
     protected AbstractDslTask() {
         super()
         group = 'Job DSL'
+    }
+
+    AbstractDslTask buildDirectory(String buildDirectoryPath) {
+        this.buildDirectoryPath = buildDirectoryPath
+        return this
     }
 
     @Override
@@ -41,6 +47,7 @@ abstract class AbstractDslTask extends JavaExec {
         }
 
         def properties = getProperties()
+        properties['buildDirectory'] = buildDirectoryPath
         properties['configuration'] = encodeBase64(new JsonBuilder(project.jobdsl.configuration).toString())
         properties['filter'] = encodeBase64(filter)
         properties['inputFiles'] = project.sourceSets.jobdsl.allGroovy.asPath
@@ -49,7 +56,8 @@ abstract class AbstractDslTask extends JavaExec {
         systemProperties = properties
 
         main = mainClass
-        classpath = project.sourceSets.main.runtimeClasspath + project.buildscript.configurations.classpath
+        classpath = project.sourceSets.main.runtimeClasspath + project.buildscript.configurations.classpath +
+                project.configurations.jenkinsPlugins
 
         super.exec()
     }
