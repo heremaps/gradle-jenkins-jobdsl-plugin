@@ -146,13 +146,18 @@ def pomConfig = {
     }
 }
 
+def pluginVersion() {
+    project.properties['maven.release'] == 'true' ?
+            project.properties['maven.version'] - '-SNAPSHOT' : project.properties['maven.version']
+}
+
 // Configuration for manual publication, e.g. to Maven local.
 publishing {
     publications {
         maven(MavenPublication) {
             groupId project.properties['maven.groupId']
             artifactId project.properties['maven.artifactId']
-            version project.properties['maven.version']
+            version pluginVersion()
 
             from components.java
 
@@ -186,13 +191,13 @@ pluginBundle {
             id = 'com.here.jobdsl'
             displayName = 'Gradle Job DSL Plugin'
             tags = ['jenkins', 'job-dsl']
-            version = project.properties['maven.version']
+            version = pluginVersion()
         }
     }
 
     mavenCoordinates {
         groupId = project.properties['maven.groupId']
         artifactId = project.properties['maven.artifactId']
-        version = project.properties['maven.version']
+        version = pluginVersion()
     }
 }
