@@ -111,7 +111,7 @@ class GenerateXmlTest extends AbstractTaskTest {
 
         when:
         def result = gradleRunner
-                .withArguments('dslGenerateXml', '--filter=.*unfiltered.*')
+                .withArguments('dslGenerateXml', '--filter=(folder|.*unfiltered.*)')
                 .build()
 
         then:
@@ -130,7 +130,7 @@ class GenerateXmlTest extends AbstractTaskTest {
 
         when:
         def result = gradleRunner
-                .withArguments('dslGenerateXml', '--filter=.*unfiltered.*')
+                .withArguments('dslGenerateXml', '--filter=(folder|.*unfiltered.*)')
                 .build()
 
         then:
@@ -140,23 +140,6 @@ class GenerateXmlTest extends AbstractTaskTest {
         new File(testProjectDir.root, 'build/jobdsl/xml/folder/view-unfiltered.xml').file
         !new File(testProjectDir.root, 'build/jobdsl/xml/view-filtered.xml').file
         !new File(testProjectDir.root, 'build/jobdsl/xml/folder/view-filtered.xml').file
-    }
-
-    def 'can create job in filtered folder'() {
-        given:
-        buildFile << readBuildGradle('generateXml/build.gradle')
-        copyResourceToTestDir('generateXml/job-in-filtered-folder.groovy')
-
-        when:
-        def result = gradleRunner
-                .withArguments('dslGenerateXml', '--filter=.*job.*')
-                .build()
-
-        then:
-        result.task(':dslGenerateXml').outcome == TaskOutcome.SUCCESS
-
-        !new File(testProjectDir.root, 'build/jobdsl/xml/folder.xml').file
-        new File(testProjectDir.root, 'build/jobdsl/xml/folder/job.xml').file
     }
 
     def 'global configuration is available in DSL scripts'() {
@@ -286,6 +269,79 @@ class GenerateXmlTest extends AbstractTaskTest {
         def actualText = generatedFile.getText('UTF-8')
         def expectedText = readResource('generateXml/groovy-postbuild-with-utf-8.xml')
         XMLUnit.compareXML(expectedText, actualText).identical()
+    }
+
+    def 'job with generated DSL is generated correctly'() {
+        given:
+        buildFile << readBuildGradle('generateXml/build-with-generated-dsl.gradle')
+        copyResourceToTestDir('generateXml/job-with-generated-dsl.groovy')
+
+        when:
+        def result = gradleRunner
+                .withArguments('dslGenerateXml')
+                .build()
+
+        then:
+        result.task(':dslGenerateXml').outcome == TaskOutcome.SUCCESS
+
+        def generatedFile = new File(testProjectDir.root, 'build/jobdsl/xml/job.xml')
+        generatedFile.file
+        def actualText = generatedFile.getText('UTF-8')
+        def expectedText = readResource('generateXml/job-with-generated-dsl.xml')
+        XMLUnit.compareXML(expectedText, actualText).identical()
+    }
+
+    def 'task fails when plugin for generated DSL is missing'() {
+        given:
+        buildFile << readBuildGradle('generateXml/build.gradle')
+        copyResourceToTestDir('generateXml/job-with-generated-dsl.groovy')
+
+        when:
+        def result = gradleRunner
+                .withArguments('dslGenerateXml')
+                .buildAndFail()
+
+        then:
+        result.task(':dslGenerateXml').outcome == TaskOutcome.FAILED
+        result.output.contains('No signature of method: javaposse.jobdsl.dsl.helpers.ScmContext.cvsscm() is ' +
+                'applicable for argument types')
+    }
+
+    def 'job with Job DSL extension is generated correctly'() {
+        given:
+        buildFile << readBuildGradle('generateXml/build-with-jobdsl-extension.gradle')
+        copyResourceToTestDir('generateXml/job-with-job-dsl-extension.groovy')
+
+        when:
+        def result = gradleRunner
+                .withArguments('dslGenerateXml')
+                .build()
+
+        then:
+        result.task(':dslGenerateXml').outcome == TaskOutcome.SUCCESS
+
+        def generatedFile = new File(testProjectDir.root, 'build/jobdsl/xml/job.xml')
+        generatedFile.file
+        def actualText = generatedFile.getText('UTF-8')
+        def expectedText = readResource('generateXml/job-with-job-dsl-extension.xml')
+        XMLUnit.compareXML(expectedText, actualText).identical()
+    }
+
+    def 'task fails when plugin for Job DSL extension is missing'() {
+        given:
+        buildFile << readBuildGradle('generateXml/build.gradle')
+        copyResourceToTestDir('generateXml/job-with-job-dsl-extension.groovy')
+
+        when:
+        def result = gradleRunner
+                .withArguments('dslGenerateXml')
+                .buildAndFail()
+
+        then:
+        result.task(':dslGenerateXml').outcome == TaskOutcome.FAILED
+        result.output.contains(
+                'No signature of method: javaposse.jobdsl.dsl.helpers.publisher.PublisherContext.jgivenReports() is ' +
+                        'applicable for argument types')
     }
 
 }

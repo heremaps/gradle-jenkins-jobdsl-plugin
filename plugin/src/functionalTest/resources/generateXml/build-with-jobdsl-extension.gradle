@@ -10,4 +10,5 @@ dependencies {
     compile localGroovy()
 
     jenkinsPlugins 'org.jenkins-ci.plugins:cloudbees-folder:6.2.1'
+    jenkinsPlugins 'org.jenkins-ci.plugins:jgiven:0.15.1'
 }

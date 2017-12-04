@@ -3,7 +3,9 @@ package com.here.gradle.plugins.jobdsl
 import groovyx.net.http.ContentType
 import groovyx.net.http.HttpResponseDecorator
 import groovyx.net.http.RESTClient
+
 import hudson.util.VersionNumber
+
 import javaposse.jobdsl.dsl.AbstractJobManagement
 import javaposse.jobdsl.dsl.ConfigurationMissingException
 import javaposse.jobdsl.dsl.DslScriptException
@@ -13,11 +15,17 @@ import javaposse.jobdsl.dsl.Item
 import javaposse.jobdsl.dsl.JobConfigurationNotFoundException
 import javaposse.jobdsl.dsl.NameNotProvidedException
 import javaposse.jobdsl.dsl.UserContent
+import javaposse.jobdsl.plugin.JenkinsJobManagement
+
+import jenkins.model.Jenkins
+
 import org.apache.http.HttpRequest
 import org.apache.http.HttpRequestInterceptor
 import org.apache.http.HttpStatus
 import org.apache.http.protocol.HttpContext
 import org.custommonkey.xmlunit.XMLUnit
+
+import java.nio.file.Files
 
 /**
  * Implementation of {@link javaposse.jobdsl.dsl.JobManagement} that performs all actions using the REST API of Jenkins.
@@ -62,6 +70,8 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
     boolean dryRun
     ItemFilter filter
     String jenkinsUrl
+    Jenkins jenkins
+    JenkinsJobManagement jenkinsJobManagement
     VersionNumber jenkinsVersion
     RESTClient restClient
     List<Map> plugins
@@ -74,13 +84,14 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
 
     @SuppressWarnings('ParameterCount')
     RestJobManagement(ItemFilter filter, boolean disablePluginChecks, boolean dryRun, String jenkinsUrl,
-                      String jenkinsUser, String jenkinsApiToken) {
+                      String jenkinsUser, String jenkinsApiToken, Jenkins jenkins) {
         super(System.out)
 
         this.disablePluginChecks = disablePluginChecks
         this.dryRun = dryRun
         this.filter = filter
         this.jenkinsUrl = jenkinsUrl
+        this.jenkins = jenkins
 
         if (!this.jenkinsUrl.endsWith('/')) {
             this.jenkinsUrl += '/'
@@ -93,6 +104,11 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
 
         itemRequests = []
         viewRequests = []
+
+        def workspace = Files.createTempDirectory('jobdsl').toFile()
+        workspace.deleteOnExit()
+
+        jenkinsJobManagement = new JenkinsJobManagement(System.out, [:], workspace)
 
         restClient = new RESTClient(jenkinsUrl)
         restClient.encoder.charset = 'UTF-8'
@@ -262,7 +278,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
     @Override
     Node callExtension(String name, Item item, Class<? extends ExtensibleContext> contextType, Object... args) throws
             Throwable {
-        return null
+        return jenkinsJobManagement.callExtension(name, item, contextType, args)
     }
 
     VersionNumber requestJenkinsVersion() {

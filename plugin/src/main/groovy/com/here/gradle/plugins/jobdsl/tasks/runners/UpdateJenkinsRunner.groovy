@@ -3,7 +3,11 @@ package com.here.gradle.plugins.jobdsl.tasks.runners
 import com.here.gradle.plugins.jobdsl.GradleJobDslPluginException
 import com.here.gradle.plugins.jobdsl.ItemFilter
 import com.here.gradle.plugins.jobdsl.RestJobManagement
+
+import javaposse.jobdsl.dsl.GeneratedItems
 import javaposse.jobdsl.dsl.JobManagement
+
+import jenkins.model.Jenkins
 
 /**
  * Performs the action of the {@link com.here.gradle.plugins.jobdsl.tasks.UpdateJenkinsTask} to upload all items and
@@ -16,18 +20,18 @@ class UpdateJenkinsRunner extends AbstractTaskRunner {
     }
 
     @Override
-    JobManagement createJobManagement(ItemFilter filter) {
+    JobManagement createJobManagement(Jenkins jenkins, ItemFilter filter) {
         boolean disablePluginChecks = runProperties['disablePluginChecks'].toBoolean()
         boolean dryRun = runProperties['dryRun'].toBoolean()
         String jenkinsUrl = runProperties['jenkinsUrl']
         String jenkinsUser = runProperties['jenkinsUser']
         String jenkinsApiToken = runProperties['jenkinsApiToken']
 
-        new RestJobManagement(filter, disablePluginChecks, dryRun, jenkinsUrl, jenkinsUser, jenkinsApiToken)
+        new RestJobManagement(filter, disablePluginChecks, dryRun, jenkinsUrl, jenkinsUser, jenkinsApiToken, jenkins)
     }
 
     @Override
-    void postProcess() {
+    void postProcess(Jenkins jenkins, List<GeneratedItems> generatedItems, ItemFilter filter) {
         println '\ndslUpdateJenkins results:'
         def restJobManagement = (RestJobManagement) jobManagement
 
@@ -45,6 +49,7 @@ class UpdateJenkinsRunner extends AbstractTaskRunner {
             printPluginList(restJobManagement.deprecatedPlugins, 'Deprecated')
             printPluginList(restJobManagement.missingPlugins, 'Missing')
             printPluginList(restJobManagement.outdatedPlugins, 'Outdated')
+            println ''
         }
 
         if (restJobManagement.statusCounter[RestJobManagement.STATUS_COULD_NOT_CREATE] > 0

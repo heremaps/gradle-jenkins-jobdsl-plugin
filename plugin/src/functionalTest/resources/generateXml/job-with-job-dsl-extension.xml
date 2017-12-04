@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <actions/>
+    <description/>
+    <keepDependencies>false</keepDependencies>
+    <properties/>
+    <scm class="hudson.scm.NullSCM"/>
+    <canRoam>true</canRoam>
+    <disabled>false</disabled>
+    <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+    <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+    <triggers/>
+    <concurrentBuild>false</concurrentBuild>
+    <builders/>
+    <publishers>
+        <org.jenkinsci.plugins.jgiven.JgivenReportGenerator plugin="jgiven@0.15.1">
+            <reportConfigs>
+                <org.jenkinsci.plugins.jgiven.JgivenReportGenerator_-HtmlReportConfig>
+                    <format>HTML</format>
+                    <customCssFile>some.css</customCssFile>
+                    <customJsFile>some.js</customJsFile>
+                    <title>My Custom Title</title>
+                </org.jenkinsci.plugins.jgiven.JgivenReportGenerator_-HtmlReportConfig>
+            </reportConfigs>
+            <excludeEmptyScenarios>true</excludeEmptyScenarios>
+            <jgivenResults>**/*.json</jgivenResults>
+        </org.jenkinsci.plugins.jgiven.JgivenReportGenerator>
+    </publishers>
+    <buildWrappers/>
+</project>
