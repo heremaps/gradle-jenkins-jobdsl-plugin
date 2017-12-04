@@ -4,6 +4,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 2.2.0 (under development)
 
+## 2.1.1 (2017-12-04)
+
+- RestJobManagement: Use UTF-8 also on Windows. Before configurations containing UTF-8 characters got corrupted by the
+  dslUpdateJenkins task when using Windows. 
+
 ## 2.1.0 (2017-10-20)
 
 - Upgrade job-dsl-core to 1.66
