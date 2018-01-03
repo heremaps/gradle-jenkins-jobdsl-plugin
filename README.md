@@ -1,6 +1,13 @@
-[![Build Status](https://travis-ci.org/heremaps/gradle-jenkins-jobdsl-plugin.svg?branch=master)](https://travis-ci.org/heremaps/gradle-jenkins-jobdsl-plugin)
-
 # Gradle Jenkins Job DSL Plugin
+
+| Linux | Windows |
+| :---- | :------ |
+[ ![Linux build status][1]][2] | [![Windows build status][3]][4] |
+
+[1]: https://travis-ci.org/heremaps/gradle-jenkins-jobdsl-plugin.svg?branch=master
+[2]: https://travis-ci.org/heremaps/gradle-jenkins-jobdsl-plugin
+[3]: https://ci.appveyor.com/api/projects/status/37g184qui7ityfw2/branch/master?svg=true
+[4]: https://ci.appveyor.com/project/heremaps/gradle-jenkins-jobdsl-plugin/branch/master
 
 This is a plugin to manage Jenkins [Job DSL](https://wiki.jenkins-ci.org/display/JENKINS/Job+DSL+Plugin) projects in a
 Gradle project.
