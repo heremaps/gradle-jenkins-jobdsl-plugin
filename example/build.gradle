@@ -1,5 +1,5 @@
 buildscript {
-    ext.jenkinsJobdslPluginVersion = '2.1.1'
+    ext.jenkinsJobdslPluginVersion = '3.0.0'
 
     repositories {
         maven {
@@ -12,7 +12,17 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.here.gradle.plugins:gradle-jenkins-jobdsl-plugin:${jenkinsJobdslPluginVersion}"
+        classpath 'org.codehaus.groovy:groovy-all:2.4.12'
+        classpath("com.here.gradle.plugins:gradle-jenkins-jobdsl-plugin:${jenkinsJobdslPluginVersion}") {
+            // Exclude unneeded transitive dependencies that can cause dependency resolution issues.
+            exclude(module: 'bootstrap')
+            exclude(module: 'org-netbeans-insane')
+
+            // Exclude unneeded transitive dependencies on XML libraries that can break the generation of config files.
+            // See: https://issues.jenkins-ci.org/browse/JENKINS-35638
+            exclude(module: 'xalan')
+            exclude(module: 'xercesImpl')
+        }
     }
 }
 
@@ -22,14 +32,20 @@ repositories {
     maven {
         url 'https://plugins.gradle.org/m2'
     }
-
-    maven {
-        url 'https://repo.jenkins-ci.org/releases/'
-    }
 }
 
 dependencies {
-    compile "com.here.gradle.plugins:gradle-jenkins-jobdsl-plugin:${jenkinsJobdslPluginVersion}"
+    compile 'org.codehaus.groovy:groovy-all:2.4.12'
+    compile("com.here.gradle.plugins:gradle-jenkins-jobdsl-plugin:${jenkinsJobdslPluginVersion}") {
+        exclude(module: 'bootstrap')
+        exclude(module: 'org-netbeans-insane')
+        exclude(module: 'xalan')
+        exclude(module: 'xercesImpl')
+    }
+
+    jenkinsPlugins 'org.jenkins-ci.plugins:build-timeout:1.19'
+    jenkinsPlugins 'org.jenkins-ci.plugins:cloudbees-folder:6.2.1'
+    jenkinsPlugins 'org.jenkins-ci.plugins:timestamper:1.8.9'
 }
 
 if (properties.buildAgainstPluginProject.toBoolean()) {
@@ -66,7 +82,7 @@ jobdsl {
             jenkinsUrl = 'http://localhost:8080/'
             jenkinsUser = 'bot-account'
             // jenkinsApiToken not provided to prevent accidental job deployment to production server.
-            // jenkinsApiToken = 'yourApiToken'
+            //jenkinsApiToken = 'yourApiToken'
             configuration = [
                     serverName: 'Production'
             ]
