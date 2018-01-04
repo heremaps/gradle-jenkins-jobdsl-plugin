@@ -18,6 +18,9 @@ import org.junit.runner.Description
 import org.junit.runners.model.Statement
 import org.jvnet.hudson.test.JenkinsRule
 
+import java.util.logging.Level
+import java.util.logging.Logger
+
 /**
  * Common code for all tasks that extend {@link com.here.gradle.plugins.jobdsl.tasks.AbstractDslTask} to perform their
  * actions in another process. This class takes care of receiving and decoding the configuration options for the tasks.
@@ -51,6 +54,11 @@ abstract class AbstractTaskRunner {
 
         def jenkinsRule = new JenkinsRule()
         jenkinsRule.contextPath = '/jenkins'
+
+        // Only print severe logs from Jenkins to not clutter up the log.
+        Logger.getLogger('').handlers.each {
+            it.level = Level.SEVERE
+        }
 
         def description = Description.createSuiteDescription('Run Job DSL Task', [])
 
