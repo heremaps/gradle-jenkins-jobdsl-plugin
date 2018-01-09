@@ -16,6 +16,7 @@ Gradle project.
 
 - [Usage](#usage)
     - [Apply Plugin](#apply-plugin)
+    - [How does it work](#how-does-it-work)
     - [Writing Job DSL Scripts](#writing-job-dsl-scripts)
         - [Helper Classes](#helper-classes)
         - [Job Builders](#job-builders)
@@ -26,6 +27,7 @@ Gradle project.
     - [Seed Job](#seed-job)
     - [Custom Configuration](#custom-configuration)
     - [Filter Jobs](#filter-jobs)
+    - [Generated DSL and Job DSL extensions](#generated-dsl-and-job-dsl-extensions)
 - [Development](#development)
     - [Build the Plugin](#build-the-plugin)
     - [Test the Plugin](#test-the-plugin)
@@ -47,7 +49,7 @@ like this:
 
 ```groovy
 buildscript {
-    ext.jenkinsJobdslPluginVersion = '2.1.1'
+    ext.jenkinsJobdslPluginVersion = '3.0.0'
 
     repositories {
         maven {
@@ -60,26 +62,51 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.here.gradle.plugins:gradle-jenkins-jobdsl-plugin:${jenkinsJobdslPluginVersion}"
+        classpath("com.here.gradle.plugins:gradle-jenkins-jobdsl-plugin:${jenkinsJobdslPluginVersion}") {
+            // Exclude unneeded transitive dependencies that can cause dependency resolution issues.
+            exclude(module: 'bootstrap')
+            exclude(module: 'groovy-all')
+            exclude(module: 'org-netbeans-insane')
+
+            // Exclude unneeded transitive dependencies on XML libraries that can break the generation of config files.
+            // See: https://issues.jenkins-ci.org/browse/JENKINS-35638
+            exclude(module: 'xalan')
+            exclude(module: 'xercesImpl')
+        }
     }
 }
 
 apply plugin: 'com.here.jobdsl'
 
 repositories {
-    jcenter()
-
     maven {
         url 'https://plugins.gradle.org/m2'
-    }
-
-    maven {
-        url 'https://repo.jenkins-ci.org/releases/'
     }
 }
 
 dependencies {
-    compile "com.here.gradle.plugins:gradle-jenkins-jobdsl-plugin:${jenkinsJobdslPluginVersion}"
+    compile("com.here.gradle.plugins:gradle-jenkins-jobdsl-plugin:${jenkinsJobdslPluginVersion}") {
+        exclude(module: 'org-netbeans-insane')
+        exclude(module: 'xalan')
+        exclude(module: 'xercesImpl')
+    }
+}
+```
+
+### How does it work
+
+To come as close as possible to the behaviour of a normal Job DSL
+[seed job](https://github.com/jenkinsci/job-dsl-plugin/wiki/Tutorial---Using-the-Jenkins-Job-DSL#1-creating-the-seed-job)
+the plugin launches a Jenkins instance in the background and executes the Job DSL scripts inside of this Jenkins. This
+implementation enables support for the generated DSL and Job DSL extensions as described below.
+
+To load plugins in this Jenkins instance they have to be added as dependencies to the `jenkinsPlugins` configuration:
+
+```groovy
+dependencies {
+    // Some Job DSL features only work when plugins are installed, for example cloudbees-folder is required
+    // to be able to create folders (https://jenkinsci.github.io/job-dsl-plugin/#path/folder).
+    jenkinsPlugins 'org.jenkins-ci.plugins:cloudbees-folder:6.2.1'
 }
 ```
 
@@ -115,7 +142,7 @@ import javaposse.jobdsl.dsl.Job
 
 class CustomJobBuilder extends JobBuilder {
 
-    GenericJob(DslFactory dslFactory) {
+    CustomJobBuilder(DslFactory dslFactory) {
         super(dslFactory)
 
         addDsl {
@@ -295,9 +322,34 @@ and only job names that match this expression are evaluated:
 ./gradlew dslGenerateXml --filter=".*build.*"
 
 # Only upload jobs from the folder "MyFolder"
-# Note that /.* is put in brackets and made optional with a question mark, this makes sure that also the folder itself is uploaded.
-# You could also use "^MyFolder.*", but in this case any item in the folder "MyFolder2" would also be uploaded.
+# Note that /.* is put in brackets and made optional with a question mark, this makes sure that also the folder itself
+# is uploaded. You could also use "^MyFolder.*", but in this case any item in the folder "MyFolder2" would also be
+# uploaded.
 ./gradlew dslUpdateJenkins --filter="^MyFolder(/.*)?"
+```
+
+### Generated DSL and Job DSL extensions
+
+Job DSL has built-in support for many Jenkins plugins. Additionally there are two mechanisms that add support for
+plugins which are not directly supported:
+
+1. [Generated DSL](https://github.com/jenkinsci/job-dsl-plugin/wiki/Automatically-Generated-DSL):
+   This method uses annotations to discover configuration endpoints of plugins automatically and generates a DSL for
+   them. This works for many plugins when they use the correct annotations.
+1. [Job DSL Extensions](https://github.com/jenkinsci/job-dsl-plugin/wiki/Extending-the-DSL):
+   Plugins can also define their own DSL which is then available when the plugin is loaded by Jenkins.
+
+Both mechanisms are supported by the gradle-jenkins-jobdsl-plugin. To use them the plugins have to be added to the
+`jenkinsPlugins` configuration:
+
+```groovy
+dependencies {
+    // This plugin defines a Job DSL extension.
+    jenkinsPlugins 'org.jenkins-ci.plugins:jgiven:0.15.1'
+
+    // This plugin is supported by the generated DSL.
+    jenkinsPlugins 'org.jenkins-ci.plugins:cvs:2.13'
+}
 ```
 
 ## Development
