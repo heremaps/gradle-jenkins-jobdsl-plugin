@@ -1,15 +1,15 @@
 import com.here.demo.jobdsl.DemoPipelineJobBuilder
 import com.here.gradle.plugins.jobdsl.util.PipelineBuilder
 
-folder('demo')
-folder('demo/pipeline')
-folder('demo/pipeline/master')
-folder('demo/pipeline/staging')
+folder('Demo')
+folder('Demo/pipeline')
+folder('Demo/pipeline/master')
+folder('Demo/pipeline/staging')
 
 // Configure pipeline builder
 def pipelineBuilder = new PipelineBuilder()
 pipelineBuilder.with {
-    baseFolders(['demo', 'pipeline', 'master'])
+    baseFolders(['Demo', 'pipeline', 'master'])
     defaultConfiguration([timeout: 10])
     commonDsl {
         wrappers {
@@ -65,7 +65,7 @@ pipelineBuilder.with {
     build()
 
     // Reconfigure pipeline
-    baseFolders(['demo', 'pipeline', 'staging'])
+    baseFolders(['Demo', 'pipeline', 'staging'])
     defaultConfiguration([timeout: 20])
 
     // Build pipeline again
