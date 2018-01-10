@@ -45,6 +45,10 @@ def thirdJob = new DemoPipelineJobBuilder(this)
 thirdJob.with {
     name = 'Third job'
     shellCommand = 'ls -al'
+
+    // Apply a value to timeout, this will not be overridden by the default configuration of the pipeline builder.
+    timeout = 25
+
     freeStyleJob {
         publishers {
             archiveArtifacts('*')

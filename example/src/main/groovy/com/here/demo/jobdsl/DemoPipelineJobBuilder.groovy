@@ -9,7 +9,7 @@ import javaposse.jobdsl.dsl.DslFactory
 class DemoPipelineJobBuilder extends PipelineJobBuilder {
 
     String shellCommand
-    int timeout = 30
+    Integer timeout
 
     DemoPipelineJobBuilder(DslFactory dslFactory) {
         super(dslFactory)
