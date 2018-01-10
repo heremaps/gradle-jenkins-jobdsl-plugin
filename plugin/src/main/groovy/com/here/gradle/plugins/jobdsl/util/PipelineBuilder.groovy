@@ -57,7 +57,7 @@ class PipelineBuilder {
 
     private applyDefaultConfiguration(PipelineJobBuilder jobBuilder) {
         defaultConfiguration.each { key, value ->
-            if (jobBuilder.hasProperty(key)) {
+            if (jobBuilder.hasProperty(key) && jobBuilder.getProperty(key) == null) {
                 jobBuilder."${key}" = value
             } else {
                 println "Ignoring default configuration '${key}' for job '${jobBuilder.fullJobName()}'"
