@@ -12,10 +12,10 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.codehaus.groovy:groovy-all:2.4.12'
         classpath("com.here.gradle.plugins:gradle-jenkins-jobdsl-plugin:${jenkinsJobdslPluginVersion}") {
             // Exclude unneeded transitive dependencies that can cause dependency resolution issues.
             exclude(module: 'bootstrap')
+            exclude(module: 'groovy-all')
             exclude(module: 'org-netbeans-insane')
 
             // Exclude unneeded transitive dependencies on XML libraries that can break the generation of config files.
@@ -35,9 +35,7 @@ repositories {
 }
 
 dependencies {
-    compile 'org.codehaus.groovy:groovy-all:2.4.12'
     compile("com.here.gradle.plugins:gradle-jenkins-jobdsl-plugin:${jenkinsJobdslPluginVersion}") {
-        exclude(module: 'bootstrap')
         exclude(module: 'org-netbeans-insane')
         exclude(module: 'xalan')
         exclude(module: 'xercesImpl')
