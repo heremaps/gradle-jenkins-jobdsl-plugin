@@ -2,10 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 3.0.0 (under development)
+## 3.1.0 (under development)
 
-- Add support for auto-generated DSL and Job DSL extensions by executing the Job DSL scripts in a local Jenkins
-  instance.
+## 3.0.0 (2018-01-10)
+
+- Fix #12 - Add support for auto-generated DSL and Job DSL extensions by executing the Job DSL scripts in a local
+  Jenkins instance.
+- Fix #63 - PipelineBuilder: Do not overwrite values with default configuration.
 
 ## 2.1.1 (2017-12-04)
 
