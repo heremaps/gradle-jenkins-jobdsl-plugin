@@ -44,12 +44,12 @@ class JobDslPlugin implements Plugin<Project> {
         project.dependencies {
             // This Jenkins plugin needs to be loaded by the Jenkins instance to discover Job DSL extensions and support
             // the auto-generated DSL.
-            jenkinsPlugins('org.jenkins-ci.plugins:job-dsl:1.66') {
+            jenkinsPlugins('org.jenkins-ci.plugins:job-dsl:1.67') {
                 exclude(module: 'groovy-all')
             }
 
             // These JAR dependencies are required by the Gradle Exec task which executes the DSL scripts.
-            jenkinsPlugins('org.jenkins-ci.plugins:job-dsl:1.66@jar') {
+            jenkinsPlugins('org.jenkins-ci.plugins:job-dsl:1.67@jar') {
                 exclude(module: 'groovy-all')
             }
             jenkinsPlugins 'org.jenkins-ci.plugins:structs:1.9@jar'
