@@ -51,10 +51,10 @@ sourceSets {
 
 dependencies {
     compile localGroovy()
-    compile('org.jenkins-ci.plugins:job-dsl-core:1.66') {
+    compile('org.jenkins-ci.plugins:job-dsl-core:1.67') {
         exclude(module: 'groovy-all')
     }
-    compile 'org.jenkins-ci.plugins:job-dsl:1.66@jar'
+    compile 'org.jenkins-ci.plugins:job-dsl:1.67@jar'
     compile 'org.jenkins-ci:version-number:1.4'
 
     compile('org.codehaus.groovy.modules.http-builder:http-builder:0.7.2') {
