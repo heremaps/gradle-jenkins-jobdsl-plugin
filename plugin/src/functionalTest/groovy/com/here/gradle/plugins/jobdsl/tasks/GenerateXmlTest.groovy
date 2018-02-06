@@ -85,6 +85,25 @@ class GenerateXmlTest extends AbstractTaskTest {
         new File(testProjectDir.root, 'build/jobdsl/xml/folder/job.xml').file
     }
 
+    def 'creating job and folder in separate files works'() {
+        given:
+        buildFile << readBuildGradle('generateXml/build.gradle')
+        testProjectDir.newFolder('src', 'jobdsl', 'folder')
+        copyResourceToTestDir('generateXml/job-in-folder-without-folder.groovy', 'src/jobdsl/folder/job.groovy')
+        copyResourceToTestDir('generateXml/folder.groovy', 'src/jobdsl/folder.groovy')
+
+        when:
+        def result = gradleRunner
+                .withArguments('dslGenerateXml', '--stacktrace')
+                .build()
+
+        then:
+        result.task(':dslGenerateXml').outcome == TaskOutcome.SUCCESS
+
+        new File(testProjectDir.root, 'build/jobdsl/xml/folder.xml').file
+        new File(testProjectDir.root, 'build/jobdsl/xml/folder/job.xml').file
+    }
+
     def 'filter applies to folders'() {
         given:
         buildFile << readBuildGradle('generateXml/build.gradle')
