@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Upgrade job-dsl-core to 1.67.
 - Process Job DSL scripts in specific order. Scripts from the same folder are processed in alphabetical order and before
   any scripts from subfolders. Subfolders are also processed in alphabetical order.
+- Fix #65 - PipelineBuilder: Add common DSL Closure only once when PipelineBuilder.build() is called multiple times.
 
 ## 3.0.0 (2018-01-10)
 

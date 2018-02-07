@@ -50,8 +50,7 @@ class PipelineBuilder {
     void build() {
         jobBuilders.each { jobBuilder ->
             applyDefaultConfiguration(jobBuilder)
-            applyCommonDsl(jobBuilder)
-            jobBuilder.build()
+            jobBuilder.build(commonDsl)
         }
     }
 
@@ -63,10 +62,6 @@ class PipelineBuilder {
                 println "Ignoring default configuration '${key}' for job '${jobBuilder.fullJobName()}'"
             }
         }
-    }
-
-    private applyCommonDsl(PipelineJobBuilder jobBuilder) {
-        jobBuilder.addDsl(commonDsl)
     }
 
 }

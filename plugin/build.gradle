@@ -80,6 +80,8 @@ dependencies {
         exclude(module: 'groovy-all')
     }
 
+    testCompile 'net.bytebuddy:byte-buddy:1.7.9'
+
     functionalTestCompile('org.spockframework:spock-core:1.1-groovy-2.4') {
         exclude(module: 'groovy-all')
     }

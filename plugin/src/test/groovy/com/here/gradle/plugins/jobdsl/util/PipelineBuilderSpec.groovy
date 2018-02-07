@@ -1,5 +1,6 @@
 package com.here.gradle.plugins.jobdsl.util
 
+import com.here.gradle.plugins.jobdsl.GradleJobDslPluginException
 import javaposse.jobdsl.dsl.DslFactory
 import org.codehaus.groovy.runtime.ComposedClosure
 import spock.lang.Specification
@@ -61,11 +62,7 @@ class PipelineBuilderSpec extends Specification {
 
     def 'common DSL is applied'() {
         given:
-        def dslFactory = Mock(DslFactory)
-
-        def job = new PipelineJobBuilder(dslFactory)
-        job.name = 'job'
-        job.freeStyleJob { }
+        def job = Mock(PipelineJobBuilder)
 
         def pipelineBuilder = new PipelineBuilder()
 
@@ -77,7 +74,11 @@ class PipelineBuilderSpec extends Specification {
         pipelineBuilder.build()
 
         then:
-        job.dslClosures.contains(commonDsl)
+        1 * job.invokeMethod('concatenateDslClosures', [commonDsl])
+
+        // There is no easy way to set the jobClass property of the mocked job, so expect the job building to fail.
+        def ex = thrown GradleJobDslPluginException
+        ex.message == 'Job type null is not supported.'
     }
 
     def 'base folders are applied'() {
