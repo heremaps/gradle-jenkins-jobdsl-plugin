@@ -1,0 +1,1 @@
+freeStyleJob('folder/job')

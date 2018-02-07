@@ -1,11 +1,13 @@
 package com.here.gradle.plugins.jobdsl.tasks
 
 import com.here.gradle.plugins.jobdsl.ServerDefinition
+import com.here.gradle.plugins.jobdsl.util.PathComparator
 import groovy.json.JsonBuilder
 import org.gradle.api.GradleException
 import org.gradle.api.internal.tasks.options.Option
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.JavaExec
+import org.gradle.util.CollectionUtils
 
 /**
  * Shared code for all tasks of the plugin that call an implementation of
@@ -46,11 +48,14 @@ abstract class AbstractDslTask extends JavaExec {
             }
         }
 
+        def groovyFiles = project.sourceSets.jobdsl.allGroovy.files*.absolutePath
+        groovyFiles.sort(new PathComparator())
+
         def properties = getProperties()
         properties['buildDirectory'] = buildDirectoryPath
         properties['configuration'] = encodeBase64(new JsonBuilder(project.jobdsl.configuration).toString())
         properties['filter'] = encodeBase64(filter)
-        properties['inputFiles'] = project.sourceSets.jobdsl.allGroovy.asPath
+        properties['inputFiles'] = CollectionUtils.join(File.pathSeparator, groovyFiles)
         properties['serverConfiguration'] = server != null ?
                 encodeBase64(new JsonBuilder(server.configuration).toString()) : ''
         systemProperties = properties
