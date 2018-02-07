@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 3.1.0 (under development)
+## 3.1.0 (2018-02-07)
 
 - Upgrade job-dsl-core to 1.67.
 - Process Job DSL scripts in specific order. Scripts from the same folder are processed in alphabetical order and before
