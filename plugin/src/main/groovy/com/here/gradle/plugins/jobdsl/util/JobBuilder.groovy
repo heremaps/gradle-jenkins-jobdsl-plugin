@@ -31,24 +31,26 @@ class JobBuilder {
     /**
      * Create the job object using the configured DSL closures and job class.
      *
+     * @param dslClosure An optional Job DSL Closure that will be applied to the job builder.
+     *
      * @return The created {@link Job} object.
      */
-    final Job build() {
+    final Job build(Closure dslClosure = { }) {
         checkNameIsValid()
-        def dslClosure = concatenateDslClosures()
+        def combinedClosure = concatenateDslClosures(dslClosure)
         switch (jobClass) {
             case BuildFlowJob:
-                return dslFactory.buildFlowJob(fullJobName(), dslClosure)
+                return dslFactory.buildFlowJob(fullJobName(), combinedClosure)
             case FreeStyleJob:
-                return dslFactory.freeStyleJob(fullJobName(), dslClosure)
+                return dslFactory.freeStyleJob(fullJobName(), combinedClosure)
             case MatrixJob:
-                return dslFactory.matrixJob(fullJobName(), dslClosure)
+                return dslFactory.matrixJob(fullJobName(), combinedClosure)
             case MavenJob:
-                return dslFactory.mavenJob(fullJobName(), dslClosure)
+                return dslFactory.mavenJob(fullJobName(), combinedClosure)
             case MultiJob:
-                return dslFactory.multiJob(fullJobName(), dslClosure)
+                return dslFactory.multiJob(fullJobName(), combinedClosure)
             case WorkflowJob:
-                return dslFactory.pipelineJob(fullJobName(), dslClosure)
+                return dslFactory.pipelineJob(fullJobName(), combinedClosure)
             default:
                 throw new GradleJobDslPluginException("Job type ${jobClass} is not supported.")
         }
@@ -201,8 +203,16 @@ class JobBuilder {
         }
     }
 
-    Closure concatenateDslClosures() {
-        return dslClosures.inject({ }) { acc, val -> acc >> val }
+    /**
+     * Concatenate all {@link #dslClosures} to a single Closure.
+     *
+     * @param dslClosure An optional DSL Closure that will be appended to the result.
+     *
+     * @return The concatenated closure.
+     */
+    Closure concatenateDslClosures(Closure dslClosure = { }) {
+        def allClosures = [*dslClosures, dslClosure]
+        return allClosures.inject({ }) { acc, val -> acc >> val }
     }
 
     /**
