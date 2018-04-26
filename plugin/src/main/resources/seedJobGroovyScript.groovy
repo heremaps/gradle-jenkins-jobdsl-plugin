@@ -4,8 +4,7 @@ import hudson.model.ItemGroup
 import hudson.model.ModifiableViewGroup
 import hudson.model.View
 import jenkins.model.Jenkins
-import java.io.BufferedReader
-import java.io.InputStreamReader
+import java.nio.file.Files
 import javax.xml.transform.stream.StreamSource
 import org.custommonkey.xmlunit.Diff
 import org.custommonkey.xmlunit.XMLUnit
@@ -122,28 +121,24 @@ def updateJobs(FilePath filePath, String namePrefix = '') {
 def workspace = build.workspace
 def xmlBase = new FilePath(workspace, 'XML_BASE_DIR_PLACEHOLDER')
 
-def localFile = new File("TEMPORARY_XML_DIR_PREFIX_PLACEHOLDER-${build.getNumber()}")
-println "Create local XML dir '${localFile.absolutePath}'"
-if (localFile.exists()) {
-    throw new RuntimeException("Local XML dir '${localFile.absolutePath}' already exists")
-}
-if (!localFile.mkdir()) {
-    throw new RuntimeException("Could not create local XML dir '${localFile.absolutePath}'")
-}
-def localXmlBase = new FilePath(localFile)
+def localDir = Files.createTempDirectory("TEMPORARY_XML_DIR_PREFIX_PLACEHOLDER")
+println "Created local XML dir '${localDir}'"
+def localXmlBase = new FilePath(localDir.toFile())
 
 println 'Copy remote files to local XML dir'
 xmlBase.copyRecursiveTo(localXmlBase)
 
 println 'Start updating jobs from local XML dir'
 updateJobs(localXmlBase)
+println 'Updating jobs done'
 
-println "Delete local XML dir '${localFile.absolutePath}'"
-if (!localFile.deleteDir()) {
-    throw new RuntimeException("Could not delete local XML dir '${localFile.absolutePath}'")
+println "Deleting local XML dir '${localDir}'"
+if (!localDir.toFile().deleteDir()) {
+  println "Could not delete local XML dir '${localDir}'."
 }
 
 println """\
+
     SEED JOB SUMMARY
 
     Created items: ${createdItems}
