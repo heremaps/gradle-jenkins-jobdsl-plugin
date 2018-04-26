@@ -128,13 +128,15 @@ def localXmlBase = new FilePath(localDir.toFile())
 println 'Copy remote files to local XML dir'
 xmlBase.copyRecursiveTo(localXmlBase)
 
-println 'Start updating jobs from local XML dir'
-updateJobs(localXmlBase)
-println 'Updating jobs done'
-
-println "Deleting local XML dir '${localDir}'"
-if (!localDir.toFile().deleteDir()) {
-  println "Could not delete local XML dir '${localDir}'."
+try {
+    println 'Start updating jobs from local XML dir'
+    updateJobs(localXmlBase)
+    println 'Updating jobs done'
+} finally {
+    println "Deleting local XML dir '${localDir}'"
+    if (!localDir.toFile().deleteDir()) {
+        println "Could not delete local XML dir '${localDir}'."
+    }
 }
 
 println """\
