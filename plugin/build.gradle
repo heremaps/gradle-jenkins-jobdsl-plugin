@@ -155,18 +155,36 @@ task groovydocJar(type: Jar, dependsOn: groovydoc) {
     classifier = 'groovydoc'
 }
 
+def pluginVersion() {
+    project.properties['maven.release'] == 'true' ?
+            project.properties['maven.version'] - '-SNAPSHOT' : project.properties['maven.version']
+}
+
 def pomConfig = {
+    description 'A plugin for Gradle to manage Jenkins Job DSL projects.'
+    url 'https://github.com/heremaps/gradle-jenkins-jobdsl-plugin'
+    inceptionYear 2016
+    organization {
+        name 'HERE'
+        url 'https://here.com'
+    }
     licenses {
         license {
             name 'Apache-2.0'
             url 'http://www.apache.org/licenses/LICENSE-2.0'
+            distribution 'repo'
         }
     }
-}
-
-def pluginVersion() {
-    project.properties['maven.release'] == 'true' ?
-            project.properties['maven.version'] - '-SNAPSHOT' : project.properties['maven.version']
+    scm {
+        connection 'scm:git:https://github.com/heremaps/gradle-jenkins-jobdsl-plugin.git'
+        developerConnection 'scm:git:git@github.com:heremaps/gradle-jenkins-jobdsl-plugin.git'
+        url 'https://github.com/heremaps/gradle-jenkins-jobdsl-plugin'
+        tag pluginVersion()
+    }
+    issueManagement {
+        system 'GitHub'
+        url 'https://github.com/heremaps/gradle-jenkins-jobdsl-plugin/issues'
+    }
 }
 
 // Configuration for manual publication, e.g. to Maven local.
