@@ -183,10 +183,7 @@ publishing {
             artifact groovydocJar
 
             pom.withXml {
-                asNode().children().last() + {
-                    def root = asNode()
-                    root.children().last() + pomConfig
-                }
+                asNode().children().last() + pomConfig
             }
         }
     }
