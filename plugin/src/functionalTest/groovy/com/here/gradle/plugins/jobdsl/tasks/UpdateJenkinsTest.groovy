@@ -321,7 +321,7 @@ class UpdateJenkinsTest extends AbstractTaskTest {
         jenkinsRule.jenkins.getItemByFullName('job') instanceof FreeStyleProject
     }
 
-    @WithPlugin('htmlpublisher-1.12.hpi')
+    @WithPlugin('groovy-1.30.hpi')
     def 'deprecated plugins are reported'() {
         given:
         buildFile << readBuildGradle('updateJenkins/build.gradle')
@@ -332,7 +332,7 @@ class UpdateJenkinsTest extends AbstractTaskTest {
 
         then:
         result.task(':dslUpdateJenkins').outcome == TaskOutcome.SUCCESS
-        gradleSectionOutput(result.output, 'Deprecated plugins:') == ['htmlpublisher']
+        gradleSectionOutput(result.output, 'Deprecated plugins:') == ['groovy']
     }
 
     def 'missing plugins are reported'() {

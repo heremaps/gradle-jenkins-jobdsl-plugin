@@ -4,7 +4,6 @@ import com.here.gradle.plugins.jobdsl.GradleJobDslPluginException
 
 import javaposse.jobdsl.dsl.DslFactory
 import javaposse.jobdsl.dsl.Job
-import javaposse.jobdsl.dsl.jobs.BuildFlowJob
 import javaposse.jobdsl.dsl.jobs.FreeStyleJob
 import javaposse.jobdsl.dsl.jobs.MatrixJob
 import javaposse.jobdsl.dsl.jobs.MavenJob
@@ -39,8 +38,6 @@ class JobBuilder {
         checkNameIsValid()
         def combinedClosure = concatenateDslClosures(dslClosure)
         switch (jobClass) {
-            case BuildFlowJob:
-                return dslFactory.buildFlowJob(fullJobName(), combinedClosure)
             case FreeStyleJob:
                 return dslFactory.freeStyleJob(fullJobName(), combinedClosure)
             case MatrixJob:
@@ -54,19 +51,6 @@ class JobBuilder {
             default:
                 throw new GradleJobDslPluginException("Job type ${jobClass} is not supported.")
         }
-    }
-
-    /**
-     * Set the job type to {@link BuildFlowJob} and add the provided DSL closure to the list of closures.
-     *
-     * @param closure
-     */
-    void buildFlowJob(@DelegatesTo(BuildFlowJob) Closure closure = null) {
-        checkJobClassNull()
-        if (closure != null) {
-            addDsl(closure)
-        }
-        jobClass = BuildFlowJob
     }
 
     /**
