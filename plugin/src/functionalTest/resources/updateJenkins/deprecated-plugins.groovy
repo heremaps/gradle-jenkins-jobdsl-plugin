@@ -1,5 +1,5 @@
 job('deprecated-plugins') {
-    publishers {
-        publishHtml {}
+    steps {
+        groovyCommand('println "Hello world!"')
     }
 }
