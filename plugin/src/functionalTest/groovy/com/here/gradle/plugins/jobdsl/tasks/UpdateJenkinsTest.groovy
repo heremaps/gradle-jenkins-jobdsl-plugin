@@ -76,7 +76,7 @@ class UpdateJenkinsTest extends AbstractTaskTest {
         ).identical()
     }
 
-    @WithPlugin('cloudbees-folder-6.1.0.hpi')
+    @WithPlugin('cloudbees-folder-6.4.hpi')
     def 'upload folder'() {
         given:
         buildFile << readBuildGradle('updateJenkins/build.gradle')
@@ -95,7 +95,7 @@ class UpdateJenkinsTest extends AbstractTaskTest {
         ).identical()
     }
 
-    @WithPlugin('cloudbees-folder-6.1.0.hpi')
+    @WithPlugin('cloudbees-folder-6.4.hpi')
     def 'upload job in folder'() {
         given:
         buildFile << readBuildGradle('updateJenkins/build.gradle')
@@ -110,7 +110,7 @@ class UpdateJenkinsTest extends AbstractTaskTest {
         item instanceof FreeStyleProject
     }
 
-    @WithPlugin('cloudbees-folder-6.1.0.hpi')
+    @WithPlugin('cloudbees-folder-6.4.hpi')
     def 'upload view in folder'() {
         given:
         buildFile << readBuildGradle('updateJenkins/build.gradle')
@@ -126,7 +126,7 @@ class UpdateJenkinsTest extends AbstractTaskTest {
         view instanceof ListView
     }
 
-    @WithPlugin('cloudbees-folder-6.1.0.hpi')
+    @WithPlugin('cloudbees-folder-6.4.hpi')
     def 'filter applies to folders'() {
         given:
         buildFile << readBuildGradle('updateJenkins/build.gradle')
@@ -147,7 +147,7 @@ class UpdateJenkinsTest extends AbstractTaskTest {
         jenkinsRule.jenkins.getItemByFullName('folder-filtered/subfolder') == null
     }
 
-    @WithPlugin('cloudbees-folder-6.1.0.hpi')
+    @WithPlugin('cloudbees-folder-6.4.hpi')
     def 'filter applies to jobs'() {
         given:
         buildFile << readBuildGradle('updateJenkins/build.gradle')
@@ -168,7 +168,7 @@ class UpdateJenkinsTest extends AbstractTaskTest {
         jenkinsRule.jenkins.getItemByFullName('folder/job-filtered') == null
     }
 
-    @WithPlugin('cloudbees-folder-6.1.0.hpi')
+    @WithPlugin('cloudbees-folder-6.4.hpi')
     def 'filter applies to views'() {
         given:
         buildFile << readBuildGradle('updateJenkins/build.gradle')

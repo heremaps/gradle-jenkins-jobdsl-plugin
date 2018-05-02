@@ -63,14 +63,14 @@ dependencies {
     }
 
     // Need to exclude XML parsers: https://issues.jenkins-ci.org/browse/JENKINS-35638
-    compile('org.jenkins-ci.main:jenkins-test-harness:2.32') {
+    compile('org.jenkins-ci.main:jenkins-test-harness:2.38') {
         exclude(module: 'org-netbeans-insane')
         exclude(module: 'serializer')
         exclude(module: 'xalan')
         exclude(module: 'xercesImpl')
     }
 
-    compile('org.jenkins-ci.main:jenkins-war:2.92') {
+    compile('org.jenkins-ci.main:jenkins-war:2.124') {
         exclude(module: 'groovy-all')
         exclude(module: 'slf4j-jdk14')
         exclude(module: 'xalan')
@@ -86,20 +86,20 @@ dependencies {
         exclude(module: 'groovy-all')
     }
 
-    functionalTestCompile('org.jenkins-ci.main:jenkins-war:2.92') {
+    functionalTestCompile('org.jenkins-ci.main:jenkins-war:2.124') {
         exclude(module: 'groovy-all')
         exclude(module: 'slf4j-jdk14')
     }
 
     // Need to exclude transitive dependency because of: https://github.com/gradle/gradle/issues/3666
-    functionalTestCompile('org.jenkins-ci.main:jenkins-test-harness:2.32') {
+    functionalTestCompile('org.jenkins-ci.main:jenkins-test-harness:2.38') {
         exclude(module: 'org-netbeans-insane')
     }
 
-    functionalTestCompile 'org.jenkins-ci.plugins:cloudbees-folder:6.1.0@jar'
+    functionalTestCompile 'org.jenkins-ci.plugins:cloudbees-folder:6.4@jar'
 
     // Plugins to be available for single tests using the @WithPlugin annotation.
-    jenkinsPlugins 'org.jenkins-ci.plugins:cloudbees-folder:6.1.0'
+    jenkinsPlugins 'org.jenkins-ci.plugins:cloudbees-folder:6.4'
     jenkinsPlugins 'org.jenkins-ci.plugins:gradle:1.22' // Old version used to test reporting of outdated plugins.
     jenkinsPlugins 'org.jenkins-ci.plugins:groovy:1.30' // Old version used to test reporting of deprecated plugins.
 }
