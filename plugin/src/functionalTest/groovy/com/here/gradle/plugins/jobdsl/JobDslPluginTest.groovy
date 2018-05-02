@@ -58,7 +58,7 @@ class JobDslPluginTest extends Specification {
 
         then:
         project.repositories.find { it.url.toString() == 'https://repo.jenkins-ci.org/releases/' }
-        project.repositories.find { it.url.toString() == 'https://repo1.maven.org/maven2/' }
+        project.repositories.find { it.url.toString() == 'https://repo.maven.apache.org/maven2/' }
     }
 
     def 'jobdsl source set is created'() {
