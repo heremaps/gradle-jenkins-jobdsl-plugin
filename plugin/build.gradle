@@ -156,11 +156,22 @@ task groovydocJar(type: Jar, dependsOn: groovydoc) {
 }
 
 def pomConfig = {
+    organization {
+        name 'HERE'
+        url 'https://here.com'
+    }
+
     licenses {
         license {
             name 'Apache-2.0'
             url 'http://www.apache.org/licenses/LICENSE-2.0'
         }
+    }
+
+    scm {
+        connection 'scm:git:https://github.com/heremaps/gradle-jenkins-jobdsl-plugin.git'
+        developerConnection 'scm:git:git@github.com:heremaps/gradle-jenkins-jobdsl-plugin.git'
+        url 'https://github.com/heremaps/gradle-jenkins-jobdsl-plugin'
     }
 }
 
