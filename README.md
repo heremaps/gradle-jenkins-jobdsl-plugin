@@ -110,6 +110,9 @@ dependencies {
 }
 ```
 
+Note: dslGenerateXml fails if `org.jenkins-ci.plugins:ws-cleanup` is added to the `jenkinsPlugins` configuration. This is
+a known issue tracked by [#74](https://github.com/heremaps/gradle-jenkins-jobdsl-plugin/issues/74).
+
 ### Writing Job DSL Scripts
 
 By default all \*.groovy files from src/jobdsl and its subdirectories are evaluated as Job DSL scripts. You can change
