@@ -91,6 +91,9 @@ def updateJobs(FilePath filePath, String namePrefix = '') {
             def reader = new BufferedReader(new InputStreamReader(file.read()))
             def parent = findParentItem(fullName)
             def firstLine = reader.readLine()
+            if (firstLine.contains('?xml')) {
+                firstLine = reader.readLine()
+            }
             if (firstLine.contains('View')) {
                 totalViews++
                 def view = parent.getView(name)
