@@ -4,6 +4,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 3.2.0 (under development)
 
+- Upgrade job-dsl-core to 1.69.
+- [#78](https://github.com/heremaps/gradle-jenkins-jobdsl-plugin/pull/78) - Improve handling of temporary folders in
+  seed job script.
+- [#79](https://github.com/heremaps/gradle-jenkins-jobdsl-plugin/pull/79) - Fix handling of generated XML files that
+  start with an `<?xml ..>` tag.
+
 ## 3.1.0 (2018-02-07)
 
 - Upgrade job-dsl-core to 1.67.
