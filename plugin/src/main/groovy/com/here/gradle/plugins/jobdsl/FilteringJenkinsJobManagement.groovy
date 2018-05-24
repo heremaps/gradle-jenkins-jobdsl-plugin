@@ -11,9 +11,11 @@ class FilteringJenkinsJobManagement extends JenkinsJobManagement {
 
     private final ItemFilter filter
 
-    FilteringJenkinsJobManagement(ItemFilter filter, PrintStream outputLogger, Map<String, ?> envVars, File workspace) {
+    FilteringJenkinsJobManagement(ItemFilter filter, PrintStream outputLogger, Map<String, ?> envVars,
+                                  File workspace, boolean failOnMissingPlugin) {
         super(outputLogger, envVars, workspace)
         this.filter = filter
+        this.failOnMissingPlugin = failOnMissingPlugin
     }
 
     @Override
