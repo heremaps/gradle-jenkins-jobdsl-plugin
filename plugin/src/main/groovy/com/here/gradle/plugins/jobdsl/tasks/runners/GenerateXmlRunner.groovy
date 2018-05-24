@@ -27,10 +27,11 @@ class GenerateXmlRunner extends AbstractTaskRunner {
 
     @Override
     JobManagement createJobManagement(Jenkins jenkins, ItemFilter filter) {
+        boolean failOnMissingPlugin = runProperties['failOnMissingPlugin'].toBoolean()
         def workspace = Files.createTempDirectory('jobdsl').toFile()
         workspace.deleteOnExit()
 
-        new FilteringJenkinsJobManagement(filter, System.out, [:], workspace)
+        new FilteringJenkinsJobManagement(filter, System.out, [:], workspace, failOnMissingPlugin)
     }
 
     @Override

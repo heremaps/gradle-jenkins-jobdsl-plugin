@@ -68,6 +68,21 @@ class GenerateXmlTest extends AbstractTaskTest {
         XMLUnit.compareXML(expectedText, actualText).identical()
     }
 
+    def 'failOnMissingPlugin fails the task if a required plugin is missing'() {
+        given:
+        buildFile << readBuildGradle('generateXml/build-with-missing-plugins.gradle')
+        copyResourceToTestDir('generateXml/folder.groovy')
+
+        when:
+        def result = gradleRunner
+                .withArguments('dslGenerateXml', '--failOnMissingPlugin')
+                .buildAndFail()
+
+        then:
+        result.task(':dslGenerateXml').outcome == TaskOutcome.FAILED
+        result.output.contains("plugin 'cloudbees-folder' needs to be installed")
+    }
+
     def 'job in folder is generated in the right subfolder'() {
         given:
         buildFile << readBuildGradle('generateXml/build.gradle')
