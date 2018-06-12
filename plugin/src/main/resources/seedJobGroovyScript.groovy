@@ -15,6 +15,7 @@ updatedItems = 0
 updatedViews = 0
 totalItems = 0
 totalViews = 0
+totalFailures = 0
 
 def updateItem(Item item, String name, FilePath file) {
     println "  Update item ${name}"
@@ -96,18 +97,30 @@ def updateJobs(FilePath filePath, String namePrefix = '') {
             if (firstLine.contains('View')) {
                 totalViews++
                 def view = parent.getView(name)
-                if (view) {
-                    updateView(view, name, file)
-                } else {
-                    createView(parent, name, file)
+                try {
+                    if (view) {
+                        updateView(view, name, file)
+                    } else {
+                        createView(parent, name, file)
+                    }
+                } catch (Exception ex) {
+                    def action = view ? "update" : "create"
+                    println "Could not ${action} ${fullName}: ${ex.message}"
+                    totalFailures++
                 }
             } else {
                 totalItems++
                 def item = Jenkins.getInstance().getItemByFullName(fullName)
-                if (item) {
-                    updateItem(item, name, file)
-                } else {
-                    createItem(parent, name, file)
+                try {
+                    if (item) {
+                        updateItem(item, name, file)
+                    } else {
+                        createItem(parent, name, file)
+                    }
+                } catch (Exception ex) {
+                    def action = item ? "update" : "create"
+                    println "Could not ${action} ${fullName}: ${ex.message}"
+                    totalFailures++
                 }
             }
         }
@@ -149,4 +162,10 @@ println """\
 
     Created views: ${createdViews}
     Updated views: ${updatedViews}
-    Total views  : ${totalViews}""".stripIndent()
+    Total views  : ${totalViews}
+
+    Total failures: ${totalFailures}""".stripIndent()
+
+if (totalFailures > 0) {
+    throw new RuntimeException("Could not create/update ${totalFailures} elements")
+}
