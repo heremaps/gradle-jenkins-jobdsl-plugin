@@ -9,6 +9,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   seed job script.
 - [#79](https://github.com/heremaps/gradle-jenkins-jobdsl-plugin/pull/79) - Fix handling of generated XML files that
   start with an `<?xml ..>` tag.
+- [#82](https://github.com/heremaps/gradle-jenkins-jobdsl-plugin/pull/82) - Add the option `failOnMissingPlugin` to
+  the dslGenerateXml task.
+- [#83](https://github.com/heremaps/gradle-jenkins-jobdsl-plugin/pull/83) - Make the seed job script more resilient to
+  errors when creating/updating jobs/views.
 
 ## 3.1.0 (2018-02-07)
 
