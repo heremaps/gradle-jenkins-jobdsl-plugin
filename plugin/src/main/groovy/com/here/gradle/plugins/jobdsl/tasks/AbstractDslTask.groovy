@@ -63,6 +63,11 @@ abstract class AbstractDslTask extends JavaExec {
         main = mainClass
         classpath = project.sourceSets.main.runtimeClasspath + project.buildscript.configurations.classpath +
                 project.configurations.jenkinsPlugins
+        jvmArgs = [
+                // Uncomment the following two lines for debugging the exec tasks.
+                //'-Xdebug',
+                //'-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005'
+        ]
 
         super.exec()
     }
