@@ -21,11 +21,11 @@ class GroovySeedJobBuilder extends JobBuilder {
     String generateXmlScript = './gradlew --no-daemon dslGenerateXml'
 
     /**
-     * The path on Jenkins master to use as temporary folder for the XML files generated on the node. The have to be
-     * copied to the Jenkins master in order to apply them. The build number of the seed job will be added to the
-     * prefix, also the job will fail when the folder already exists and delete it after generating the jobs.
+     * The prefix of the temporary directory on Jenkins master for the XML files generated on the node. They have to be
+     * copied to the Jenkins master in order to apply them. The job will try to delete the temporary directory after
+     * done, logging an error in case that this is not possible.
      */
-    String temporaryXmlDirPrefix = '/tmp/seedjob'
+    String temporaryXmlDirPrefix = 'seedjob'
 
     /**
      * The base directory where the generated XML files are located. Usually this is the build/jobdsl/xml folder in the
