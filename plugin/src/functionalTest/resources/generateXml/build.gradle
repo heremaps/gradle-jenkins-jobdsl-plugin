@@ -10,4 +10,7 @@ dependencies {
     compile localGroovy()
 
     jenkinsPlugins 'org.jenkins-ci.plugins:cloudbees-folder:6.2.1'
+    // Add the ws-cleanup plugin to prevent a regression of:
+    // https://github.com/heremaps/gradle-jenkins-jobdsl-plugin/issues/74
+    jenkinsPlugins 'org.jenkins-ci.plugins:ws-cleanup:0.34'
 }
