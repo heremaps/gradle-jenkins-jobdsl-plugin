@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## 3.2.0 (under development)
 
 - Upgrade job-dsl-core to 1.69.
+- [#74](https://github.com/heremaps/gradle-jenkins-jobdsl-plugin/issues/74) - Fix a crash when using the ws-cleanup
+  plugin, caused by the wrong implementation of javax.xml.transform.TransformerFactory being used.
 - [#78](https://github.com/heremaps/gradle-jenkins-jobdsl-plugin/pull/78) - Improve handling of temporary folders in
   seed job script.
 - [#79](https://github.com/heremaps/gradle-jenkins-jobdsl-plugin/pull/79) - Fix handling of generated XML files that

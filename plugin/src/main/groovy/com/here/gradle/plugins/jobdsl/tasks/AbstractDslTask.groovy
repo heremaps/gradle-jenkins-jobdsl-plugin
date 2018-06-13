@@ -63,6 +63,12 @@ abstract class AbstractDslTask extends JavaExec {
         main = mainClass
         classpath = project.sourceSets.main.runtimeClasspath + project.buildscript.configurations.classpath +
                 project.configurations.jenkinsPlugins
+        jvmArgs = [
+                // Make sure the correct TransformerFactory is used in Jenkins. Note: In Java 9 the default
+                // implementation could be retrieved with TransformerFactory.newDefaultInstance().
+                '-Djavax.xml.transform.TransformerFactory=' +
+                        'com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl'
+        ]
 
         super.exec()
     }
