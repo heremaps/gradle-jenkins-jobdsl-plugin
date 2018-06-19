@@ -1,6 +1,12 @@
 package com.here.gradle.plugins.jobdsl.tasks
 
 import com.cloudbees.hudson.plugins.folder.Folder
+import com.cloudbees.hudson.plugins.folder.properties.FolderCredentialsProvider
+import com.cloudbees.plugins.credentials.CredentialsProvider
+import com.cloudbees.plugins.credentials.CredentialsScope
+import com.cloudbees.plugins.credentials.CredentialsStore
+import com.cloudbees.plugins.credentials.domains.Domain
+import com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl
 import hudson.model.FreeStyleProject
 import hudson.model.Item
 import hudson.model.ListView
@@ -14,6 +20,8 @@ import org.junit.Rule
 import org.jvnet.hudson.test.JenkinsRule
 import org.jvnet.hudson.test.MockAuthorizationStrategy
 import org.jvnet.hudson.test.recipes.WithPlugin
+import org.xmlunit.builder.DiffBuilder
+import org.xmlunit.diff.Diff
 
 /**
  * Test for the dslUpdateJenkins test. Uses {@link JenkinsRule} to create a Jenkins instance to run the tests against.
@@ -93,6 +101,46 @@ class UpdateJenkinsTest extends AbstractTaskTest {
                 readResource('updateJenkins/folder.xml'),
                 item.configFile.asString()
         ).identical()
+    }
+
+    private CredentialsStore getFolderStore(Folder folder) {
+        Iterable<CredentialsStore> stores = CredentialsProvider.lookupStores(folder)
+        CredentialsStore folderStore = null
+        for (CredentialsStore store : stores) {
+            if (store.provider instanceof FolderCredentialsProvider && store.context == folder) {
+                folderStore = store
+                break
+            }
+        }
+        return folderStore
+    }
+
+    @WithPlugin('cloudbees-folder-6.4.hpi')
+    def 'upload folder preserving existing credentials'() {
+        given:
+        // Existing folder with credentials
+        Folder folder = jenkinsRule.createProject(Folder, 'folder-with-credentials')
+        def folderStore = getFolderStore(folder)
+        UsernamePasswordCredentialsImpl credentials =
+            new UsernamePasswordCredentialsImpl(CredentialsScope.GLOBAL, 'test-id',
+                'description', 'test-user', 'secret')
+        folderStore.addCredentials(Domain.global(), credentials)
+        buildFile << readBuildGradle('updateJenkins/build.gradle')
+        copyResourceToTestDir('updateJenkins/folder-with-credentials.groovy')
+
+        when:
+        def result = gradleRunner.withArguments('dslUpdateJenkins', jenkinsUrlParam()).build()
+
+        then:
+        result.task(':dslUpdateJenkins').outcome == TaskOutcome.SUCCESS
+        Item item = jenkinsRule.jenkins.getItemByFullName('folder-with-credentials')
+        item instanceof Folder
+        Diff documentDiff = DiffBuilder
+            .compare(readResource('updateJenkins/folder-with-credentials.xml'))
+            .withTest(item.configFile.asString())
+            .withNodeFilter { node -> node.nodeName != 'password' }
+            .build()
+        !documentDiff.hasDifferences()
     }
 
     @WithPlugin('cloudbees-folder-6.4.hpi')

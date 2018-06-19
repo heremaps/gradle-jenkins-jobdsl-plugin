@@ -1,3 +1,4 @@
+import groovy.xml.XmlUtil
 import hudson.FilePath
 import hudson.model.Item
 import hudson.model.ItemGroup
@@ -20,6 +21,7 @@ totalFailures = 0
 def updateItem(Item item, String name, FilePath file) {
     println "  Update item ${name}"
 
+    InputStream inputStream = file.read()
     try {
         String oldConfig = item.getConfigFile().asString()
         String newConfig = file.read().getText('UTF-8')
@@ -28,11 +30,18 @@ def updateItem(Item item, String name, FilePath file) {
             println "  Item ${name} did not change"
             return
         }
+        def existingXmlParsed = new XmlParser().parseText(oldConfig)
+        if (existingXmlParsed.properties != null) {
+            def newXmlParsed = new XmlParser().parseText(newConfig)
+            Node node = existingXmlParsed.properties[0] as Node
+            newXmlParsed.properties[0].replaceNode(node)
+            inputStream = new ByteArrayInputStream(XmlUtil.serialize(newXmlParsed).getBytes('UTF-8'))
+        }
     } catch (Exception e) {
         println "  WARNING: Could not create XML diff for ${name}"
     }
 
-    def source = new StreamSource(file.read())
+    def source = new StreamSource(inputStream)
     item.updateByXml(source)
     updatedItems++
 }
