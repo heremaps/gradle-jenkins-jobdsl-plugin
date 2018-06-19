@@ -1,5 +1,6 @@
 package com.here.gradle.plugins.jobdsl
 
+import groovy.xml.XmlUtil
 import groovyx.net.http.ContentType
 import groovyx.net.http.HttpResponseDecorator
 import groovyx.net.http.RESTClient
@@ -335,6 +336,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
         }
     }
 
+    @SuppressWarnings('Instanceof')
     boolean performCreateOrUpdateConfig(Item item, boolean ignoreExisting) throws NameNotProvidedException {
         if (!filter.matches(item.name)) {
             logItemStatus(item, STATUS_IGNORED)
@@ -351,6 +353,21 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
         }
 
         if (isXmlDifferent(existingXml, item.xml)) {
+            if (item instanceof Folder) {
+                /*
+                Folders can contain credentials scoped to the items they contain. The credentials are
+                stored in the folder XML and not in the Jenkins configuration files, so we copy over any
+                manually set properties from the existing folders.
+                Approach suggested in https://issues.jenkins-ci.org/browse/JENKINS-44681
+                 */
+                def existingXmlParsed = new XmlParser().parseText(existingXml)
+                if (existingXmlParsed.properties != null) {
+                    def newXmlParsed = new XmlParser().parseText(item.xml)
+                    Node node = existingXmlParsed.properties[0] as Node
+                    newXmlParsed.properties[0].replaceNode(node)
+                    return updateItem(item, XmlUtil.serialize(newXmlParsed))
+                }
+            }
             return updateItem(item)
         }
 
@@ -459,7 +476,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
         }
     }
 
-    boolean updateItem(Item item) {
+    boolean updateItem(Item item, String newXml = null) {
         if (dryRun) {
             logItemStatus(item, STATUS_WOULD_BE_UPDATED)
             return true
@@ -467,7 +484,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
 
         HttpResponseDecorator response = restClient.post(
                 path: FolderPathHelper.itemConfigPath(item.name),
-                body: item.xml,
+                body: newXml ?: item.xml,
                 requestContentType: 'application/xml'
         ) as HttpResponseDecorator
 
