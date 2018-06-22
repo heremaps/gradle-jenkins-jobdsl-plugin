@@ -43,7 +43,7 @@ def createItem(ItemGroup parent, String name, FilePath file) {
         parent.createProjectFromXML(name, file.read())
         createdItems++
     } else {
-        println "  Could not create project in parent of type ${parent.class}"
+        throw new RuntimeException("Parent is not a folder type ModifiableViewGroup but of type '${parent?.class}'")
     }
 }
 
@@ -60,7 +60,7 @@ def createView(ItemGroup parent, String name, FilePath file) {
         ((ModifiableViewGroup) parent).addView(View.createViewFromXML(name, file.read()))
         createdViews++
     } else {
-        println "  Could not create view in parent of type ${parent.class}"
+        throw new RuntimeException("Parent is not a folder type ModifiableViewGroup but of type '${parent?.class}'")
     }
 }
 
