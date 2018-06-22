@@ -74,7 +74,17 @@ def findParentItem(String fullName) {
         default:
             def parentName = fullName.substring(0, i)
             Item item = jenkins.getItemByFullName(parentName)
-            return item instanceof ItemGroup ? (ItemGroup) item : null
+
+            if (item == null) {
+                println "  WARNING: parent folder ${parentName} not found"
+                return null
+            }
+            else if (item instanceof ItemGroup) {
+                return item
+            }
+            else {
+                println "  WARNING: parent ${parentName} is not a folder but of type '${item?.class}''"
+            }
     }
 }
 
