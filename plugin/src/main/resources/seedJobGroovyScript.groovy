@@ -42,8 +42,13 @@ def createItem(ItemGroup parent, String name, FilePath file) {
     if (parent instanceof ModifiableViewGroup) {
         parent.createProjectFromXML(name, file.read())
         createdItems++
+    } else if (parent == null) {
+        throw new RuntimeException("""\
+            Parent is null. This happens when the parent folder could not get created.
+            For example, a possible cause is that a job with the name of the parent folder already exists.
+            To solve that case, rename the job or the parent folder.""".stripIndent())
     } else {
-        throw new RuntimeException("Parent is not a folder type ModifiableViewGroup but of type '${parent?.class}'")
+        throw new RuntimeException("Parent is not a folder type ModifiableViewGroup but of type '${parent.class}'")
     }
 }
 
@@ -59,8 +64,13 @@ def createView(ItemGroup parent, String name, FilePath file) {
     if (parent instanceof ModifiableViewGroup) {
         ((ModifiableViewGroup) parent).addView(View.createViewFromXML(name, file.read()))
         createdViews++
+    } else if (parent == null) {
+        throw new RuntimeException("""\
+            Parent is null. This happens when the parent folder could not get created.
+            For example, a possible cause is that a job with the name of the parent folder already exists.
+            To solve that case, rename the job or the parent folder.""".stripIndent())
     } else {
-        throw new RuntimeException("Parent is not a folder type ModifiableViewGroup but of type '${parent?.class}'")
+        throw new RuntimeException("Parent is not a folder type ModifiableViewGroup but of type '${parent.class}'")
     }
 }
 
@@ -78,12 +88,10 @@ def findParentItem(String fullName) {
             if (item == null) {
                 println "  WARNING: parent folder ${parentName} not found"
                 return null
-            }
-            else if (item instanceof ItemGroup) {
+            } else if (item instanceof ItemGroup) {
                 return item
-            }
-            else {
-                println "  WARNING: parent ${parentName} is not a folder but of type '${item?.class}''"
+            } else {
+                println "  WARNING: parent ${parentName} is not a folder but of type '${item.class}''"
             }
     }
 }
