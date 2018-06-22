@@ -105,7 +105,7 @@ def updateJobs(FilePath filePath, String namePrefix = '') {
                     }
                 } catch (Exception ex) {
                     def action = view ? "update" : "create"
-                    println "Could not ${action} ${fullName}: ${ex.message}"
+                    println "  ERROR: Could not ${action} ${fullName}: ${ex.message}"
                     totalFailures++
                 }
             } else {
@@ -119,7 +119,7 @@ def updateJobs(FilePath filePath, String namePrefix = '') {
                     }
                 } catch (Exception ex) {
                     def action = item ? "update" : "create"
-                    println "Could not ${action} ${fullName}: ${ex.message}"
+                    println "  ERROR: Could not ${action} ${fullName}: ${ex.message}"
                     totalFailures++
                 }
             }
@@ -156,15 +156,16 @@ println """\
 
     SEED JOB SUMMARY
 
-    Created items: ${createdItems}
-    Updated items: ${updatedItems}
-    Total items  : ${totalItems}
+    Created items : ${createdItems}
+    Updated items : ${updatedItems}
+    Total items   : ${totalItems}
 
-    Created views: ${createdViews}
-    Updated views: ${updatedViews}
-    Total views  : ${totalViews}
+    Created views : ${createdViews}
+    Updated views : ${updatedViews}
+    Total views   : ${totalViews}
 
-    Total failures: ${totalFailures}""".stripIndent()
+    Total failures: ${totalFailures}
+    """
 
 if (totalFailures > 0) {
     throw new RuntimeException("Could not create/update ${totalFailures} elements")
