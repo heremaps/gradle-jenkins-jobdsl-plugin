@@ -110,8 +110,17 @@ dependencies {
 }
 ```
 
-Note: dslGenerateXml fails if `org.jenkins-ci.plugins:ws-cleanup` is added to the `jenkinsPlugins` configuration. This is
-a known issue tracked by [#74](https://github.com/heremaps/gradle-jenkins-jobdsl-plugin/issues/74).
+Known issues with plugins:
+
+* The `org.jenkins-ci.plugins:ws-cleanup` plugin has a dependency on an old version of `jenkins-core`. This adds some
+  XML parser libraries to the classpath which conflict with the XML parser expected by newer Jenkins versions. As
+  `jenkins-core` is provided anyway it should be excluded:
+
+```groovy
+jenkinsPlugins('org.jenkins-ci.plugins:ws-cleanup:0.34') {
+    exclude module: 'jenkins-core'
+}
+```
 
 ### Writing Job DSL Scripts
 
