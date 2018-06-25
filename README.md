@@ -31,6 +31,7 @@ Gradle project.
 - [Development](#development)
     - [Build the Plugin](#build-the-plugin)
     - [Test the Plugin](#test-the-plugin)
+    - [Debugging the DSL tasks](#debugging-the-dsl-tasks)
     - [Contributing](#contributing)
 - [Examples](#examples)
 - [Hints](#hints)
@@ -385,6 +386,23 @@ To run the tests of the plugin execute:
 ```bash
 ./gradlew plugin:check
 ```
+
+### Debugging the DSL tasks
+
+To debug the tasks `DslGenerateXml` and `DslUpdateJenkins` using IntelliJ follow these steps:
+
+1. Uncomment these two lines in [`AbstractDslTask`](https://github.com/heremaps/gradle-jenkins-jobdsl-plugin/blob/master/plugin/src/main/groovy/com/here/gradle/plugins/jobdsl/tasks/AbstractDslTask.groovy):
+   ```groovy
+   //'-Xdebug',
+   //'-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005'
+   ```
+2. Create a test in `GenerateXmlTest.groovy` or `UpdateJenkinsTest.groovy` with the scenario you want to test (e.g.
+   usage of specific plugins).
+3. Set a breakpoint in the `run` method of `AbstractTaskRunner.groovy`.
+4. Create a remote debug configuration in IntelliJ: `Run` -> `Edit Configurations...` -> `+ Remote`
+5. Run the test on the command line:
+   `./gradlew plugin:functionalTest --tests "com.here.gradle.plugins.jobdsl.tasks.GenerateXmlTest.name of your test"`
+6. Start the remote debug configuration in IntelliJ.
 
 ### Contributing
 
