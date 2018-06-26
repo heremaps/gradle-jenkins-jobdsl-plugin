@@ -13,6 +13,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   the dslGenerateXml task.
 - [#83](https://github.com/heremaps/gradle-jenkins-jobdsl-plugin/pull/83) - Make the seed job script more resilient to
   errors when creating/updating jobs/views.
+- [#86](https://github.com/heremaps/gradle-jenkins-jobdsl-plugin/pull/86) - Inherit folder properties from existing
+  folders: Some folder properties like credentials which are configured in the Jenkins UI are stored in the folder XML
+  file. Keep these values if they do not exist in the generated XML.
+- [#87](https://github.com/heremaps/gradle-jenkins-jobdsl-plugin/pull/87) - Improve error reporting in seed job.
 
 ## 3.1.0 (2018-02-07)
 
