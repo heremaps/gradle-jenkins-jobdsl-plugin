@@ -378,4 +378,24 @@ class GenerateXmlTest extends AbstractTaskTest {
                         'applicable for argument types')
     }
 
+    def 'dependencies can be used in DSL scripts'() {
+        given:
+        buildFile << readBuildGradle('generateXml/build-with-dependency.gradle')
+        copyResourceToTestDir('generateXml/job-with-dependency.groovy')
+
+        when:
+        def result = gradleRunner
+                .withArguments('dslGenerateXml')
+                .build()
+
+        then:
+        result.task(':dslGenerateXml').outcome == TaskOutcome.SUCCESS
+
+        def generatedFile = new File(testProjectDir.root, 'build/jobdsl/xml/job.xml')
+        generatedFile.file
+        def actualText = generatedFile.getText('UTF-8')
+        def expectedText = readResource('generateXml/job-with-dependency.xml')
+        XMLUnit.compareXML(expectedText, actualText).identical()
+    }
+
 }
