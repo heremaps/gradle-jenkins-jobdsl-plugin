@@ -33,10 +33,8 @@ def updateItem(Item item, String name, FilePath file) {
         def folderCredentialsProviderKey = 'com.cloudbees.hudson.plugins.folder.properties.FolderCredentialsProvider_-FolderCredentialsProperty'
         def existingXmlParsed = new XmlParser().parseText(oldConfig)
         def newXmlParsed = new XmlParser().parseText(newConfig)
-        if (existingXmlParsed.properties != null &&
-                existingXmlParsed.properties."${folderCredentialsProviderKey}".size() > 0 &&
-                newXmlParsed.properties != null &&
-                newXmlParsed.properties."${folderCredentialsProviderKey}".size() == 0) {
+        if (existingXmlParsed.properties?."${folderCredentialsProviderKey}".size() > 0 &&
+                newXmlParsed.properties?."${folderCredentialsProviderKey}".size() == 0) {
             def node = existingXmlParsed.properties[0]."${folderCredentialsProviderKey}"[0] as Node
             newXmlParsed.properties[0].children().add(node)
             inputStream = new ByteArrayInputStream(XmlUtil.serialize(newXmlParsed).getBytes('UTF-8'))
