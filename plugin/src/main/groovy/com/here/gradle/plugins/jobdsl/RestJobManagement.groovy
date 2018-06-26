@@ -337,6 +337,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
     }
 
     @SuppressWarnings('Instanceof')
+    @SuppressWarnings('LineLength')
     boolean performCreateOrUpdateConfig(Item item, boolean ignoreExisting) throws NameNotProvidedException {
         if (!filter.matches(item.name)) {
             logItemStatus(item, STATUS_IGNORED)
@@ -357,14 +358,19 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
                 /*
                 Folders can contain credentials scoped to the items they contain. The credentials are
                 stored in the folder XML and not in the Jenkins configuration files, so we copy over any
-                manually set properties from the existing folders.
+                manually set properties from the existing folders if the scripts don't contain any credentials
+                already.
                 Approach suggested in https://issues.jenkins-ci.org/browse/JENKINS-44681
                  */
+                def folderCredentialsProviderKey = 'com.cloudbees.hudson.plugins.folder.properties.FolderCredentialsProvider_-FolderCredentialsProperty'
                 def existingXmlParsed = new XmlParser().parseText(existingXml)
-                if (existingXmlParsed.properties != null) {
-                    def newXmlParsed = new XmlParser().parseText(item.xml)
-                    Node node = existingXmlParsed.properties[0] as Node
-                    newXmlParsed.properties[0].replaceNode(node)
+                def newXmlParsed = new XmlParser().parseText(item.xml)
+                if (existingXmlParsed.properties != null &&
+                        existingXmlParsed.properties."${folderCredentialsProviderKey}".size() > 0 &&
+                        newXmlParsed.properties != null &&
+                        newXmlParsed.properties."${folderCredentialsProviderKey}".size() == 0) {
+                    def node = existingXmlParsed.properties[0]."${folderCredentialsProviderKey}"[0] as Node
+                    newXmlParsed.properties[0].children().add(node)
                     return updateItem(item, XmlUtil.serialize(newXmlParsed))
                 }
             }
