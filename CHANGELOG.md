@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 3.2.0 (under development)
+## 3.2.0 (2018-06-28)
 
 - Upgrade job-dsl-core to 1.69.
 - [#78](https://github.com/heremaps/gradle-jenkins-jobdsl-plugin/pull/78) - Improve handling of temporary folders in
