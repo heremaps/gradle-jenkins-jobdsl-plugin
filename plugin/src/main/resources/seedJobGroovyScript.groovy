@@ -21,37 +21,46 @@ totalFailures = 0
 def updateItem(Item item, String name, FilePath file) {
     println "  Update item ${name}"
 
-    InputStream inputStream = file.read()
-    try {
-        String oldConfig = item.getConfigFile().asString()
-        String newConfig = file.read().getText('UTF-8')
-        Diff diff = XMLUnit.compareXML(oldConfig, newConfig)
-        if (diff.identical()) {
-            println "  Item ${name} did not change"
-            return
-        }
-        def folderCredentialsProviderKey = 'com.cloudbees.hudson.plugins.folder.properties.FolderCredentialsProvider_-FolderCredentialsProperty'
-        def existingXmlParsed = new XmlParser().parseText(oldConfig)
-        def newXmlParsed = new XmlParser().parseText(newConfig)
-        if (existingXmlParsed.properties?."${folderCredentialsProviderKey}".size() > 0 &&
-                newXmlParsed.properties?."${folderCredentialsProviderKey}".size() == 0) {
-            def node = existingXmlParsed.properties[0]."${folderCredentialsProviderKey}"[0] as Node
-            newXmlParsed.properties[0].children().add(node)
-            inputStream = new ByteArrayInputStream(XmlUtil.serialize(newXmlParsed).getBytes('UTF-8'))
-        }
-    } catch (Exception e) {
-        println "  WARNING: Could not create XML diff for ${name}"
-    }
+    file.read().withCloseable { xmlStream ->
+        try {
+            String oldConfig = item.getConfigFile().asString()
+            String newConfig = file.read().getText('UTF-8')
 
-    def source = new StreamSource(inputStream)
-    item.updateByXml(source)
+            Diff diff = XMLUnit.compareXML(oldConfig, newConfig)
+            if (diff.identical()) {
+                println "  Item ${name} did not change"
+                return
+            }
+
+            // Retain folder credentials if present by copying from existing job XML
+            def folderCredentialsProviderKey = 'com.cloudbees.hudson.plugins.folder.properties.FolderCredentialsProvider_-FolderCredentialsProperty'
+            def existingXmlParsed = new XmlParser().parseText(oldConfig)
+            def newXmlParsed = new XmlParser().parseText(newConfig)
+            if (existingXmlParsed.properties?."${folderCredentialsProviderKey}".size() > 0 &&
+                    newXmlParsed.properties?."${folderCredentialsProviderKey}".size() == 0) {
+                // Credentials found on existing job, so copy them over to new job XML
+                def node = existingXmlParsed.properties[0]."${folderCredentialsProviderKey}"[0] as Node
+                newXmlParsed.properties[0].children().add(node)
+
+                // Close new job XML file and instead read from new XML + copied properties.
+                xmlStream.close()
+                xmlStream = new ByteArrayInputStream(XmlUtil.serialize(newXmlParsed).getBytes('UTF-8'))
+            }
+        } catch (Exception e) {
+            println "  WARNING: Could not create XML diff for ${name}"
+        }
+
+        item.updateByXml(new StreamSource(xmlStream))
+    }
     updatedItems++
 }
 
 def createItem(ItemGroup parent, String name, FilePath file) {
     println "  Create item ${name}"
     if (parent instanceof ModifiableViewGroup) {
-        parent.createProjectFromXML(name, file.read())
+        file.read().withCloseable { xmlStream ->
+            parent.createProjectFromXML(name, xmlStream)
+        }
         createdItems++
     } else if (parent == null) {
         throw new RuntimeException("""\
@@ -65,15 +74,18 @@ def createItem(ItemGroup parent, String name, FilePath file) {
 
 def updateView(View view, String name, FilePath file) {
     println "  Update view ${name}"
-    def source = new StreamSource(file.read())
-    view.updateByXml(source)
+    file.read().withCloseable { xmlStream ->
+        view.updateByXml(new StreamSource(xmlStream))
+    }
     updatedViews++
 }
 
 def createView(ItemGroup parent, String name, FilePath file) {
     println "  Create view ${name}"
     if (parent instanceof ModifiableViewGroup) {
-        ((ModifiableViewGroup) parent).addView(View.createViewFromXML(name, file.read()))
+        file.read().withCloseable { xmlStream ->
+            ((ModifiableViewGroup) parent).addView(View.createViewFromXML(name, xmlStream))
+        }
         createdViews++
     } else if (parent == null) {
         throw new RuntimeException("""\
@@ -116,13 +128,20 @@ def updateJobs(FilePath filePath, String namePrefix = '') {
             def name = file.name[0..-5]
             Jenkins.checkGoodName(name)
             def fullName = "${namePrefix}${name}"
+
             println "Processing ${fullName}"
-            def reader = new BufferedReader(new InputStreamReader(file.read()))
             def parent = findParentItem(fullName)
-            def firstLine = reader.readLine()
-            if (firstLine.contains('?xml')) {
-                firstLine = reader.readLine()
+
+            // Detect whether XML is for a view or job by reading first line of the XML
+            def firstLine
+            new BufferedReader(new InputStreamReader(file.read())).withCloseable { xmlReader ->
+                firstLine = xmlReader.readLine()
+                if (firstLine.contains('?xml')) {
+                    firstLine = xmlReader.readLine()
+                }
             }
+
+            // Handle view
             if (firstLine.contains('View')) {
                 totalViews++
                 def view = parent.getView(name)
@@ -137,6 +156,8 @@ def updateJobs(FilePath filePath, String namePrefix = '') {
                     println "  ERROR: Could not ${action} ${fullName}: ${ex.message}"
                     totalFailures++
                 }
+
+            // Handle job (freestyle or pipeline job)
             } else {
                 totalItems++
                 def item = Jenkins.getInstance().getItemByFullName(fullName)
