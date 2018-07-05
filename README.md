@@ -50,7 +50,7 @@ like this:
 
 ```groovy
 buildscript {
-    ext.jenkinsJobdslPluginVersion = '3.1.0'
+    ext.jenkinsJobdslPluginVersion = '3.2.1'
 
     repositories {
         maven {
