@@ -6,7 +6,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.gradle.publish:plugin-publish-plugin:0.10.0'
+        classpath "com.gradle.publish:plugin-publish-plugin:$publishPluginVersion"
     }
 }
 
@@ -51,61 +51,61 @@ sourceSets {
 
 dependencies {
     compile localGroovy()
-    compile('org.jenkins-ci.plugins:job-dsl-core:1.69') {
+    compile("org.jenkins-ci.plugins:job-dsl-core:$jobDslVersion") {
         exclude(module: 'groovy-all')
     }
-    compile 'org.jenkins-ci.plugins:job-dsl:1.69@jar'
-    compile 'org.jenkins-ci:version-number:1.4'
+    compile "org.jenkins-ci.plugins:job-dsl:$jobDslVersion@jar"
+    compile "org.jenkins-ci:version-number:$versionNumberVersion"
 
-    compile('org.codehaus.groovy.modules.http-builder:http-builder:0.7.2') {
+    compile("org.codehaus.groovy.modules.http-builder:http-builder:$httpBuilderVersion") {
         exclude(module: 'groovy')
         exclude(module: 'xercesImpl')
     }
 
     // Need to exclude XML parsers: https://issues.jenkins-ci.org/browse/JENKINS-35638
-    compile('org.jenkins-ci.main:jenkins-test-harness:2.38') {
+    compile("org.jenkins-ci.main:jenkins-test-harness:$jenkinsTestHarnessVersion") {
         exclude(module: 'org-netbeans-insane')
         exclude(module: 'serializer')
         exclude(module: 'xalan')
         exclude(module: 'xercesImpl')
     }
 
-    compile('org.jenkins-ci.main:jenkins-war:2.124') {
+    compile("org.jenkins-ci.main:jenkins-war:$jenkinsVersion") {
         exclude(module: 'groovy-all')
         exclude(module: 'slf4j-jdk14')
         exclude(module: 'xalan')
     }
 
-    testCompile('org.spockframework:spock-core:1.1-groovy-2.4') {
+    testCompile("org.spockframework:spock-core:$spockVersion") {
         exclude(module: 'groovy-all')
     }
 
-    testCompile 'net.bytebuddy:byte-buddy:1.8.11'
+    testCompile "net.bytebuddy:byte-buddy:$byteBuddyVersion"
 
-    functionalTestCompile('org.spockframework:spock-core:1.1-groovy-2.4') {
+    functionalTestCompile("org.spockframework:spock-core:$spockVersion") {
         exclude(module: 'groovy-all')
     }
 
-    functionalTestCompile('org.jenkins-ci.main:jenkins-war:2.124') {
+    functionalTestCompile("org.jenkins-ci.main:jenkins-war:$jenkinsVersion") {
         exclude(module: 'groovy-all')
         exclude(module: 'slf4j-jdk14')
     }
 
     // Need to exclude transitive dependency because of: https://github.com/gradle/gradle/issues/3666
-    functionalTestCompile('org.jenkins-ci.main:jenkins-test-harness:2.38') {
+    functionalTestCompile("org.jenkins-ci.main:jenkins-test-harness:$jenkinsTestHarnessVersion") {
         exclude(module: 'org-netbeans-insane')
     }
 
-    functionalTestCompile 'org.xmlunit:xmlunit-core:2.6.0'
+    functionalTestCompile "org.xmlunit:xmlunit-core:$xmlUnitVersion"
 
-    functionalTestCompile 'org.jenkins-ci.plugins:cloudbees-folder:6.4@jar'
-    functionalTestCompile 'org.jenkins-ci.plugins:credentials:2.1.10@jar'
+    functionalTestCompile "org.jenkins-ci.plugins:cloudbees-folder:$folderPluginVersion@jar"
+    functionalTestCompile "org.jenkins-ci.plugins:credentials:$credentialsPluginVersion@jar"
 
     // Plugins to be available for single tests using the @WithPlugin annotation.
-    jenkinsPlugins 'org.jenkins-ci.plugins:cloudbees-folder:6.4'
-    jenkinsPlugins 'org.jenkins-ci.plugins:credentials:2.1.10'
-    jenkinsPlugins 'org.jenkins-ci.plugins:gradle:1.22' // Old version used to test reporting of outdated plugins.
-    jenkinsPlugins 'org.jenkins-ci.plugins:groovy:1.30' // Old version used to test reporting of deprecated plugins.
+    jenkinsPlugins "org.jenkins-ci.plugins:cloudbees-folder:$folderPluginVersion"
+    jenkinsPlugins "org.jenkins-ci.plugins:credentials:$credentialsPluginVersion"
+    jenkinsPlugins "org.jenkins-ci.plugins:gradle:$gradlePluginVersion" // Old version used to test reporting of outdated plugins.
+    jenkinsPlugins "org.jenkins-ci.plugins:groovy:$groovyPluginVersion" // Old version used to test reporting of deprecated plugins.
 }
 
 task resolveTestPlugins(type: Copy) {
