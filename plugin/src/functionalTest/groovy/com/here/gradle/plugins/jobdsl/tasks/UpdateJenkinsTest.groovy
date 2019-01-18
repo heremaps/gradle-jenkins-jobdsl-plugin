@@ -85,7 +85,7 @@ class UpdateJenkinsTest extends AbstractTaskTest {
         ).identical()
     }
 
-    @WithPlugin('cloudbees-folder-6.4.hpi')
+    @WithPlugin('cloudbees-folder-6.7.hpi')
     def 'upload folder'() {
         given:
         buildFile << readBuildGradle('updateJenkins/build.gradle')
@@ -116,7 +116,7 @@ class UpdateJenkinsTest extends AbstractTaskTest {
         return folderStore
     }
 
-    @WithPlugin('cloudbees-folder-6.4.hpi')
+    @WithPlugin('cloudbees-folder-6.7.hpi')
     def 'upload folder preserving existing credentials'() {
         given:
         // Existing folder with credentials
@@ -144,7 +144,7 @@ class UpdateJenkinsTest extends AbstractTaskTest {
         !documentDiff.hasDifferences()
     }
 
-    @WithPlugin('cloudbees-folder-6.4.hpi')
+    @WithPlugin('cloudbees-folder-6.7.hpi')
     def 'upload job in folder'() {
         given:
         buildFile << readBuildGradle('updateJenkins/build.gradle')
@@ -159,7 +159,7 @@ class UpdateJenkinsTest extends AbstractTaskTest {
         item instanceof FreeStyleProject
     }
 
-    @WithPlugin('cloudbees-folder-6.4.hpi')
+    @WithPlugin('cloudbees-folder-6.7.hpi')
     def 'upload view in folder'() {
         given:
         buildFile << readBuildGradle('updateJenkins/build.gradle')
@@ -175,7 +175,7 @@ class UpdateJenkinsTest extends AbstractTaskTest {
         view instanceof ListView
     }
 
-    @WithPlugin('cloudbees-folder-6.4.hpi')
+    @WithPlugin('cloudbees-folder-6.7.hpi')
     def 'filter applies to folders'() {
         given:
         buildFile << readBuildGradle('updateJenkins/build.gradle')
@@ -196,7 +196,7 @@ class UpdateJenkinsTest extends AbstractTaskTest {
         jenkinsRule.jenkins.getItemByFullName('folder-filtered/subfolder') == null
     }
 
-    @WithPlugin('cloudbees-folder-6.4.hpi')
+    @WithPlugin('cloudbees-folder-6.7.hpi')
     def 'filter applies to jobs'() {
         given:
         buildFile << readBuildGradle('updateJenkins/build.gradle')
@@ -217,7 +217,7 @@ class UpdateJenkinsTest extends AbstractTaskTest {
         jenkinsRule.jenkins.getItemByFullName('folder/job-filtered') == null
     }
 
-    @WithPlugin('cloudbees-folder-6.4.hpi')
+    @WithPlugin('cloudbees-folder-6.7.hpi')
     def 'filter applies to views'() {
         given:
         buildFile << readBuildGradle('updateJenkins/build.gradle')
