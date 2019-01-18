@@ -22,6 +22,7 @@ import org.jvnet.hudson.test.MockAuthorizationStrategy
 import org.jvnet.hudson.test.recipes.WithPlugin
 import org.xmlunit.builder.DiffBuilder
 import org.xmlunit.diff.Diff
+import spock.lang.Ignore
 
 /**
  * Test for the dslUpdateJenkins test. Uses {@link JenkinsRule} to create a Jenkins instance to run the tests against.
@@ -369,6 +370,7 @@ class UpdateJenkinsTest extends AbstractTaskTest {
         jenkinsRule.jenkins.getItemByFullName('job') instanceof FreeStyleProject
     }
 
+    @Ignore('Job DSL 1.72 has no deprecated plugins. Enable again when upgrading to a newer version.')
     @WithPlugin('groovy-1.30.hpi')
     def 'deprecated plugins are reported'() {
         given:
