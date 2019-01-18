@@ -4,6 +4,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 3.3.0 (under development)
 
+## 3.2.2 (2019-01-18)
+
+- Upgrade the Gradle plugin-publish plugin to 0.10.0 as this version should now include the POM modifications in the
+  published POM file.
+
 ## 3.2.1 (2018-07-05)
 
 - [#93](https://github.com/heremaps/gradle-jenkins-jobdsl-plugin/pull/93) - Make sure all files are closed in the seed
