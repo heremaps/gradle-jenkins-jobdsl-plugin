@@ -300,7 +300,7 @@ class UpdateJenkinsTest extends AbstractTaskTest {
         def user = User.get('user', true)
         jenkinsRule.jenkins.authorizationStrategy = new MockAuthorizationStrategy()
         jenkinsRule.jenkins.securityRealm = jenkinsRule.createDummySecurityRealm()
-        def apiToken = user.getProperty(ApiTokenProperty).apiToken
+        def apiToken = user.getProperty(ApiTokenProperty).tokenStore.generateNewToken('test').plainValue
 
         buildFile << readBuildGradle('updateJenkins/build.gradle')
         copyResourceToTestDir('updateJenkins/empty-freestyle-job.groovy')
@@ -325,7 +325,7 @@ class UpdateJenkinsTest extends AbstractTaskTest {
         jenkinsRule.jenkins.authorizationStrategy = new MockAuthorizationStrategy().
                 grant(Jenkins.ADMINISTER).everywhere().to(admin)
         jenkinsRule.jenkins.securityRealm = jenkinsRule.createDummySecurityRealm()
-        def apiToken = admin.getProperty(ApiTokenProperty).apiToken
+        def apiToken = admin.getProperty(ApiTokenProperty).tokenStore.generateNewToken('test').plainValue
 
         buildFile << readBuildGradle('updateJenkins/build.gradle')
         copyResourceToTestDir('updateJenkins/empty-freestyle-job.groovy')
@@ -350,7 +350,7 @@ class UpdateJenkinsTest extends AbstractTaskTest {
                 grant(Jenkins.READ).everywhere().to(user).
                 grant(Item.CREATE).everywhere().to(user)
         jenkinsRule.jenkins.securityRealm = jenkinsRule.createDummySecurityRealm()
-        def apiToken = user.getProperty(ApiTokenProperty).apiToken
+        def apiToken = user.getProperty(ApiTokenProperty).tokenStore.generateNewToken('test').plainValue
 
         buildFile << readBuildGradle('updateJenkins/build.gradle')
         copyResourceToTestDir('updateJenkins/empty-freestyle-job.groovy')
