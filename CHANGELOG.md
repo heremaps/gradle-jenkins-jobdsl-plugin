@@ -4,7 +4,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 3.3.0 (under development)
 
-## 3.2.2 (2019-01-18)
+## 3.2.3 (2019-01-21)
+
+- Fix the published POM file to include a license and SCM information.
+
+## 3.2.2 (2019-01-21)
 
 - Upgrade the Gradle plugin-publish plugin to 0.10.0 as this version should now include the POM modifications in the
   published POM file.
