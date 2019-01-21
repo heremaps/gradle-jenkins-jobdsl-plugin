@@ -217,10 +217,4 @@ pluginBundle {
             version = pluginVersion()
         }
     }
-
-    mavenCoordinates {
-        groupId = project.properties['maven.groupId']
-        artifactId = project.properties['maven.artifactId']
-        version = pluginVersion()
-    }
 }
