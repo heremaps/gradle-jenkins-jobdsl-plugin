@@ -50,7 +50,7 @@ like this:
 
 ```groovy
 buildscript {
-    ext.jenkinsJobdslPluginVersion = '3.2.1'
+    ext.jenkinsJobdslPluginVersion = '3.2.3'
 
     repositories {
         maven {
@@ -86,6 +86,8 @@ repositories {
 }
 
 dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.4.15'
+
     compile("com.here.gradle.plugins:gradle-jenkins-jobdsl-plugin:${jenkinsJobdslPluginVersion}") {
         exclude(module: 'org-netbeans-insane')
         exclude(module: 'xalan')
