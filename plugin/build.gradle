@@ -208,7 +208,7 @@ publishing {
 // Configuration for publication to the Gradle plugin registry.
 pluginBundle {
     website = 'https://github.com/heremaps/gradle-jenkins-jobdsl-plugin'
-    vcsUrl = 'git@github.com:heremaps/gradle-jenkins-jobdsl-plugin.git'
+    vcsUrl = 'https://github.com/heremaps/gradle-jenkins-jobdsl-plugin.git'
     description = 'A Gradle plugin to manage Jenkins Job DSL scripts.'
 
     plugins {
