@@ -182,12 +182,10 @@ def pluginVersion() {
 // Configuration for manual publication, e.g. to Maven local.
 publishing {
     publications {
-        maven(MavenPublication) {
+        pluginMaven(MavenPublication) {
             groupId project.properties['maven.groupId']
             artifactId project.properties['maven.artifactId']
             version pluginVersion()
-
-            from components.java
 
             artifact sourceJar
             artifact groovydocJar
