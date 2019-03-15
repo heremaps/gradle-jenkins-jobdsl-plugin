@@ -1,7 +1,6 @@
 import com.here.demo.jobdsl.DemoPipelineJobBuilder
 import com.here.gradle.plugins.jobdsl.util.PipelineBuilder
 
-folder('Demo')
 folder('Demo/pipeline')
 folder('Demo/pipeline/master')
 folder('Demo/pipeline/staging')
