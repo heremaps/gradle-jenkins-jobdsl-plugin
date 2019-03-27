@@ -11,7 +11,7 @@ import spock.lang.Specification
  */
 class FolderPathHelperSpec extends Specification {
 
-    JobManagement jobManagement = new MemoryJobManagement()
+    private final JobManagement jobManagement = new MemoryJobManagement()
 
     def 'config path for non-folder item is generated correctly'() {
         setup:

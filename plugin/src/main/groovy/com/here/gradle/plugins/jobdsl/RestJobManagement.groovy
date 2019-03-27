@@ -44,7 +44,7 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
     public static final String STATUS_WOULD_BE_CREATED = 'WOULD BE CREATED'
     public static final String STATUS_WOULD_BE_UPDATED = 'WOULD BE UPDATED'
 
-    private static final HEADER_ACCEPT_XML = [Accept: 'application/xml']
+    private static final Map<String, String> HEADER_ACCEPT_XML = [Accept: 'application/xml']
 
     static class ItemRequest {
         Item item
@@ -59,12 +59,6 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
 
     static String getItemType(Item item) {
         return item.getClass().simpleName
-    }
-
-    private static boolean isXmlDifferent(String control, String test) {
-        XMLUnit.ignoreComments = true
-        XMLUnit.ignoreWhitespace = true
-        return !XMLUnit.compareXML(control, test).similar()
     }
 
     boolean disablePluginChecks
@@ -520,6 +514,12 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
             logViewStatus(viewName, STATUS_COULD_NOT_UPDATE, response.dump())
             return false
         }
+    }
+
+    private static boolean isXmlDifferent(String control, String test) {
+        XMLUnit.ignoreComments = true
+        XMLUnit.ignoreWhitespace = true
+        return !XMLUnit.compareXML(control, test).similar()
     }
 
     private void logItemStatus(Item item, String status, String message = null) {

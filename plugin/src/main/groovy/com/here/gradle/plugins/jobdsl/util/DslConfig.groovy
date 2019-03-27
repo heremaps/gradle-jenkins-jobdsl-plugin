@@ -15,7 +15,6 @@ class DslConfig {
      * configuration.
      *
      * @param key
-     * @return
      */
     static get(String key) {
         if (serverConfiguration.containsKey(key)) {
