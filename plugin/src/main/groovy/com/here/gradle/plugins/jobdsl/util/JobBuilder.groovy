@@ -201,8 +201,6 @@ class JobBuilder {
 
     /**
      * Return the full job name including folders.
-     *
-     * @return
      */
     String fullJobName() {
         return (folders + name).join('/')

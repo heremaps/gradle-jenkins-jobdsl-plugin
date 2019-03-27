@@ -104,18 +104,6 @@ class UpdateJenkinsTest extends AbstractTaskTest {
         ).identical()
     }
 
-    private CredentialsStore getFolderStore(Folder folder) {
-        Iterable<CredentialsStore> stores = CredentialsProvider.lookupStores(folder)
-        CredentialsStore folderStore = null
-        for (CredentialsStore store : stores) {
-            if (store.provider instanceof FolderCredentialsProvider && store.context == folder) {
-                folderStore = store
-                break
-            }
-        }
-        return folderStore
-    }
-
     @WithPlugin('cloudbees-folder-6.7.hpi')
     def 'upload folder preserving existing credentials'() {
         given:
@@ -503,6 +491,18 @@ class UpdateJenkinsTest extends AbstractTaskTest {
         result.output.contains(
                 'No signature of method: javaposse.jobdsl.dsl.helpers.publisher.PublisherContext.jgivenReports() is ' +
                         'applicable for argument types')
+    }
+
+    private CredentialsStore getFolderStore(Folder folder) {
+        Iterable<CredentialsStore> stores = CredentialsProvider.lookupStores(folder)
+        CredentialsStore folderStore = null
+        for (CredentialsStore store : stores) {
+            if (store.provider instanceof FolderCredentialsProvider && store.context == folder) {
+                folderStore = store
+                break
+            }
+        }
+        return folderStore
     }
 
 }

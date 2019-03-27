@@ -10,10 +10,10 @@ import javaposse.jobdsl.dsl.helpers.step.StepContext
  */
 class CustomStep {
 
-        static void echo(StepContext context, String output) {
-            context.with {
-                shell("echo ${output}")
-            }
+    static void echo(StepContext context, String output) {
+        context.with {
+            shell("echo ${output}")
         }
+    }
 
 }

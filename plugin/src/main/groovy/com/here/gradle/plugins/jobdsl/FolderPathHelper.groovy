@@ -9,7 +9,6 @@ class FolderPathHelper {
      * Generate the path to the item by injecting 'job/' between the parent folder names.
      *
      * @param name
-     * @return
      */
     static String itemNameToPath(String name) {
         return "job/${name.replaceAll('/', '/job/')}"
@@ -20,7 +19,6 @@ class FolderPathHelper {
      * name.
      *
      * @param name
-     * @return
      */
     static String viewNameToPath(String name) {
         return name.split('/').reverse().inject('view') { acc, value ->
@@ -32,17 +30,15 @@ class FolderPathHelper {
      * Generate the path to the config.xml for an item.
      *
      * @param name
-     * @return
      */
     static String itemConfigPath(String name) {
-       return itemNameToPath(name) + '/config.xml'
+        return itemNameToPath(name) + '/config.xml'
     }
 
     /**
      * Generate the path to the config.xml for a view.
      *
      * @param name
-     * @return
      */
     static String viewConfigPath(String name) {
         return viewNameToPath(name) + '/config.xml'
@@ -52,7 +48,6 @@ class FolderPathHelper {
      * Remove all folders from the name. This removes everything before and including the last '/' in the name.
      *
      * @param name
-     * @return
      */
     static String removeFoldersFromName(String name) {
         int lastIndex = name.lastIndexOf('/')
@@ -64,7 +59,6 @@ class FolderPathHelper {
      * folder items this is the path of the folder.
      *
      * @param name
-     * @return
      */
     static String restApiPathForName(String name) {
         def names = name.split('/')
@@ -77,7 +71,6 @@ class FolderPathHelper {
      *
      * @param name
      * @param restMethod
-     * @return
      */
     static String restMethodPathForName(String name, String restMethod) {
         return restApiPathForName(name) + restMethod
@@ -87,7 +80,6 @@ class FolderPathHelper {
      * Get the path to the create REST method for an item name.
      *
      * @param name
-     * @return
      */
     static String createItemPath(String name) {
         return restMethodPathForName(name, 'createItem')
@@ -97,7 +89,6 @@ class FolderPathHelper {
      * Get the path to the create REST method for a view name.
      *
      * @param name
-     * @return
      */
     static String createViewPath(String name) {
         return restMethodPathForName(name, 'createView')

@@ -59,6 +59,20 @@ ruleset {
     IfStatementBraces
     WhileStatementBraces
 
+    // rulesets/comments.xml
+    ClassJavadoc
+    JavadocConsecutiveEmptyLines
+    JavadocEmptyAuthorTag
+    JavadocEmptyExceptionTag
+    JavadocEmptyFirstLine
+    JavadocEmptyLastLine
+    JavadocEmptyParamTag
+    JavadocEmptyReturnTag
+    JavadocEmptySeeTag
+    JavadocEmptySinceTag
+    JavadocEmptyThrowsTag
+    JavadocEmptyVersionTag
+
     // rulesets/concurrency.xml
     BusyWait
     DoubleCheckedLocking
@@ -91,17 +105,28 @@ ruleset {
     ConfusingTernary
     CouldBeElvis
     CouldBeSwitchStatement
+    FieldTypeRequired
     HashtableIsObsolete
     IfStatementCouldBeTernary
+    InvertedCondition
     InvertedIfElse
     LongLiteralWithLowerCaseL
+    MethodParameterTypeRequired
+    // Disable because we allow dynamic return types.
+    //MethodReturnTypeRequired
     // Disable because using def is fine in this project.
     //NoDef
+    NoJavaUtilDate
     NoTabCharacter
     ParameterReassignment
+    PublicMethodsBeforeNonPublicMethods
+    StaticFieldsBeforeInstanceFields
+    StaticMethodsBeforeInstanceMethods
     TernaryCouldBeElvis
     // Disable because we do not require a trailing comma.
     //TrailingComma
+    // Disable because using def is fine in this project.
+    //VariableTypeRequired
     VectorIsObsolete
 
     // rulesets/design.xml
@@ -141,6 +166,7 @@ ruleset {
     // See: https://github.com/CodeNarc/CodeNarc/issues/123
     //CloneWithoutCloneable
     //JUnitAssertEqualsConstantActualValue
+    //MissingOverrideAnnotation
     //UnsafeImplementationAsMap
 
     // rulesets/exceptions.xml
@@ -166,16 +192,23 @@ ruleset {
     ThrowThrowable
 
     // rulesets/formatting.xml
-    BlankLineBeforePackage
+    // Disable because we want an empty line after the license header.
+    //BlankLineBeforePackage
+    BlockEndsWithBlankLine
+    BlockStartsWithBlankLine
     BracesForClass
     BracesForForLoop
     BracesForIfElse
     BracesForMethod
     BracesForTryCatchFinally
-    ClassJavadoc
+    // Disable because it mostly reports false positives.
+    //ClassEndsWithBlankLine
+    // Disable because it mostly reports false positives.
+    //ClassStartsWithBlankLine
     ClosureStatementOnOpeningLineOfMultipleLineClosure
     ConsecutiveBlankLines
     FileEndsWithoutNewline
+    Indentation
     LineLength
     MissingBlankLineAfterImports
     MissingBlankLineAfterPackage
@@ -215,6 +248,7 @@ ruleset {
     GrailsDomainHasEquals
     GrailsDomainHasToString
     GrailsDomainReservedSqlKeywordName
+    GrailsDomainStringPropertyMaxSize
     GrailsDomainWithServiceReference
     GrailsDuplicateConstraint
     GrailsDuplicateMapping
@@ -242,6 +276,7 @@ ruleset {
     ExplicitCallToOrMethod
     ExplicitCallToPlusMethod
     ExplicitCallToPowerMethod
+    ExplicitCallToPutAtMethod
     ExplicitCallToRightShiftMethod
     ExplicitCallToXorMethod
     ExplicitHashMapInstantiation
@@ -399,7 +434,7 @@ ruleset {
     UnnecessaryParenthesesForMethodCallWithClosure
     UnnecessaryPublicModifier
     // Disable because we like to be explicit about returns.
-    // UnnecessaryReturnKeyword
+    //UnnecessaryReturnKeyword
     UnnecessarySafeNavigationOperator
     UnnecessarySelfAssignment
     UnnecessarySemicolon

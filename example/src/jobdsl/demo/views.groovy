@@ -1,5 +1,4 @@
 listView('TestView') {
-
     description('Simple test view.')
 
     jobs {
@@ -19,7 +18,6 @@ listView('TestView') {
 }
 
 listView('Demo/TestViewInFolder') {
-
     description('Test view inside the Demo folder.')
 
     jobs {

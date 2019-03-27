@@ -13,7 +13,6 @@ class ItemFilterSpec extends Specification {
 
         expect:
         filter.matches('name') == true
-
     }
 
     def 'filter is ignored when empty'() {

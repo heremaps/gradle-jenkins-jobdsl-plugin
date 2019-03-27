@@ -14,6 +14,6 @@ subprojects {
 
     codenarc {
         configFile rootProject.file('config/codenarc.groovy')
-        toolVersion '1.0'
+        toolVersion codenarcVersion
     }
 }
