@@ -2,7 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 3.3.0 (under development)
+## 3.3.0 (2019-03-27)
+
+- Upgrade job-dsl-core to 1.72.
 
 ## 3.2.3 (2019-01-21)
 
