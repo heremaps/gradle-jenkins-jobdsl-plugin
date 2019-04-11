@@ -43,6 +43,10 @@ class UpdateJenkinsTask extends AbstractDslTask {
 
     @Input
     @Optional
+    String proxyUrl
+
+    @Input
+    @Optional
     String jenkinsUser
 
     @Input
@@ -76,6 +80,10 @@ class UpdateJenkinsTask extends AbstractDslTask {
             if (jenkinsApiToken == null) {
                 jenkinsApiToken = server.jenkinsApiToken
             }
+
+            if (proxyUrl == null) {
+                proxyUrl = server.proxyUrl
+            }
         }
 
         return [
@@ -83,7 +91,8 @@ class UpdateJenkinsTask extends AbstractDslTask {
                 dryRun             : dryRun,
                 jenkinsUrl         : jenkinsUrl,
                 jenkinsUser        : jenkinsUser,
-                jenkinsApiToken    : jenkinsApiToken
+                jenkinsApiToken    : jenkinsApiToken,
+                proxyUrl           : proxyUrl
         ]
     }
 
@@ -110,6 +119,11 @@ class UpdateJenkinsTask extends AbstractDslTask {
     @Option(option = 'jenkinsApiToken', description = 'Jenkins API token.')
     void setJenkinsApiToken(String jenkinsApiToken) {
         this.jenkinsApiToken = jenkinsApiToken
+    }
+
+    @Option(option = 'proxyUrl', description = 'URL of the HTTP proxy used to communicate with Jenkins.')
+    void setProxyUrl(String proxyUrl) {
+        this.proxyUrl = proxyUrl
     }
 
 }

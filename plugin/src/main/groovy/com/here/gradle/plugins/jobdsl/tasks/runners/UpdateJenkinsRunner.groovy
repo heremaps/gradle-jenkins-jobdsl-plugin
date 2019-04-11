@@ -45,8 +45,10 @@ class UpdateJenkinsRunner extends AbstractTaskRunner {
         String jenkinsUrl = runProperties['jenkinsUrl']
         String jenkinsUser = runProperties['jenkinsUser']
         String jenkinsApiToken = runProperties['jenkinsApiToken']
+        String proxyUrl = runProperties['proxyUrl']
 
-        new RestJobManagement(filter, disablePluginChecks, dryRun, jenkinsUrl, jenkinsUser, jenkinsApiToken, jenkins)
+        new RestJobManagement(filter, disablePluginChecks, dryRun, jenkinsUrl,
+                              jenkinsUser, jenkinsApiToken, proxyUrl, jenkins)
     }
 
     @Override

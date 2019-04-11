@@ -28,6 +28,7 @@ class ServerDefinition {
     String jenkinsUrl
     String jenkinsUser
     String jenkinsApiToken
+    String proxyUrl
     Map<String, ?> configuration = [:]
 
     ServerDefinition(String name) {
