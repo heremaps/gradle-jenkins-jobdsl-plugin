@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.4.0 (2019-04-12)
+
+- [#110](https://github.com/heremaps/gradle-jenkins-jobdsl-plugin/pull/110) - Add Proxy support for the update Jenkins
+  task. Authentication is not supported.
+
 ## 3.3.0 (2019-03-27)
 
 - Upgrade job-dsl-core to 1.72.
