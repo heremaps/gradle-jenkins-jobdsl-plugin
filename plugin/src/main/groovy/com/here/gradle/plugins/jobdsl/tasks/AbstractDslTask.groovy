@@ -23,7 +23,7 @@ import com.here.gradle.plugins.jobdsl.ServerDefinition
 import com.here.gradle.plugins.jobdsl.util.PathComparator
 import groovy.json.JsonBuilder
 import org.gradle.api.GradleException
-import org.gradle.api.internal.tasks.options.Option
+import org.gradle.api.tasks.options.Option
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.JavaExec
 import org.gradle.util.CollectionUtils

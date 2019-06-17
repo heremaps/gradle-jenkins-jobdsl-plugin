@@ -19,7 +19,7 @@
 
 package com.here.gradle.plugins.jobdsl.tasks
 
-import org.gradle.api.internal.tasks.options.Option
+import org.gradle.api.tasks.options.Option
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Optional
 
