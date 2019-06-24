@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.5.0 (2019-06-25)
+
+- [#114](https://github.com/heremaps/gradle-jenkins-jobdsl-plugin/pull/114) - Fix support for task options in Gradle 5.
+
 ## 3.4.0 (2019-04-12)
 
 - [#110](https://github.com/heremaps/gradle-jenkins-jobdsl-plugin/pull/110) - Add Proxy support for the update Jenkins
