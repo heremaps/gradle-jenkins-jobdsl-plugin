@@ -73,7 +73,7 @@ class PipelineBuilder {
         }
     }
 
-    private applyDefaultConfiguration(PipelineJobBuilder jobBuilder) {
+    final applyDefaultConfiguration(PipelineJobBuilder jobBuilder) {
         defaultConfiguration.each { key, value ->
             if (jobBuilder.hasProperty(key) && jobBuilder.getProperty(key) == null) {
                 jobBuilder."${key}" = value
