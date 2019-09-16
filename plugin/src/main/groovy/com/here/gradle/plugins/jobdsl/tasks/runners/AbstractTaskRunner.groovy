@@ -79,6 +79,8 @@ abstract class AbstractTaskRunner {
             it.level = Level.SEVERE
         }
 
+        jenkinsRule.timeout = 0
+
         def description = Description.createSuiteDescription('Run Job DSL Task', [])
 
         def statement = new Statement() {
