@@ -29,6 +29,7 @@ class ServerDefinition {
     String jenkinsUser
     String jenkinsApiToken
     String proxyUrl
+    Boolean ignoreSslErrors
     Map<String, ?> configuration = [:]
 
     ServerDefinition(String name) {

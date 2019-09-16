@@ -46,9 +46,10 @@ class UpdateJenkinsRunner extends AbstractTaskRunner {
         String jenkinsUser = runProperties['jenkinsUser']
         String jenkinsApiToken = runProperties['jenkinsApiToken']
         String proxyUrl = runProperties['proxyUrl']
+        Boolean ignoreSslErrors = runProperties['ignoreSslErrors']
 
         new RestJobManagement(filter, disablePluginChecks, dryRun, jenkinsUrl,
-                              jenkinsUser, jenkinsApiToken, proxyUrl, jenkins)
+                              jenkinsUser, jenkinsApiToken, proxyUrl, ignoreSslErrors, jenkins)
     }
 
     @Override

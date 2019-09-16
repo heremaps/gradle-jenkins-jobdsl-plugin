@@ -98,7 +98,8 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
 
     @SuppressWarnings('ParameterCount')
     RestJobManagement(ItemFilter filter, boolean disablePluginChecks, boolean dryRun, String jenkinsUrl,
-                      String jenkinsUser, String jenkinsApiToken, String proxyUrl, Jenkins jenkins) {
+                      String jenkinsUser, String jenkinsApiToken, String proxyUrl, Boolean ignoreSslErrors,
+                      Jenkins jenkins) {
         super(System.out)
 
         this.disablePluginChecks = disablePluginChecks
@@ -130,6 +131,9 @@ class RestJobManagement extends AbstractJobManagement implements DeferredJobMana
         if (proxyUrl != null && !proxyUrl.isEmpty()) {
             URI proxyURI = new URI(proxyUrl)
             restClient.setProxy(proxyURI.host, proxyURI.port, proxyURI.scheme)
+        }
+        if (ignoreSslErrors) {
+            restClient.ignoreSSLIssues()
         }
 
         if (jenkinsUser != null && jenkinsApiToken != null) {

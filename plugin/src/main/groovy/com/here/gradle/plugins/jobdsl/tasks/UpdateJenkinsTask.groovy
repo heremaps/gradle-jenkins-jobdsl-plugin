@@ -47,6 +47,10 @@ class UpdateJenkinsTask extends AbstractDslTask {
 
     @Input
     @Optional
+    Boolean ignoreSslErrors
+
+    @Input
+    @Optional
     String jenkinsUser
 
     @Input
@@ -84,6 +88,10 @@ class UpdateJenkinsTask extends AbstractDslTask {
             if (proxyUrl == null) {
                 proxyUrl = server.proxyUrl
             }
+
+            if (ignoreSslErrors == null) {
+                ignoreSslErrors = server.ignoreSslErrors
+            }
         }
 
         return [
@@ -92,7 +100,8 @@ class UpdateJenkinsTask extends AbstractDslTask {
                 jenkinsUrl         : jenkinsUrl,
                 jenkinsUser        : jenkinsUser,
                 jenkinsApiToken    : jenkinsApiToken,
-                proxyUrl           : proxyUrl
+                proxyUrl           : proxyUrl,
+                ignoreSslErrors    : ignoreSslErrors
         ]
     }
 
@@ -124,6 +133,11 @@ class UpdateJenkinsTask extends AbstractDslTask {
     @Option(option = 'proxyUrl', description = 'URL of the HTTP proxy used to communicate with Jenkins.')
     void setProxyUrl(String proxyUrl) {
         this.proxyUrl = proxyUrl
+    }
+
+    @Option(option = 'ignoreSslErrors', description = 'Used to disable SSL error checking')
+    void setIgnoreSslErrors(Boolean ignoreSslErrors) {
+        this.ignoreSslErrors = ignoreSslErrors
     }
 
 }
