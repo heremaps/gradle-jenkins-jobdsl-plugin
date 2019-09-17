@@ -41,7 +41,6 @@ import org.jvnet.hudson.test.MockAuthorizationStrategy
 import org.jvnet.hudson.test.recipes.WithPlugin
 import org.xmlunit.builder.DiffBuilder
 import org.xmlunit.diff.Diff
-import spock.lang.Ignore
 
 /**
  * Test for the dslUpdateJenkins test. Uses {@link JenkinsRule} to create a Jenkins instance to run the tests against.
@@ -377,8 +376,13 @@ class UpdateJenkinsTest extends AbstractTaskTest {
         jenkinsRule.jenkins.getItemByFullName('job') instanceof FreeStyleProject
     }
 
-    @Ignore('Job DSL 1.72 has no deprecated plugins. Enable again when upgrading to a newer version.')
-    @WithPlugin('groovy-1.30.hpi')
+    @WithPlugin([
+            'script-security-1.16.hpi',
+            'workflow-api-2.1.hpi',
+            'workflow-step-api-1.15.hpi',
+            'workflow-support-2.1.hpi',
+            'workflow-job-2.3.hpi'
+    ])
     def 'deprecated plugins are reported'() {
         given:
         buildFile << readBuildGradle('updateJenkins/build.gradle')
@@ -389,7 +393,7 @@ class UpdateJenkinsTest extends AbstractTaskTest {
 
         then:
         result.task(':dslUpdateJenkins').outcome == TaskOutcome.SUCCESS
-        gradleSectionOutput(result.output, 'Deprecated plugins:') == ['groovy']
+        gradleSectionOutput(result.output, 'Deprecated plugins:') == ['workflow-job']
     }
 
     def 'missing plugins are reported'() {
