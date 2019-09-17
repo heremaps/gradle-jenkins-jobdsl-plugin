@@ -105,7 +105,7 @@ dependencies {
     jenkinsPlugins "org.jenkins-ci.plugins:cloudbees-folder:$folderPluginVersion"
     jenkinsPlugins "org.jenkins-ci.plugins:credentials:$credentialsPluginVersion"
     jenkinsPlugins "org.jenkins-ci.plugins:gradle:$gradlePluginVersion" // Old version used to test reporting of outdated plugins.
-    jenkinsPlugins "org.jenkins-ci.plugins:groovy:$groovyPluginVersion" // Old version used to test reporting of deprecated plugins.
+    jenkinsPlugins "org.jenkins-ci.plugins.workflow:workflow-job:$workflowJobPluginVersion" // Old version used to test reporting of deprecated plugins.
 }
 
 task resolveTestPlugins(type: Copy) {
