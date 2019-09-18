@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.7.0 (2019-09-18)
+
+- [#120](https://github.com/heremaps/gradle-jenkins-jobdsl-plugin/pull/120) - Disable the timeout of JenkinsRule when
+  generating job configurations in `dslGenerateXml` and `dslUpdateJenkins`. Before that change it was not possible to
+  use the plugin for larger setups that take longer to generate than the default timeout of 180 seconds.
+- [#126](https://github.com/heremaps/gradle-jenkins-jobdsl-plugin/pull/126) - Upgrade job-dsl-core to 1.76.
+
 ## 3.6.0 (2019-09-17)
 
 - [#122](https://github.com/heremaps/gradle-jenkins-jobdsl-plugin/pull/122) - Add an option to ignore SSL errors.
